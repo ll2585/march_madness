@@ -1,103 +1,53 @@
 var express = require("express");
-var routes = require("./app/routes");
 var app = express();
 var port = process.env.PORT || 3159;
-var router = express.Router();
+var mongoose = require('mongoose');
+var passport = require('passport');
+var flash    = require('connect-flash');
+
+var morgan       = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser   = require('body-parser');
+var session      = require('express-session');
+
 //***********************MONGODB OPTIONS********************
+var configDB = require('./config/database.js');
 var mongoose = require('mongoose');
 var uriUtil = require('mongodb-uri');
 
 var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
     replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } } };
 
-var mongodbUri = 'mongodb://luke:FTR93tcUeT7MjbS@ds062097.mongolab.com:62097/march-madness';
-var mongooseUri = uriUtil.formatMongoose(mongodbUri);
+mongoose.connect(uriUtil.formatMongoose(configDB.url), options);
 
-var db;
-var connected_to_db = false;
-var Schema = mongoose.Schema;
-mongoose.connect(mongooseUri, options);
-db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function callback() {
-    connected_to_db = true;
-});
-var songSchema = Schema({
-    decade: String,
-    artist: String,
-    song: String,
-    weeksAtOne: Number
-});
-function insert_random_stuff() {
-    // Create song schema
-
-    // Store song documents in a collection called "songs"
-    var Song = mongoose.model('songs', songSchema);
-
-    // Create seed data
-    var seventies = new Song({
-        decade: '1970s',
-        artist: 'Debby Boone',
-        song: 'You Light Up My Life',
-        weeksAtOne: 10
-    });
-
-    var eighties = new Song({
-        decade: '1980s',
-        artist: 'Olivia Newton-John',
-        song: 'Physical',
-        weeksAtOne: 10
-    });
-
-    var nineties = new Song({
-        decade: '1990s',
-        artist: 'Mariah Carey',
-        song: 'One Sweet Day',
-        weeksAtOne: 16
-    });
-
-    /*
-     * First we'll add a few songs. Nothing is required to create the
-     * songs collection; it is created automatically when we insert.
-     */
-    seventies.save();
-    eighties.save();
-    nineties.save();
-
-    /*
-     * Then we need to give Boyz II Men credit for their contribution
-     * to the hit "One Sweet Day".
-     */
-    Song.update({song: 'One Sweet Day'}, {$set: {artist: 'Mariah Carey ft. Boyz II Men'}},
-        function (err, numberAffected, raw) {
-
-            if (err) return handleError(err);
-
-            /*
-             * Finally we run a query which returns all the hits that spend 10 or
-             * more weeks at number 1.
-             */
-            Song.find({weeksAtOne: {$gte: 10}}).sort({decade: 1}).exec(function (err, docs) {
-
-                if (err) throw err;
-
-                docs.forEach(function (doc) {
-                    console.log(
-                        'In the ' + doc['decade'] + ', ' + doc['song'] + ' by ' + doc['artist'] +
-                        ' topped the charts for ' + doc['weeksAtOne'] + ' straight weeks.'
-                    );
-                });
-            });
-        }
-    )
-}
+require('./config/passport')(passport); // pass passport for configuration
 //******************************************************
+// set up our express application
+app.use(morgan('dev')); // log every request to the console
+app.use(cookieParser()); // read cookies (needed for auth)
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
 
+app.use(bodyParser.json());
+app.use(express.static( __dirname + '/public'));
 app.set('views', __dirname + '/views');
 app.set('view engine', "jade");
 app.engine('jade', require('jade').__express);
 
-app.use(express.static(__dirname + '/public'));
+app.use(session({ secret: 'ilovescotchscotchyscotchscotch' ,
+	saveUninitialized: true,
+	resave: true})); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+
+// routes ======================================================================
+app.get('/', function(req, res){
+	res.render('mainPage', { title: 'Express' });
+});
+require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+
 
 //***********************MAIL OPTIONS********************
 
@@ -129,6 +79,5 @@ function send_mail(){
 }
 //******************************************************
 
-require('./app/routes')(app);
 app.listen(port);
 console.log("Listening on port " + port);

@@ -1,0 +1,29 @@
+div.container
+	div.col-sm-6.col-sm-offset-3
+		h1
+			span.fa.fa-sign-in
+			|Login
+		//if message.length > 0
+		//	div.alert.alert-danger
+		//		-message
+		form(ng-submit="login()")
+			div.form-group
+				label
+					|Email
+				input(type="text" class="form-control" ng-model="user.email" name="email")
+			div.form-group
+				label
+					|Password
+				input(type="text" class="form-control" ng-model="user.password" name="password")
+			button(type="submit" class="btn btn-warning btn-lg")
+				|Login
+		hr
+		p
+			|Need an account?
+			a(href="/signup")
+				|Signup
+		p
+			|Or go
+			a(href="/")
+				|home
+			|.

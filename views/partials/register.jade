@@ -1,0 +1,15 @@
+div.signup-container
+	div.signup-form
+		form.form-horizontal
+			div.form-group
+				label(for="name", class="col-sm-4 control-label")
+					|Name
+				div.col-sm-4
+					input#name(value="luke", type="text", class="form-control input-md", name="username", ng-model="signup.user.username")
+			div.form-group
+				label(for="email", class="col-sm-4 control-label")
+					|E-mail
+				div.col-sm-4
+					input#email(value="ll02012@gmail.com", type="text", class="form-control input-md", name="password", ng-model="signup.user.password")
+			div.submit_signup_button.col-sm-4.col-sm-offset-4.top_margin
+				input(class="btn btn-block btn-primary activation", type="submit", value="Create account", ng-click="signup.submit()")
