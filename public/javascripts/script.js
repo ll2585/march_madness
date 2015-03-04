@@ -4,26 +4,27 @@
 var scotchApp = angular.module('scotchApp', ['ngRoute', 'ngAnimate']);
 
 // configure our routes
-scotchApp.config(function($routeProvider) {
+scotchApp.config(function($routeProvider, $locationProvider) {
     $routeProvider
 
         // route for the home page
         .when('/', {
-            templateUrl: 'home.html',
+            templateUrl: 'partials/home',
             controller  : 'mainController'
         })
 
         // route for the about page
         .when('/about', {
-            templateUrl : 'partials/about/',
+            templateUrl : 'partials/about',
             controller  : 'aboutController'
         })
 
         // route for the contact page
         .when('/contact', {
-            templateUrl : 'partials/contact/',
+            templateUrl : 'partials/contact',
             controller  : 'contactController'
         });
+    $locationProvider.html5Mode(true);
 });
 
 // create the controller and inject Angular's $scope

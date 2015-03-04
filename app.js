@@ -1,8 +1,8 @@
 var express = require("express");
-var routes = require("./routes");
+var routes = require("./app/routes");
 var app = express();
-var port = process.env.PORT || 3000;
-
+var port = process.env.PORT || 3159;
+var router = express.Router();
 //***********************MONGODB OPTIONS********************
 var mongoose = require('mongoose');
 var uriUtil = require('mongodb-uri');
@@ -128,12 +128,7 @@ function send_mail(){
     });
 }
 //******************************************************
-app.get('/', function(req, res) {
-    console.log("GOING HOME");
-    res.render("mainPage");
-});
 
-var server = app.listen(3000, function () {
-
-});
+require('./app/routes')(app);
+app.listen(port);
 console.log("Listening on port " + port);
