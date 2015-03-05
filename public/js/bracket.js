@@ -1,0 +1,2 @@
+angular.module('bracketApp', ['ngRoute', 'bracketRoutes', 'MainCtrl', 'BracketCtrl', 'BracketService', 'BoxCtrl', 'BoxService', 'MiniGameCtrl', 'MiniGameService',
+    'SideBarCtrl', 'ui.bootstrap', 'ui.router', 'ngCookies']);

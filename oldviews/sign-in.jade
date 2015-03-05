@@ -1,0 +1,19 @@
+form.form-signin
+	h2.form-signin-heading
+		|Please sign in
+	label.sr-only(for="inputEmail")
+		|Email address
+	input.form-control#inputEmail(type="email" placeholder="Email address")
+	input.form-control#inputPassword(placeholder="Password")
+	div.checkbox
+		label
+			input(value="remember-me" type="checkbox")
+			|Remember Me
+	button.btn.btn-lg.btn-primary.btn-block(type="submit")
+		|Sign in
+	div.forgot-password
+		a(href="/forgot-password")
+			|Forgot Password?
+	div.register
+		a(href="/register")
+			|Register!
