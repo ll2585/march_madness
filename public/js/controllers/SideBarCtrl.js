@@ -2,6 +2,44 @@ angular.module('SideBarCtrl',  ['ui.bootstrap']).controller('SideBarController',
     $scope.name = 'World';
     $scope.collapse = false;
 
+	$scope.tabs = [
+		{ link : '/bracket', label : 'Bracket', class: 'glyphicon glyphicon-tasks' },
+		{ link : '/box', label : 'Box', class: 'glyphicon glyphicon-th' },
+		{ link : '/minigame', label : 'MiniGame', class:'glyphicon glyphicon-user' }
+	];
+
+	$scope.selectedTab = $scope.tabs[0];
+	$scope.setSelectedTab = function(tab) {
+		$scope.selectedTab = tab;
+	}
+
+	$scope.tabClass = function(tab) {
+		if ($scope.selectedTab == tab) {
+			return "active";
+		} else {
+			return "";
+		}
+	}
+
+	$scope.user = {
+
+		diameter: 200,
+
+		style:{},
+
+	};
+
+	$scope.calcStyle = function(user){
+
+		user.style = {'width':user.diameter+'px','height':user.diameter+'px'}
+
+	};
+
+	$scope.style = function(user) {
+
+		return user.style;
+
+	}
 
 
 }])
@@ -35,8 +73,8 @@ angular.module('SideBarCtrl',  ['ui.bootstrap']).controller('SideBarController',
                         initialAnimSkip = false;
                         expandDone();
                     } else {
-                        element.removeClass('collapse').addClass('collapsing-width');
-                        doTransition({ width: element[0].scrollWidth + 'px' }).then(expandDone);
+                        element.removeClass('partial_collapse').addClass('collapsing-width');
+                        doTransition({ width: element[0].scrollWidth + 100+ 'px' }).then(expandDone);
                     }
                 }
 
@@ -50,7 +88,7 @@ angular.module('SideBarCtrl',  ['ui.bootstrap']).controller('SideBarController',
                     if (initialAnimSkip) {
                         initialAnimSkip = false;
                         collapseDone();
-                        element.css({width: 0});
+                        element.css({width: 100+ 'px'});
                     } else {
                         // CSS transitions don't work with height: auto, so we have to manually change the height to a specific value
                         element.css({ width: element[0].scrollWidth + 'px' });
@@ -59,13 +97,13 @@ angular.module('SideBarCtrl',  ['ui.bootstrap']).controller('SideBarController',
 
                         element.removeClass('collapse in').addClass('collapsing-width');
 
-                        doTransition({ width: 0 }).then(collapseDone);
+                        doTransition({ width: 100+ 'px' }).then(collapseDone);
                     }
                 }
 
                 function collapseDone() {
                     element.removeClass('collapsing-width');
-                    element.addClass('collapse');
+                    element.addClass('partial-collapse');
                 }
 
                 scope.$watch(attrs.collapseWidth, function (shouldCollapse) {

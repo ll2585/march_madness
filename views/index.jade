@@ -1,43 +1,68 @@
 doctype html
 html
-    head
-        title= title
-        link(rel='stylesheet', href='/css/style.css')
-        link(rel='stylesheet', href='/css/sidebar.css')
-        link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css')
-        //-script(src='/js/js.js')
-        script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.js')
-        script(src='https://code.angularjs.org/1.3.14/angular-animate.js')
-        script(src='https://code.angularjs.org/1.3.14/angular-resource.js')
-        script(src='https://code.angularjs.org/1.3.14/angular-route.js')
-        script(src='https://code.angularjs.org/1.3.14/angular-cookies.js')
-        script(src='https://code.jquery.com/jquery-1.11.2.min.js')
-        script(src='https://code.jquery.com/jquery-migrate-1.2.1.min.js')
-        script(src='/js/bracket.js')
-        script(src='/js/nonangular/sidebar.js')
-        script(src='/js/bracketRoutes.js')
-        script(src='/js/controllers/BoxCtrl.js')
-        script(src='/js/services/BoxService.js')
-        script(src='/js/controllers/BracketCtrl.js')
-        script(src='/js/services/BracketService.js')
-        script(src='/js/controllers/MiniGameCtrl.js')
-        script(src='/js/services/MiniGameService.js')
-        script(src='/js/controllers/MainCtrl.js')
-        script(src='/js/controllers/SideBarCtrl.js')
+	head
+		title= title
+		link(rel='stylesheet', href='/css/style.css')
+		link(rel='stylesheet', href='/css/sidebar.css')
+		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css')
+		//-script(src='/js/js.js')
+		script(src='https://code.jquery.com/jquery-1.11.2.min.js')
+		script(src='https://code.jquery.com/jquery-migrate-1.2.1.min.js')
+		script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js')
+		script(src='https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.js')
+		script(src='https://code.angularjs.org/1.3.14/angular-animate.js')
+		script(src='https://code.angularjs.org/1.3.14/angular-resource.js')
+		script(src='https://code.angularjs.org/1.3.14/angular-route.js')
+		script(src='https://code.angularjs.org/1.3.14/angular-cookies.js')
 
-        script(src='/js/angular-ui-router.js')
-        script(src='/js/dashboard.min.js')
-        script(src='/js/ui-bootstrap-tpls-0.12.1.min.js')
-        base(href="/")
-    body(ng-app="bracketApp")
-        div#page-wrapper.active
-            // Sidebar
-            #sidebar-wrapper(ng-controller="SideBarController")
-                p Hello {{name}}!
-                button.btn.btn-default(ng-click='isCollapsed = !isCollapsed') Toggle Width
-                hr
-                div(collapse-width='isCollapsed')
-                    .well.well-lg Some content
-            div#page-content-wrapper
-                div.page-content.inset
-                    div(ng-view='', ng-controller='BracketController')
+		script(src='/js/bracket.js')
+		script(src='/js/nonangular/sidebar.js')
+		script(src='/js/bracketRoutes.js')
+		script(src='/js/controllers/BoxCtrl.js')
+		script(src='/js/services/BoxService.js')
+		script(src='/js/controllers/BracketCtrl.js')
+		script(src='/js/services/BracketService.js')
+		script(src='/js/controllers/MiniGameCtrl.js')
+		script(src='/js/services/MiniGameService.js')
+		script(src='/js/controllers/MainCtrl.js')
+		script(src='/js/controllers/SideBarCtrl.js')
+
+		script(src='/js/angular-ui-router.js')
+		script(src='/js/dashboard.min.js')
+		script(src='/js/ui-bootstrap-tpls-0.12.1.min.js')
+		base(href="/")
+	body(ng-app="bracketApp")
+		div#page-wrapper.active
+			// Sidebar
+			#sidebar-wrapper.sidebar(ng-controller="SideBarController")
+				#row
+					div(collapse-width='isCollapsed', class="column column_1")
+						ul.sidebar
+							li.sidebar-main
+								a(ng-click='isCollapsed = !isCollapsed')
+									| Dashboard
+									span.menu-icon.glyphicon.glyphicon-transfer
+							li.sidebar-title
+								span NAVIGATION
+							li.sidebar-list
+								a(href='#')
+									| Dashboard
+									span.menu-icon.fa.fa-tachometer
+							li.sidebar-list
+								a(href='#/tables')
+									| Tables
+									span.menu-icon.fa.fa-table
+				ul.nav.nav-tabs.nav-stacked.col-md-2
+					li.ng-scope
+						span.menu-icon.glyphicon.glyphicon-transfer(ng-click='isCollapsed = !isCollapsed')
+					li(ng-class='tabClass(tab)', ng-repeat='tab in tabs')
+						a(href='{{tab.link}}', ng-click='setSelectedTab(tab)')
+							span.menu-icon(class="{{tab.class}}")
+				p(collapse-width='isCollapsed', class="column column_1") {{user.diameter}}
+				| Diameter:
+				input(type='range', ng-model='user.diameter'  ng-change='calcStyle(user)' min='1', max='400')
+				div(id='circle', ng-style='style(user)')
+
+			div#page-content-wrapper
+				div.page-content.inset
+					div(ng-view='', ng-controller='BracketController')

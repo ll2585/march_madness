@@ -1,6 +1,3 @@
-.well {
-    width: 400px;
-}
 
 .collapsing-width {
     position: relative;
@@ -9,4 +6,50 @@
     -moz-transition: width 0.35s ease;
     -o-transition: width 0.35s ease;
     transition: width 0.35s ease;
+}
+
+.partial_collapse{
+    width:100px;
+}
+
+.column {
+    background-color:lightgrey;
+    border: solid 5px darkgrey;
+    border-radius: 3px;
+    height:200px;
+    width:33%;
+    float:left;
+}
+
+.row{
+    width: 200px;
+}
+
+#circle {
+
+    border-radius: 50%;
+
+    width: 200px;
+
+    height: 200px;
+
+    top:200px;
+
+    left:0px;
+
+    background:red;
+
+    position:absolute;
+
+    transition:1s;
+
+    max-width:400px;
+
+    max-height:400px;
+
+}
+
+.sidebar{
+    border: 2px solid;
+    border-radius: 25px;
 }
