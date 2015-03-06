@@ -34,34 +34,28 @@ html
 	body(ng-app="bracketApp")
 		div#page-wrapper.active
 			// Sidebar
-			#sidebar-wrapper.sidebar(ng-controller="SideBarController")
+			#sidebar-wrapper.sidebar(ng-controller="SideBarController as sidebar")
 				#row
-					div(collapse-width='isCollapsed', class="column column_1")
+					div(collapse-width='isCollapsed', class="column column_1 collapse")
 						ul.sidebar
-							li.sidebar-main
-								a(ng-click='isCollapsed = !isCollapsed')
-									| Dashboard
-									span.menu-icon.glyphicon.glyphicon-transfer
-							li.sidebar-title
-								span NAVIGATION
-							li.sidebar-list
-								a(href='#')
-									| Dashboard
-									span.menu-icon.fa.fa-tachometer
-							li.sidebar-list
-								a(href='#/tables')
-									| Tables
-									span.menu-icon.fa.fa-table
-				ul.nav.nav-tabs.nav-stacked.col-md-2
+							li.sidebar-welcome Welcome Luke
+							li.sidebar-title#bracket Bracket
+							li.sidebar-list Your Standings
+							li.sidebar-list Scoreboard
+							li.sidebar-title#box Box
+							li.sidebar-list Your Standings
+							li.sidebar-title#minigame MiniGame
+							li.sidebar-list ???
+							li.sidebar-title#achievements Achievements
+							li.sidebar-list Total achievements:
+							li.sidebar-list Resistance Achievements:
+							li.sidebar-list TS Achievements:
+				ul.nav.nav-tabs.nav-stacked.col-md-2.controls
 					li.ng-scope
 						span.menu-icon.glyphicon.glyphicon-transfer(ng-click='isCollapsed = !isCollapsed')
 					li(ng-class='tabClass(tab)', ng-repeat='tab in tabs')
-						a(href='{{tab.link}}', ng-click='setSelectedTab(tab)')
+						a(href='{{tab.link}}', ng-click='setSelectedTab(tab)', outer-tab, align-to='{{tab.alignTo}}', make-color = '{{tab.myColor}}')
 							span.menu-icon(class="{{tab.class}}")
-				p(collapse-width='isCollapsed', class="column column_1") {{user.diameter}}
-				| Diameter:
-				input(type='range', ng-model='user.diameter'  ng-change='calcStyle(user)' min='1', max='400')
-				div(id='circle', ng-style='style(user)')
 
 			div#page-content-wrapper
 				div.page-content.inset

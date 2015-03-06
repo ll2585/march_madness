@@ -1,11 +1,13 @@
 angular.module('SideBarCtrl',  ['ui.bootstrap']).controller('SideBarController', ['$scope',  '$cookieStore', function($scope, $cookieStore) {
-    $scope.name = 'World';
-    $scope.collapse = false;
+
+    $scope.collapse = true;
+	$scope.isCollapsed = true;
 
 	$scope.tabs = [
-		{ link : '/bracket', label : 'Bracket', class: 'glyphicon glyphicon-tasks' },
-		{ link : '/box', label : 'Box', class: 'glyphicon glyphicon-th' },
-		{ link : '/minigame', label : 'MiniGame', class:'glyphicon glyphicon-user' }
+		{ link : '/bracket', label : 'Bracket', class: 'glyphicon glyphicon-tasks', alignTo: 'bracket', myColor: "red" },
+		{ link : '/box', label : 'Box', class: 'glyphicon glyphicon-th', alignTo: 'box', myColor: "blue" },
+		{ link : '/minigame', label : 'MiniGame', class:'glyphicon glyphicon-user', alignTo: 'minigame', myColor: "green" },
+		{ link : '/achievements', label : 'Achievements', class:'glyphicon glyphicon-cup', alignTo: 'achievements', myColor: "green" }
 	];
 
 	$scope.selectedTab = $scope.tabs[0];
@@ -25,7 +27,7 @@ angular.module('SideBarCtrl',  ['ui.bootstrap']).controller('SideBarController',
 
 		diameter: 200,
 
-		style:{},
+		style:{}
 
 	};
 
@@ -73,8 +75,8 @@ angular.module('SideBarCtrl',  ['ui.bootstrap']).controller('SideBarController',
                         initialAnimSkip = false;
                         expandDone();
                     } else {
-                        element.removeClass('partial_collapse').addClass('collapsing-width');
-                        doTransition({ width: element[0].scrollWidth + 100+ 'px' }).then(expandDone);
+                        element.removeClass('collapse custom-collapsed').addClass('collapsing-width');
+                        doTransition({ width: element[0].scrollWidth + 'px' }).then(expandDone);
                     }
                 }
 
@@ -88,7 +90,7 @@ angular.module('SideBarCtrl',  ['ui.bootstrap']).controller('SideBarController',
                     if (initialAnimSkip) {
                         initialAnimSkip = false;
                         collapseDone();
-                        element.css({width: 100+ 'px'});
+                        element.css({width: 0});
                     } else {
                         // CSS transitions don't work with height: auto, so we have to manually change the height to a specific value
                         element.css({ width: element[0].scrollWidth + 'px' });
@@ -97,13 +99,13 @@ angular.module('SideBarCtrl',  ['ui.bootstrap']).controller('SideBarController',
 
                         element.removeClass('collapse in').addClass('collapsing-width');
 
-                        doTransition({ width: 100+ 'px' }).then(collapseDone);
+                        doTransition({ width: 0 }).then(collapseDone);
                     }
                 }
 
                 function collapseDone() {
                     element.removeClass('collapsing-width');
-                    element.addClass('partial-collapse');
+                    element.addClass('collapse custom-collapsed');
                 }
 
                 scope.$watch(attrs.collapseWidth, function (shouldCollapse) {
@@ -115,4 +117,30 @@ angular.module('SideBarCtrl',  ['ui.bootstrap']).controller('SideBarController',
                 });
             }
         };
-    }]);
+    }])
+	.directive('outerTab', function() {
+
+		return {
+			link: function (scope, element, attrs) {
+				var col = attrs.makeColor;
+				var attach = angular.element( document.querySelector( '#' + attrs.alignTo ) );
+				console.log(element);
+				var new_left = attach[0].offsetLeft;
+				var new_top = attach[0].offsetTop-element[0].offsetParent.offsetTop-element[0].offsetParent.offsetParent.offsetTop ;
+				console.log(new_top);
+				if(col == 'red'){
+					col_hex = "#00ff00"
+				}else if(col == 'blue'){
+					col_hex = '#0000ff'
+				}else{
+					col_hex = '#ff0000'
+				}
+				element.css("position", "absolute");
+				element.css("left", 0);
+				element.css("top", new_top);
+				element.css("background-color", col_hex);
+				element.css("content", "RED");
+
+			}
+		}
+	});

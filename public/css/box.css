@@ -1,0 +1,83 @@
+
+
+.row-1-spacer{
+    background-color: forestgreen;
+}
+
+.winning-label{
+    background-color: firebrick;
+    color: #f8f8ff;
+}
+.row-2-spacer{
+    background-color: blue;
+    height: 50px;
+}
+#losing-label{
+     background-color:gold;
+ }
+.losing-label{
+    background-color:gold;
+}
+#losing-team-label
+{
+    /* Safari */
+    -webkit-transform: rotate(-90deg);
+    -webkit-transform-origin: left top;
+    /* Firefox */
+    -moz-transform: rotate(-90deg);
+
+    /* IE */
+    -ms-transform: rotate(-90deg);
+
+    /* Opera */
+    -o-transform: rotate(-90deg);
+
+    /* Internet Explorer */
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+    position:absolute;
+}
+
+.table>tbody>tr>td{
+    padding-left: 1px;
+    padding-right: 1px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.table{
+    box-sizing: border-box;
+}
+
+.forty-five-degrees{
+    /* Safari */
+    -webkit-transform: rotate(-45deg);
+    -webkit-transform-origin: left top;
+    /* Firefox */
+    -moz-transform: rotate(-45deg);
+
+    /* IE */
+    -ms-transform: rotate(-45deg);
+
+    /* Opera */
+    -o-transform: rotate(-45deg);
+
+    /* Internet Explorer */
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+    position:absolute;
+    border-top: solid 1px;
+}
+
+
+.round{
+    border: 1px solid black;
+    transform: rotate(-90deg);
+    background-color: aqua;
+}
+
+.num{
+    background-color: deeppink;
+}
+
+.you{
+    background-color: #add8e6;
+}
