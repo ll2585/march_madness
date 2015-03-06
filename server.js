@@ -19,7 +19,7 @@ var mongoose = require('mongoose');
 var uriUtil = require('mongodb-uri');
 
 
-mongoose.connect(uriUtil.formatMongoose(configDB['local-url'])); //THISLISTENS TO PORT ALREADY LOL
+//mongoose.connect(uriUtil.formatMongoose(configDB['local-url'])); //THISLISTENS TO PORT ALREADY LOL DO THIS AFTER AUTH
 
 //require('./config/passport')(passport); // pass passport for configuration
 //******************************************************
