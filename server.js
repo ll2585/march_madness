@@ -79,5 +79,5 @@ function send_mail(){
 }
 //******************************************************
 
-app.listen(port,server_ip_address);
+app.listen(port);
 console.log("Listening on port " + port);

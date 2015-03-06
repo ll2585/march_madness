@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a2841f22-3822-4787-8509-2b8b7c46e1e7" name="Default" comment="" />
+    <list default="true" id="a2841f22-3822-4787-8509-2b8b7c46e1e7" name="Default" comment="">
+      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\appRoutes.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\bracket.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\controllers\BracketCtrl.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\controllers\MainCtrl.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\dragable.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\services\BoxService.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\services\BracketService.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\services\MiniGameService.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\other-angular\lvl-drag-drop.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\other-angular\lvl-uuid.js" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\stylesheets\dragable" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\views\bracket\bracket.jade" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    </list>
     <ignored path="march_madness.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -89,8 +104,8 @@
       <file leaf-file-name="server.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.08415841" vertical-offset="0" max-vertical-offset="1496">
-              <caret line="3" column="24" selection-start-line="3" selection-start-column="24" selection-end-line="3" selection-end-column="55" />
+            <state vertical-scroll-proportion="0.80363035" vertical-offset="890" max-vertical-offset="1496">
+              <caret line="81" column="15" selection-start-line="81" selection-start-column="15" selection-end-line="81" selection-end-column="15" />
               <folding />
             </state>
           </provider>
@@ -743,7 +758,7 @@
       <workItem from="1425503010733" duration="56000" />
       <workItem from="1425504298660" duration="13469000" />
       <workItem from="1425538248533" duration="34927000" />
-      <workItem from="1425604816793" duration="6965000" />
+      <workItem from="1425604816793" duration="7115000" />
     </task>
     <task id="LOCAL-00001" summary="finalyl got it to work">
       <created>1425427629378</created>
@@ -791,7 +806,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="72372000" />
+    <option name="totallyTimeSpent" value="72522000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -1314,8 +1329,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.08415841" vertical-offset="0" max-vertical-offset="1496">
-          <caret line="3" column="24" selection-start-line="3" selection-start-column="24" selection-end-line="3" selection-end-column="55" />
+        <state vertical-scroll-proportion="0.80363035" vertical-offset="890" max-vertical-offset="1496">
+          <caret line="81" column="15" selection-start-line="81" selection-start-column="15" selection-end-line="81" selection-end-column="15" />
           <folding />
         </state>
       </provider>
