@@ -124,10 +124,10 @@ angular.module('SideBarCtrl',  ['ui.bootstrap']).controller('SideBarController',
 			link: function (scope, element, attrs) {
 				var col = attrs.makeColor;
 				var attach = angular.element( document.querySelector( '#' + attrs.alignTo ) );
-				console.log(element);
+				//console.log(element);
 				var new_left = attach[0].offsetLeft;
 				var new_top = attach[0].offsetTop-element[0].offsetParent.offsetTop-element[0].offsetParent.offsetParent.offsetTop ;
-				console.log(new_top);
+				//console.log(new_top);
 				if(col == 'red'){
 					col_hex = "#00ff00"
 				}else if(col == 'blue'){

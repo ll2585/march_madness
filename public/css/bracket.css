@@ -1,0 +1,69 @@
+.round{
+    float:left;
+    width:100px;
+}
+.firstTeam, .secondTeam{
+    border-bottom:1px solid #ccc;
+    position:relative;
+}
+.firstSpacer-left, .secondTeam-left{
+    border-right:1px solid #ccc;
+}
+
+.firstSpacer-right, .secondTeam-right{
+    border-left:1px solid #ccc;
+}
+.team{
+    position:absolute;
+    bottom: 4px;
+    left: 8px;
+}
+
+.team-selectable{
+    background-color: #c4d8e2;
+    color: #0057A8;
+    cursor: pointer;
+}
+
+.team-chosen-to-lose{
+    background-color: #f8f8ff;
+    color: lightgray;
+    cursor: pointer;
+}
+
+.region-1 > *, .region-3 > *{
+    background-color:black;
+    float:right;
+}
+.championship-bracket{
+    height:200px;
+    background-color:gold;
+    clear: both;
+}
+.buffer{
+    height:100px;
+    background-color:palevioletred;
+    clear: both;
+}
+
+.region-0 > *, .region-2 > *{
+    background-color:greenyellow;
+    float:left;
+}
+
+.region-2{
+    clear: both;
+}
+
+.spacer{
+
+}
+.final-four{
+
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+}
+.region{
+    position:relative;
+}
