@@ -7,7 +7,8 @@ angular.module('BracketCtrl', []).controller('BracketController', ['$scope', fun
 		if(next_round == 5){
 			next_elem = angular.element( document.querySelector( '#region-' +region+ "-winner" ) );
 		}else if(next_round == 6){
-			next_elem = angular.element( document.querySelector( '#finals-' + (region % 2) + "-winner" ) );
+			var finals_round = ((region+1) % 2)+1;
+			next_elem = angular.element( document.querySelector( '#finals-' + finals_round) ); //1,3->1, 2,4->2
 		}else if(next_round == 7){
 			next_elem = angular.element( document.querySelector( '#champion' ) );
 		}else{
@@ -18,12 +19,24 @@ angular.module('BracketCtrl', []).controller('BracketController', ['$scope', fun
 	}
 
 	function getOtherTeam(round, matchup, team, region){
-		var other_team = team == 1 ? "team-2" : "team-1";
-		var other_team_elem = angular.element( document.querySelector( '#' + other_team + "-region-" + region + "-round-" + round + "-matchup-" + matchup ) );
+		var other_team = (team % 2) + 1; //1->2, 2->1
+		var other_team_elem;
+		if(round == 5){
+			other_team_elem = angular.element( document.querySelector( '#region-' +(region%4+2)+ "-winner" ) );
+		}else if(round == 6){
+			other_team_elem = angular.element( document.querySelector( '#finals-' + other_team ) );
+		}else if(round == 7){
+			other_team_elem = null;
+		}else{
+			other_team_elem = angular.element( document.querySelector( '#team-' + other_team + "-region-" + region + "-round-" + round + "-matchup-" + matchup ) );
+		}
+
 		return other_team_elem;
 	}
 	$scope.tagline = 'Nothing beats a pocket protector!';
+	$scope.selectChampions = function($event, data) {
 
+	}
 	$scope.select = function($event, data) {
 		var next_elem = getNextRound(data['round'], data['matchup'], data['region']);
 		var my_text = angular.element($event.target).text();

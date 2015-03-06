@@ -8,22 +8,22 @@
 		div(class="championship-bracket")
 			div.row
 				div.col-xs-2.spacer spacer
-				div.col-xs-8.final-four#champion bracket
+				div.col-xs-8.final-four#champion
 				div.col-xs-2.spacer spacer
 			div.row
 				div.col-xs-1.spacer spacer
-				div.col-xs-3.final-four#finals-1 bracket
+				div.col-xs-3.final-four#finals-1(ng-click="select($event, {round:6,matchup:1, region:1, team: 1})")
 				div.col-xs-4.spacer spacer
-				div.col-xs-3.final-four#finals-0 bracket
+				div.col-xs-3.final-four#finals-2(ng-click="select($event, {round:6,matchup:1, region:1, team: 2})")
 				div.col-xs-1.spacer spacer
 			div.row
-				div.col-xs-2.final-four#region-1-winner bracket
+				div.col-xs-2.final-four#region-1-winner(ng-click="select($event, {round:5,matchup:1, region:1, team: 1})")
 				div.col-xs-1.spacer spacer
-				div.col-xs-2.final-four#region-3-winner bracket
+				div.col-xs-2.final-four#region-3-winner(ng-click="select($event, {round:5,matchup:1, region:3, team: 2})")
 				div.col-xs-2.spacer spacer
-				div.col-xs-2.final-four#region-2-winner bracket
+				div.col-xs-2.final-four#region-2-winner(ng-click="select($event, {round:5,matchup:2, region:2, team: 1})")
 				div.col-xs-1.spacer spacer
-				div.col-xs-2.final-four#region-4-winner bracket
+				div.col-xs-2.final-four#region-4-winner(ng-click="select($event, {round:5,matchup:2, region:4, team: 2})")
 		-var base_height = 20;
 		-for (var k = 0; k < 4; k++)
 			-if(k==2)
