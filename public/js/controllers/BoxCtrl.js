@@ -29,7 +29,8 @@ angular.module('BoxCtrl', []).controller('BoxController', ['$scope', function($s
 						top:  parent[0].getBoundingClientRect().top + parent[0].getBoundingClientRect().height/2 + myDimens.height/2
 					});
 					parent.css({
-						'width': myDimens.width
+						//'width': myDimens.width
+						'width': "20px" //f it otherwise it becomes 1000
 					});
 				}, 0);
 			}, 0);
