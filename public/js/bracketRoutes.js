@@ -18,6 +18,11 @@ angular.module('bracketRoutes', []).config(['$routeProvider', '$locationProvider
 			controller: 'BoxController'	
 		})
 
+		.when('/box-angular', {
+			templateUrl: 'partials/box-angular',
+			controller: 'BoxControllerAngular'
+		})
+
         .when('/minigame', {
             templateUrl: 'partials/minigame',
             controller: 'MiniGameController'

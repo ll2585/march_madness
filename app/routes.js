@@ -35,6 +35,10 @@ module.exports = function(app) {
 		}
 	}
 	shuffle(boxes);
+	app.get('/boxes.json', function(req, res, next) {
+		var json = {winning_numbers: winning_numbers, losing_numbers: losing_numbers, users: users};
+		res.json(json);
+	});
 	app.all('/*', function(req, res, next) {
 		var arbitraryUrls = ['partials', 'api'];
 		if (arbitraryUrls.indexOf(req.url.split('/')[1]) > -1) {
@@ -43,6 +47,7 @@ module.exports = function(app) {
 			res.render('index');
 		}
 	});
+
 	app.get('/partials/box', function(req, res, next) {
 		res.render('.' + req.path, {winning_numbers: winning_numbers, losing_numbers: losing_numbers, boxes: boxes, curUser: "Luke"});
 	});

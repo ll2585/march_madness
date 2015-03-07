@@ -1,0 +1,44 @@
+.jumbotron.text-center
+	h1 Nerds and Proud
+	p {{tagline}}
+	div.container(ng-init="init")
+		table.table.table-bordered
+			tr
+				td(colspan=7) spacer
+				td(colspan=10) Winning Team
+			-var games = ['Championship', 'Finals', 'Semifinals', 'Quarterfinals', 'Round of 32', 'Round of 64'];
+			tr(ng-repeat="row in winning_team")
+				td(ng-if="$index == 0" rowspan=16, id='losing-label')
+				td(ng-if="$index == 0" colspan=6, rowspan=6, id='big-space')
+				td {{row}}
+				td What
+
+		//
+			-for(var i = 0; i < games.length; i++)
+				tr(id= 'round-' + i, height='34px')
+					-if(i == 0)
+						td(rowspan=16, id='losing-label')
+						td(colspan=6, rowspan=6, id='big-space')
+					-for(var j = 0; j < winning_numbers[0].length; j++)
+						td= winning_numbers[i][j]
+			-for(var j = 0; j < losing_numbers[0].length; j++)
+				tr
+					-for(var i = 0; i < games.length; i++)
+						td(width='34px')= losing_numbers[i][j]
+					-for(var i = 0; i < winning_numbers[0].length; i++)
+						-var user = boxes[i+j*winning_numbers[0].length];
+						-console.log(boxes[i+j*10])
+						-if(user == curUser)
+							td.you= user
+						-else
+							td= user
+	//
+		div(id="losing-team-label", rotate-me='', my-parent='losing-label') Losing Team
+		div(class="forty-five-degrees", rotate-me-45='', my-parent='round-0', my-offset='0' , style="left: 280px; top: 410px") 6
+		div(class="forty-five-degrees", rotate-me-45='', my-parent='round-1', my-offset='1', style="left: 360px; top: 410px") 5
+		div(class="forty-five-degrees", rotate-me-45='', my-parent='round-2', my-offset='2', style="left: 440px; top: 410px") 4
+		div(class="forty-five-degrees", rotate-me-45='', my-parent='round-3', my-offset='3', style="left: 520px; top: 410px") 3
+		div(class="forty-five-degrees", rotate-me-45='', my-parent='round-4', my-offset='4', style="left: 600px; top: 410px") 2
+		div(class="forty-five-degrees", rotate-me-45='', my-parent='round-5', my-offset='5', style="left: 660px; top: 410px") 1
+
+link(rel='stylesheet', href='/css/box.css')

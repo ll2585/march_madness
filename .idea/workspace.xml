@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a2841f22-3822-4787-8509-2b8b7c46e1e7" name="Default" comment="">
-      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\appRoutes.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\bracket.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\controllers\BracketCtrl.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\controllers\MainCtrl.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\dragable.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\services\BoxService.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\services\BracketService.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\services\MiniGameService.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\other-angular\lvl-drag-drop.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\other-angular\lvl-uuid.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\public\stylesheets\dragable" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\views\bracket\bracket.jade" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/controllers/BoxCtrl.js" afterPath="$PROJECT_DIR$/public/js/controllers/BoxCtrl.js" />
+    <list default="true" id="a2841f22-3822-4787-8509-2b8b7c46e1e7" name="Default" comment="improved bracket for finals and added openshift support">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/controllers/BoxCtrlAngular.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/views/partials/box-angular.jade" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/bracket.js" afterPath="$PROJECT_DIR$/public/js/bracket.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/bracketRoutes.js" afterPath="$PROJECT_DIR$/public/js/bracketRoutes.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/index.jade" afterPath="$PROJECT_DIR$/views/index.jade" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes.js" afterPath="$PROJECT_DIR$/app/routes.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="march_madness.iws" />
@@ -41,51 +34,41 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="BoxCtrl.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="BoxCtrl.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/js/controllers/BoxCtrl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6655738" vertical-offset="53" max-vertical-offset="1411">
-              <caret line="27" column="61" selection-start-line="27" selection-start-column="61" selection-end-line="27" selection-end-column="61" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1411">
+              <caret line="4" column="20" selection-start-line="0" selection-start-column="0" selection-end-line="77" selection-end-column="3" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="bracket.jade" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/partials/bracket.jade">
+      <file leaf-file-name="index.jade" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/views/index.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1003">
-              <caret line="16" column="47" selection-start-line="16" selection-start-column="47" selection-end-line="16" selection-end-column="47" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="23" max-vertical-offset="1156">
+              <caret line="62" column="34" selection-start-line="62" selection-start-column="34" selection-end-line="62" selection-end-column="34" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BracketCtrl.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/controllers/BracketCtrl.js">
+      <file leaf-file-name="BoxCtrlAngular.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/js/controllers/BoxCtrlAngular.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1632">
-              <caret line="15" column="9" selection-start-line="15" selection-start-column="9" selection-end-line="15" selection-end-column="9" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
+              <caret line="5" column="70" selection-start-line="5" selection-start-column="70" selection-end-line="5" selection-end-column="70" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="bower.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bower.json">
+      <file leaf-file-name="box-angular.jade" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/views/partials/box-angular.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.576923" vertical-offset="0" max-vertical-offset="272">
-              <caret line="7" column="12" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="12" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/package.json">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.5384617" vertical-offset="0" max-vertical-offset="748">
-              <caret line="10" column="29" selection-start-line="10" selection-start-column="29" selection-end-line="10" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.6672444" vertical-offset="227" max-vertical-offset="850">
+              <caret line="36" column="126" selection-start-line="36" selection-start-column="94" selection-end-line="36" selection-end-column="126" />
               <folding />
             </state>
           </provider>
@@ -101,21 +84,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server.js">
+      <file leaf-file-name="MainCtrl.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/js/controllers/MainCtrl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="125" max-vertical-offset="1496">
-              <caret line="12" column="36" selection-start-line="12" selection-start-column="36" selection-end-line="12" selection-end-column="36" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="170">
+              <caret line="0" column="24" selection-start-line="0" selection-start-column="16" selection-end-line="0" selection-end-column="24" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="db.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config/db.js">
+      <file leaf-file-name="box.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/css/box.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="221">
-              <caret line="3" column="13" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="85" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="871" max-vertical-offset="1496">
+              <caret line="63" column="27" selection-start-line="0" selection-start-column="0" selection-end-line="82" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -124,18 +107,28 @@
       <file leaf-file-name="routes.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/routes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="276" max-vertical-offset="969">
-              <caret line="46" column="123" selection-start-line="46" selection-start-column="116" selection-end-line="46" selection-end-column="123" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="272" max-vertical-offset="1054">
+              <caret line="39" column="23" selection-start-line="39" selection-start-column="23" selection-end-line="39" selection-end-column="23" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SideBarCtrl.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/controllers/SideBarCtrl.js">
+      <file leaf-file-name="bracketRoutes.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/js/bracketRoutes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1630" max-vertical-offset="2567">
-              <caret line="125" column="94" selection-start-line="125" selection-start-column="94" selection-end-line="125" selection-end-column="94" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="646">
+              <caret line="22" column="45" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="45" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="bracket.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/js/bracket.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="119">
+              <caret line="0" column="100" selection-start-line="0" selection-start-column="100" selection-end-line="0" selection-end-column="100" />
               <folding />
             </state>
           </provider>
@@ -149,7 +142,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/task.js" />
         <option value="$PROJECT_DIR$/public/javascripts/controllers.js" />
         <option value="$PROJECT_DIR$/test/unit/controllersSpec.js" />
         <option value="$PROJECT_DIR$/test/karma.conf.js" />
@@ -183,14 +175,10 @@
         <option value="$PROJECT_DIR$/gulpfile.js" />
         <option value="$PROJECT_DIR$/public/js/appRoutes.js" />
         <option value="$PROJECT_DIR$/public/js/app.js" />
-        <option value="$PROJECT_DIR$/public/js/bracketRoutes.js" />
         <option value="$PROJECT_DIR$/public/js/dashboard.min.js" />
-        <option value="$PROJECT_DIR$/public/js/bracket.js" />
         <option value="$PROJECT_DIR$/public/js/nonangular/sidebar.js" />
-        <option value="$PROJECT_DIR$/views/index.jade" />
         <option value="$PROJECT_DIR$/public/css/sidebar.css" />
         <option value="$PROJECT_DIR$/public/js/controllers/SideBarCtrl.js" />
-        <option value="$PROJECT_DIR$/app/routes.js" />
         <option value="$PROJECT_DIR$/public/css/box.css" />
         <option value="$PROJECT_DIR$/views/partials/box.jade" />
         <option value="$PROJECT_DIR$/views/partials/bracket.jade" />
@@ -199,6 +187,12 @@
         <option value="$PROJECT_DIR$/config/db.js" />
         <option value="$PROJECT_DIR$/server.js" />
         <option value="$PROJECT_DIR$/public/js/controllers/BoxCtrl.js" />
+        <option value="$PROJECT_DIR$/views/index.jade" />
+        <option value="$PROJECT_DIR$/public/js/bracketRoutes.js" />
+        <option value="$PROJECT_DIR$/public/js/bracket.js" />
+        <option value="$PROJECT_DIR$/app/routes.js" />
+        <option value="$PROJECT_DIR$/public/js/controllers/BoxCtrlAngular.js" />
+        <option value="$PROJECT_DIR$/views/partials/box-angular.jade" />
       </list>
     </option>
   </component>
@@ -206,10 +200,10 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="2249" />
+    <option name="y" value="1" />
     <option name="width" value="1936" />
-    <option name="height" value="1066" />
+    <option name="height" value="1050" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -319,6 +313,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="march_madness" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="march_madness" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="services" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -459,6 +475,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\luke.li\Google Drive\javascript\march_madness\public\js\controllers" />
+      <recent name="C:\Users\luke.li\Google Drive\javascript\march_madness\views\partials" />
       <recent name="C:\Users\luke.li\Google Drive\javascript\march_madness\public\javascripts\services" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -759,7 +777,7 @@
       <workItem from="1425503010733" duration="56000" />
       <workItem from="1425504298660" duration="13469000" />
       <workItem from="1425538248533" duration="34927000" />
-      <workItem from="1425604816793" duration="7811000" />
+      <workItem from="1425604816793" duration="16977000" />
     </task>
     <task id="LOCAL-00001" summary="finalyl got it to work">
       <created>1425427629378</created>
@@ -807,7 +825,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="73218000" />
+    <option name="totallyTimeSpent" value="82384000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -830,8 +848,8 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1066" extended-state="7" />
-    <editor active="true" />
+    <frame x="2249" y="1" width="1936" height="1050" extended-state="0" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -843,9 +861,9 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32919255" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31764707" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3262032" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3540107" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.31764707" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.34167573" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34300518" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25053304" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -922,35 +940,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/gulpfile.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="748" max-vertical-offset="2074">
-          <caret line="58" column="42" selection-start-line="58" selection-start-column="42" selection-end-line="58" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/index.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="606" max-vertical-offset="1139">
-          <caret line="23" column="28" selection-start-line="23" selection-start-column="28" selection-end-line="23" selection-end-column="28" />
-          <folding>
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/controllers/BoxCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1020" max-vertical-offset="1394">
@@ -1027,20 +1016,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="816">
           <caret line="33" column="22" selection-start-line="33" selection-start-column="22" selection-end-line="33" selection-end-column="22" />
-          <folding>
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1086,6 +1062,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="119">
           <caret line="0" column="29" selection-start-line="0" selection-start-column="29" selection-end-line="1" selection-end-column="60" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1093,6 +1070,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="391" max-vertical-offset="561">
           <caret line="23" column="11" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="11" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1108,20 +1086,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="187">
           <caret line="3" column="11" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="11" />
-          <folding>
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1190,20 +1155,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/bracketRoutes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="561">
-          <caret line="23" column="11" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/bracket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="119">
-          <caret line="1" column="62" selection-start-line="1" selection-start-column="62" selection-end-line="1" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/nonangular/sidebar.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="621">
@@ -1231,43 +1182,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="748" max-vertical-offset="2074">
           <caret line="58" column="42" selection-start-line="58" selection-start-column="42" selection-end-line="58" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/index.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="589" max-vertical-offset="1139">
-          <caret line="22" column="28" selection-start-line="22" selection-start-column="28" selection-end-line="22" selection-end-column="28" />
-          <folding>
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1425653865333" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/css/box.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="871" max-vertical-offset="1496">
-          <caret line="81" column="30" selection-start-line="81" selection-start-column="30" selection-end-line="81" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/routes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="276" max-vertical-offset="969">
-          <caret line="46" column="123" selection-start-line="46" selection-start-column="116" selection-end-line="46" selection-end-column="123" />
           <folding />
         </state>
       </provider>
@@ -1328,6 +1242,56 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/services/BoxService.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="170">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/angular-ui-router.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-3.520064" vertical-offset="2193" max-vertical-offset="72029">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/bracket.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="623">
+          <caret line="0" column="100" selection-start-line="0" selection-start-column="100" selection-end-line="0" selection-end-column="100" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/controllers/MainCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="170">
+          <caret line="0" column="24" selection-start-line="0" selection-start-column="16" selection-end-line="0" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/bracketRoutes.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="646">
+          <caret line="22" column="45" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/routes.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="272" max-vertical-offset="1054">
+          <caret line="39" column="23" selection-start-line="39" selection-start-column="23" selection-end-line="39" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/views/partials/box.jade">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="731">
@@ -1336,10 +1300,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/views/index.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="533" max-vertical-offset="1156">
+          <caret line="62" column="34" selection-start-line="62" selection-start-column="34" selection-end-line="62" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/controllers/BoxCtrlAngular.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
+          <caret line="5" column="70" selection-start-line="5" selection-start-column="70" selection-end-line="5" selection-end-column="70" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/controllers/BoxCtrl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6655738" vertical-offset="53" max-vertical-offset="1411">
-          <caret line="27" column="61" selection-start-line="27" selection-start-column="61" selection-end-line="27" selection-end-column="61" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1411">
+          <caret line="4" column="20" selection-start-line="0" selection-start-column="0" selection-end-line="77" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/css/box.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="871" max-vertical-offset="1496">
+          <caret line="63" column="27" selection-start-line="0" selection-start-column="0" selection-end-line="82" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/partials/box-angular.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6672444" vertical-offset="227" max-vertical-offset="850">
+          <caret line="36" column="126" selection-start-line="36" selection-start-column="94" selection-end-line="36" selection-end-column="126" />
           <folding />
         </state>
       </provider>
