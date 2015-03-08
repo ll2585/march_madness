@@ -34,9 +34,21 @@ module.exports = function(app) {
 			}
 		}
 	}
-	shuffle(boxes);
+	shuffle(boxes); //split it up into 10 arrays of size 10
+	var players = [];
+	var temp = [];
+	for(var i = 0; i < boxes.length; i++){
+		if((i%10)==0){
+			if(temp.length == 10){
+				players.push(temp);
+			}
+			var temp = [];
+		}
+		temp.push(boxes[i]);
+	}
+	players.push(temp);
 	app.get('/boxes.json', function(req, res, next) {
-		var json = {winning_numbers: winning_numbers, losing_numbers: losing_numbers, users: users};
+		var json = {winning_numbers: winning_numbers, losing_numbers: losing_numbers, users: players};
 		res.json(json);
 	});
 	app.all('/*', function(req, res, next) {

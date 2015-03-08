@@ -1,0 +1,45 @@
+
+
+.row-1-spacer{
+    background-color: forestgreen;
+}
+
+.winning-label{
+    background-color: firebrick;
+    color: #f8f8ff;
+}
+.row-2-spacer{
+    background-color: blue;
+    height: 50px;
+}
+#losing-label{
+     background-color:gold;
+ }
+.losing-label{
+    background-color:gold;
+}
+
+.table>tbody>tr>td{
+    padding-left: 1px;
+    padding-right: 1px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.table{
+    box-sizing: border-box;
+}
+
+.round{
+    border: 1px solid black;
+    transform: rotate(-90deg);
+    background-color: aqua;
+}
+
+.num{
+    background-color: deeppink;
+}
+
+.you{
+    background-color: #add8e6;
+}

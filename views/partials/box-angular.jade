@@ -7,11 +7,19 @@
 				td(colspan=7) spacer
 				td(colspan=10) Winning Team
 			-var games = ['Championship', 'Finals', 'Semifinals', 'Quarterfinals', 'Round of 32', 'Round of 64'];
-			tr(ng-repeat="row in winning_team")
+			tr(ng-repeat="row in winning_team" class="winning-rows")
 				td(ng-if="$index == 0" rowspan=16, id='losing-label')
 				td(ng-if="$index == 0" colspan=6, rowspan=6, id='big-space')
-				td {{row}}
-				td What
+				td(id="winning-team-row-{{$index}}") {{row[0]}}
+				td(ng-repeat="cell in row" ng-if="$index > 0") {{cell}}
+			tr(class="losing-cols")
+				td(ng-repeat="cell in losing_team" id="losing-team-col-{{$index}}") {{cell[0]}}
+				td(ng-repeat="p in players[0] track by $index" ng-class="{'you': '{{p}}'=='Luke'}") {{p}}
+			tr(ng-repeat="i in [1,2,3,4,5,6,7,8,9]" class="losing-cols")
+				td(ng-repeat="cell in losing_team") {{cell[i]}}
+				td(ng-repeat="p in players[i] track by $index" ng-class="{'you': '{{p}}'=='Luke'}") {{p}}
+		rotate-me(id="losing-team-label", my-parent='losing-label') Losing Team
+		draw-line(ng-repeat="i in [0,1,2,3,4,5]" from="winning-team-row-{{$index}}" to="losing-team-col-{{$index}}") {{6-$index}}
 
 		//
 			-for(var i = 0; i < games.length; i++)
@@ -41,4 +49,4 @@
 		div(class="forty-five-degrees", rotate-me-45='', my-parent='round-4', my-offset='4', style="left: 600px; top: 410px") 2
 		div(class="forty-five-degrees", rotate-me-45='', my-parent='round-5', my-offset='5', style="left: 660px; top: 410px") 1
 
-link(rel='stylesheet', href='/css/box.css')
+link(rel='stylesheet', href='/css/box-angular.css')

@@ -5,7 +5,7 @@ angular.module('SideBarCtrl',  ['ui.bootstrap']).controller('SideBarController',
 
 	$scope.tabs = [
 		{ link : '/bracket', label : 'Bracket', class: 'glyphicon glyphicon-tasks', alignTo: 'bracket', myColor: "red" },
-		{ link : '/box', label : 'Box', class: 'glyphicon glyphicon-th', alignTo: 'box', myColor: "blue" },
+		{ link : '/box-angular', label : 'Box', class: 'glyphicon glyphicon-th', alignTo: 'box', myColor: "blue" },
 		{ link : '/minigame', label : 'MiniGame', class:'glyphicon glyphicon-user', alignTo: 'minigame', myColor: "green" },
 		{ link : '/achievements', label : 'Achievements', class:'glyphicon glyphicon-cup', alignTo: 'achievements', myColor: "green" }
 	];
