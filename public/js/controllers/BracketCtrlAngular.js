@@ -18,13 +18,16 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 		var team_id = Math.pow(2,round) + (2*matchup) + (team_num-1);
 		return ($scope.data['west']['tree'][team_id]['name']);
 	};
+	$scope.removeFromTop=function(id, top_node){
+		console.log(top_node);
+	};
 	$scope.moveTop=function(round, matchup, team_num){
 		var team_id = Math.pow(2,round) + (2*matchup) + (team_num-1);
 		var top_node = $scope.data['west']['tree'][team_id]['top'];
 		var team_name = $scope.data['west']['tree'][team_id]['name'];
 		$scope.data['west']['tree'][top_node]['name'] = team_name;
 		var other_team_id = top_node['left'] == team_id ? top_node['right'] : top_node['left'];
-		$scope.removeFromTop(other_team_id);
+		$scope.removeFromTop(other_team_id, top_node);
 	};
 	$scope.canClick=function(round, matchup, team_num){
 		var team_id = Math.pow(2,round) + (2*matchup) + (team_num-1);

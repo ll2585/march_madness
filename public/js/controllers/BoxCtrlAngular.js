@@ -23,6 +23,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 				$timeout(function () {
 					var myDimens = element[0].getBoundingClientRect();
 					var parent = angular.element(document.querySelector('#' + attrs.myParent));
+					console.log(parent);
 					var parentDimens = parent[0].getBoundingClientRect();
 					var myNewHeight = myDimens.height;
 					element.css({
@@ -31,7 +32,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 						'transform': 'rotate(-90deg)',
 						'transform-origin': 'left top'
 					});
-				}, 0);
+				}, 300);
 			}, 0);
 		}
 	}
@@ -67,18 +68,16 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 				'transform': 'rotate(' + angle + 'rad)',
 				'transform-origin': 'left top'
 			});
-			console.log(to_elem[0].offsetTop);
-			//element.text(required_padding);
 				}, 10);
 			}, 0);
 		}
 
 	};
 
-}).directive('losingTeamColumn', function() {
+}).directive('thisTable', function() {
 
 	return {
-		restrict: 'A',
-		template: '<rowspan="16" id="losing-label" style="width: 20px;">'
+		restrict: 'E',
+		template: '<table><tr><td>WAT</td></tr>'
 	}
 });
