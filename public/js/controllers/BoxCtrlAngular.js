@@ -12,6 +12,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 
 	};
 	$scope.tagline = 'The square root of life is pi!';
+	$scope.losing_label = "losing-label";
 	$scope.init();
 
 }]).directive('rotateMe', function($timeout) {
@@ -74,4 +75,10 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 
 	};
 
+}).directive('losingTeamColumn', function() {
+
+	return {
+		restrict: 'A',
+		template: '<rowspan="16" id="losing-label" style="width: 20px;">'
+	}
 });
