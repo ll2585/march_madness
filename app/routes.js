@@ -1,3 +1,5 @@
+var Bracket      = require('.././Bracket.js');
+
 module.exports = function(app) {
 	function shuffle(array) {
 		var currentIndex = array.length, temporaryValue, randomIndex ;
@@ -19,10 +21,13 @@ module.exports = function(app) {
 	}
 	var winning_numbers = [];
 	var losing_numbers = [];
+
 	for(var i = 0; i < 6; i++) {
 		winning_numbers.push(shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]));
 		losing_numbers.push(shuffle([0, 9, 8, 7, 6, 5, 4, 3, 2, 1]));
 	}
+
+	var west_bracket = new Bracket();
 	var users = ["Luke", "Dean", "Liana", "Jenny", "Steve", "Jolyn"];
 	var boxes = [];
 	while(boxes.length < 100){
@@ -51,6 +56,28 @@ module.exports = function(app) {
 		var json = {winning_numbers: winning_numbers, losing_numbers: losing_numbers, users: players};
 		res.json(json);
 	});
+
+	var west_bracket = new Bracket();
+	var east_bracket = new Bracket();
+	var north_bracket = new Bracket();
+	var south_bracket = new Bracket();
+	var championship_bracket = new Bracket();
+	west_bracket.makeTree(31);
+	east_bracket.makeTree(31);
+	north_bracket.makeTree(31);
+	south_bracket.makeTree(31);
+	championship_bracket.makeTree(7);
+	var tournament = {};
+	for(var i = 0; i < 16; i++){
+		west_bracket.insertToBottom("Team " + i);
+	}
+	tournament['west'] = west_bracket;
+	tournament['championship'] = championship_bracket;
+	app.get('/brackets.json', function(req, res, next) {
+		var json = tournament;
+		res.json(json);
+	});
+
 	app.all('/*', function(req, res, next) {
 		var arbitraryUrls = ['partials', 'api'];
 		if (arbitraryUrls.indexOf(req.url.split('/')[1]) > -1) {

@@ -18,8 +18,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 	return {
 		restrict: 'E',
 		link: function (scope, element, attrs) {
-			$timeout(function () {
-				$timeout(function () {
+			angular.element(document).ready(function() {
 					var myDimens = element[0].getBoundingClientRect();
 					var parent = angular.element(document.querySelector('#' + attrs.myParent));
 					var parentDimens = parent[0].getBoundingClientRect();
@@ -30,8 +29,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 						'transform': 'rotate(-90deg)',
 						'transform-origin': 'left top'
 					});
-				}, 0);
-			}, 0);
+				})
 		}
 	}
 }).directive('drawLine', function($timeout) {

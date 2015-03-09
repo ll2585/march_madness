@@ -1,54 +1,35 @@
 .jumbotron.text-center
 	h1 Geek City
-	p {{tagline}}
+
 	div.container
-		-var teams = [];
-		-for (var i = 0; i < 64; i++)
-			-teams.push("Team " + i);
-		div(class="championship-bracket")
-			div.row
-				div.col-xs-2.spacer spacer
-				div.col-xs-8.final-four#champion
-				div.col-xs-2.spacer spacer
-			div.row
-				div.col-xs-1.spacer spacer
-				div.col-xs-3.final-four#finals-1(ng-click="select($event, {round:6,matchup:1, region:1, team: 1})")
-				div.col-xs-4.spacer spacer
-				div.col-xs-3.final-four#finals-2(ng-click="select($event, {round:6,matchup:1, region:1, team: 2})")
-				div.col-xs-1.spacer spacer
-			div.row
-				div.col-xs-2.final-four#region-1-winner(ng-click="select($event, {round:5,matchup:1, region:1, team: 1})")
-				div.col-xs-1.spacer spacer
-				div.col-xs-2.final-four#region-3-winner(ng-click="select($event, {round:5,matchup:1, region:3, team: 2})")
-				div.col-xs-2.spacer spacer
-				div.col-xs-2.final-four#region-2-winner(ng-click="select($event, {round:5,matchup:2, region:2, team: 1})")
-				div.col-xs-1.spacer spacer
-				div.col-xs-2.final-four#region-4-winner(ng-click="select($event, {round:5,matchup:2, region:4, team: 2})")
-		-var base_height = 20;
-		-for (var k = 0; k < 4; k++)
-			-if(k==2)
-				div(class="buffer")
-			-var onRight = k % 2 == 1;
-			div(class="region region-" + k)
-				-for (var i = 0; i < 4; i++)  //-four rounds
-					div(class="round round-" + (i+1))
-						-for (var j = 0; j < (8/Math.pow(2,i)); j++)  //-0:8, 1:4, 2:2, 3:1
-							div(class="matchup matchup-" + (j+1))
-								.firstTeam(style='height:'+base_height*(Math.pow(2,i))+'px;')
-									-var div_class = i == 0 ? "team team-selectable" :  "team";
-									div(class =div_class, ng-click="select($event, {round:"+(i+1)+",matchup:"+(j+1)+", region:" + (k+1 )+ ",team: 1})",id="team-1-region-" + (k+1)+"-round-"+(i+1)+"-matchup-"+(j+1))
-										-if(i==0)
-											=teams[2*j]
-								-var firstSpacerClass = onRight ? 'firstSpacer-right' : 'firstSpacer-left';
-								-var secondTeamClass = onRight ? 'secondTeam-right' : 'secondTeam-left';
-								div(class = "firstSpacer " + firstSpacerClass, style='height:'+base_height*(Math.pow(2,i))+'px;')  
-								div(class= "secondTeam " + secondTeamClass, style='height:'+base_height*(Math.pow(2,i))+'px;')
-									-var div_class = i == 0 ? "team team-selectable" :  "team";
-									div(class =div_class, ng-click="select($event, {round:"+(i+1)+",matchup:"+(j+1)+", region:" + (k+1 )+", team: 2})",id="team-2-region-" + (k+1) +"-round-"+(i+1)+"-matchup-"+(j+1))
-										-if(i==0)
-											=teams[2*j+1]
-								.secondSpacer(style='height:'+base_height*(Math.pow(2,i))+'px;')  
-
-
-
+		div(class="region region-0")
+			div(ng-repeat="i in [0,1,2,3]" class="round round-{{$index}}")
+				div(ng-repeat="j in matchupCount($index) track by $index" class="matchup matchup-{{$index}}")
+					//starts with 2^i and then goes to 2^(i+1)-1 but in reverse; the 1 in the function is whether it is first team or second team
+					div.firstTeam(style='height: {{getNewHeight($parent.$index)}}px;', ng-click="moveTop((4-$parent.$index), $index, 1)")
+						div(class = "team", ng-class="{'team-selectable': canClick((4-$parent.$index), $index, 1), 'team-chosen-to-lose':  choseToLose((4-$parent.$index), $index, 1)  } ") {{getTeamName((4-$parent.$index), $index, 1)}}
+					div(class="firstSpacer firstSpacer-left", style = "height: {{getNewHeight($parent.$index)}}px;")
+					div.secondTeam.secondTeam-left(style='height: {{getNewHeight($parent.$index)}}px;', ng-click="moveTop((4-$parent.$index), $index, 2)")
+						div(class = "team", ng-class="{'team-selectable': canClick((4-$parent.$index), $index, 2), 'team-chosen-to-lose':  choseToLose((4-$parent.$index), $index, 2) } ") {{getTeamName((4-$parent.$index), $index, 2)}}
+					div(class="secondSpacer", style = "height: {{getNewHeight($parent.$index)}}px;")
+		//
+			-for (var i = 0; i < 4; i++)  //-four rounds
+			div(class="round round-" + (i+1))
+				-for (var j = 0; j < (8/Math.pow(2,i)); j++)  //-0:8, 1:4, 2:2, 3:1
+				div(class="matchup matchup-" + (j+1))
+					.firstTeam(style='height:'+base_height*(Math.pow(2,i))+'px;')
+						-var div_class = i == 0 ? "team team-selectable" :  "team";
+						div(class =div_class, ng-click="select($event, {round:"+(i+1)+",matchup:"+(j+1)+", region:" + (k+1 )+ ",team: 1})",id="team-1-region-" + (k+1)+"-round-"+(i+1)+"-matchup-"+(j+1))
+							-if(i==0)
+								=teams[2*j]
+					-var firstSpacerClass = onRight ? 'firstSpacer-right' : 'firstSpacer-left';
+					-var secondTeamClass = onRight ? 'secondTeam-right' : 'secondTeam-left';
+					div(class = "firstSpacer " + firstSpacerClass, style='height:'+base_height*(Math.pow(2,i))+'px;')  
+					div(class= "secondTeam " + secondTeamClass, style='height:'+base_height*(Math.pow(2,i))+'px;')
+						-var div_class = i == 0 ? "team team-selectable" :  "team";
+						div(class =div_class, ng-click="select($event, {round:"+(i+1)+",matchup:"+(j+1)+", region:" + (k+1 )+", team: 2})",id="team-2-region-" + (k+1) +"-round-"+(i+1)+"-matchup-"+(j+1))
+							-if(i==0)
+							=teams[2*j+1]
+					.secondSpacer(style='height:'+base_height*(Math.pow(2,i))+'px;')
+p {{data}}
 link(rel='stylesheet', href='/css/bracket.css')
