@@ -1,4 +1,6 @@
+
 angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope', '$http', function($scope, $http) {
+	$scope.winning_team = [1,2,3,4,5,6,7];
 	$scope.init = function(){
 		$http.get("/boxes.json").success(function(data){
 			$scope.json_data = data
@@ -18,11 +20,12 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 }]).directive('rotateMe', function($timeout) {
 	return {
 		restrict: 'E',
+		scope: false,
 		link: function (scope, element, attrs) {
 			$timeout(function () {
 				$timeout(function () {
 					var myDimens = element[0].getBoundingClientRect();
-					var parent = angular.element(document.querySelector('#' + attrs.myParent));
+					var parent = angular.element( document.querySelector( '#' + attrs.myParent ) );
 					console.log(parent);
 					var parentDimens = parent[0].getBoundingClientRect();
 					var myNewHeight = myDimens.height;
@@ -74,10 +77,4 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 
 	};
 
-}).directive('thisTable', function() {
-
-	return {
-		restrict: 'E',
-		template: '<table><tr><td>WAT</td></tr>'
-	}
 });

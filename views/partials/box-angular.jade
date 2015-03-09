@@ -21,7 +21,6 @@
 		rotate-me(id="losing-team-label", my-parent='losing-label') Losing Team
 		draw-line(ng-repeat="i in [0,1,2,3,4,5]" from="winning-team-row-{{$index}}" to="losing-team-col-{{$index}}") {{6-$index}}
 
-	this-table
 		//
 			-for(var i = 0; i < games.length; i++)
 				tr(id= 'round-' + i, height='34px')

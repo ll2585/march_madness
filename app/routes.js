@@ -70,8 +70,15 @@ module.exports = function(app) {
 	var tournament = {};
 	for(var i = 0; i < 16; i++){
 		west_bracket.insertToBottom("Team " + i);
+		east_bracket.insertToBottom("Team " + i);
+		north_bracket.insertToBottom("Team " + i);
+		south_bracket.insertToBottom("Team " + i);
+
 	}
 	tournament['west'] = west_bracket;
+	tournament['east'] = east_bracket;
+	tournament['south'] = south_bracket;
+	tournament['north'] = north_bracket;
 	tournament['championship'] = championship_bracket;
 	app.get('/brackets.json', function(req, res, next) {
 		var json = tournament;
