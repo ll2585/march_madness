@@ -67,3 +67,7 @@
 .region{
     position:relative;
 }
+
+.chosen-champion{
+    background-color: darkkhaki;
+}

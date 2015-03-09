@@ -18,6 +18,10 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 		return new Array(8/Math.pow(2,n));
 	};
 
+	$scope.championshipCount=function(n){
+		return new Array(3+2*n);
+	};
+
 	$scope.getNewHeight=function(i){
 		return $scope.base_height*(Math.pow(2,i));
 	};
@@ -57,9 +61,9 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 		}
 
 		if($scope.data[region]['tree'][top_node_id]['top']==null){ //champion
-
-			$scope.data["championship"]['tree'][regionID+4]['name'] = team_name;
+			console.log("CHAMPION");
 			console.log($scope.data["championship"]['tree'][regionID+4]);
+			$scope.data["championship"]['tree'][regionID+4]['name'] = team_name;
 		}
 
 	};
@@ -70,10 +74,13 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 		var i_have_name = cur_team['name'] != null;
 		var top_node_id = cur_team['top'];
 		var top_node;
-		if(top_node_id==null && region != 4){
-			top_node = $scope.data['championship']['tree'][regionID+4]
-		}else{
+		if(top_node_id==null && regionID != 4){
+			top_node = $scope.data['championship']['tree'][regionID+4];
+		}else if(top_node_id != null){
+
 			 top_node = $scope.data[region]['tree'][top_node_id];
+		}else{
+			return false;
 		}
 
 		var no_top_selected = top_node['name'] == null;
@@ -87,13 +94,33 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 		var i_have_name = cur_team['name'] != null;
 		var top_node_id = cur_team['top'];
 		var top_node;
-		if(top_node_id==null && region != 4){
+		if(top_node_id==null && regionID != 4){
 			top_node = $scope.data['championship']['tree'][regionID+4]
-		}else{
+		}else if(top_node_id != null){
 			top_node = $scope.data[region]['tree'][top_node_id];
+		}else{
+			return false;
 		}
 		var top_node_has_name = top_node['name'] != null;
 		var top_node_does_not_have_my_name = top_node['name'] != cur_team['name'];
 		return (i_have_name && top_node_does_not_have_my_name && top_node_has_name);
 	}
+
+	$scope.onboardingSteps = [
+		{
+			title: "Welcome!",
+			position: "centered",
+			description: "Welcome to my app!",
+			width: 300
+		},
+		{
+			title: "Account Setup",
+			position: "right",
+			description: "This is the form for configuring your account.",
+			attachTo: "#account_form",
+			position: "bottom"
+		}
+	];
+
+
 }]);
