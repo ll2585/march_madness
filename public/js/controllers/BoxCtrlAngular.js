@@ -68,7 +68,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 			});
 			console.log(to_elem[0].offsetTop);
 			//element.text(required_padding);
-				}, 0);
+				}, 10);
 			}, 0);
 		}
 
