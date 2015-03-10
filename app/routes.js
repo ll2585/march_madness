@@ -1,7 +1,8 @@
 var Bracket      = require('.././Bracket.js');
 var User     = require('./models/User.js');
 var jwt        = require("jsonwebtoken");
-
+var expressJwt = require('express-jwt');
+var secret = "SECRET TOKEN";
 module.exports = function(app) {
     app.post('/register', function(req, res){
         var username = req.body.username || '';
@@ -9,38 +10,40 @@ module.exports = function(app) {
         var passwordConfirmation = req.body.passwordConfirmation || '';
 
         if (username == '' || password == '' || password != passwordConfirmation) {
-            return res.send(400);
+            return res.sendStatus(400);
         }
 
         var user = new User();
         user.username = username;
         user.password = password;
-
+		console.log("REGISTERING");
+		console.log(username);
+		console.log(password);
         user.save(function(err) {
             if (err) {
                 console.log(err);
-                return res.send(500);
+                return res.sendStatus(500);
             }
 
             User.count(function(err, counter) {
                 if (err) {
                     console.log(err);
-                    return res.send(500);
+                    return res.sendStatus(500);
                 }
 
                 if (counter == 1) {
                     User.update({username:user.username}, {is_admin:true}, function(err, nbRow) {
                         if (err) {
                             console.log(err);
-                            return res.send(500);
+                            return res.sendStatus(500);
                         }
 
                         console.log('First user created as an Admin');
-                        return res.send(200);
+                        return res.sendStatus(200);
                     });
                 }
                 else {
-                    return res.send(200);
+                    return res.sendStatus(200);
                 }
             });
         });
@@ -49,34 +52,35 @@ module.exports = function(app) {
         if (req.user) {
 
             delete req.user;
-            return res.send(200);
+            return res.sendStatus(200);
         }
         else {
-            return res.send(401);
+            return res.sendStatus(401);
         }
     });
-    app.post('/signin', function(req, res) {
+    app.post('/login', function(req, res) {
         var username = req.body.username || '';
         var password = req.body.password || '';
 
         if (username == '' || password == '') {
-            return res.send(401);
+            return res.sendStatus(401);
         }
 
         User.findOne({username: username}, function (err, user) {
             if (err) {
                 console.log(err);
-                return res.send(401);
+                return res.sendStatus(401);
             }
 
             if (user == undefined) {
-                return res.send(401);
+				console.log("NOUSER");
+                return res.status(401).send("No user by that name.");
             }
 
             user.comparePassword(password, function(isMatch) {
                 if (!isMatch) {
                     console.log("Attempt failed to login with " + user.username);
-                    return res.send(401);
+                    return res.sendStatus(401);
                 }
 
                 var token = jwt.sign({id: user._id}, "SECRET TOKEN");
@@ -174,6 +178,7 @@ module.exports = function(app) {
 	});
 
 	app.all('/*', function(req, res, next) {
+		console.log("WE RENDERING" + req.path);
 		var arbitraryUrls = ['partials', 'api'];
 		if (arbitraryUrls.indexOf(req.url.split('/')[1]) > -1) {
 			next();
@@ -186,6 +191,7 @@ module.exports = function(app) {
 		res.render('.' + req.path, {winning_numbers: winning_numbers, losing_numbers: losing_numbers, boxes: boxes, curUser: "Luke"});
 	});
 	app.get('/partials/*', function(req, res, next) {
+		console.log("WE RENDERING" + req.path);
 		res.render('.' + req.path);
 	});
 };

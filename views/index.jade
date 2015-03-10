@@ -28,22 +28,33 @@ html
 		script(src='/js/controllers/MainCtrl.js')
 		script(src='/js/controllers/SideBarCtrl.js')
 		script(src='/js/controllers/BracketCtrlAngular.js')
+		script(src='/js/controllers/NavBarCtrl.js')
 
 		script(src='/js/angular-bootstrap-tour/bootstrap-tour.js')
 		script(src='/js/angular-bootstrap-tour/angular-bootstrap-tour.js')
 		link(rel='stylesheet', href='/css/angular-boostrap-tour/bootstrap-tour.css')
 
 		script(src='/js/angular-modal-service/angular-modal-service.js')
+		script(src='/js/message-center/message-center.js')
 		script(src='/js/ngStorage.js')
 		script(src='/js/dashboard.min.js')
 		script(src='/js/ui-bootstrap-tpls-0.12.1.min.js')
 		base(href="/")
 	body(ng-app="bracketApp")
+
 		div#page-wrapper.active
+			nav(class="navbar navbar-default navbar-fixed-top" ng-controller="NavBarController as sidebar")
+				div.container
+					div.navbar-header {{name}}
+					div#navbar.navbar-collapse.collapse
+						ul.nav.navbar-nav.navbar-right
+							li
+								a(href="/logout" ng-if="isLoggedIn") Logout
+
+
 			// Sidebar
 			#sidebar-wrapper.sidebar(ng-controller="SideBarController as sidebar")
 				#row
-					a(href="/me") ME
 					div(collapse-width='isCollapsed', class="column column_1 collapse")
 						ul.sidebar
 							li.sidebar-welcome Welcome Luke
@@ -64,7 +75,6 @@ html
 					li(ng-class='tabClass(tab)', ng-repeat='tab in tabs')
 						a(href='{{tab.link}}', ng-click='setSelectedTab(tab)', outer-tab, align-to='{{tab.alignTo}}', make-color = '{{tab.myColor}}')
 							span.menu-icon(class="{{tab.class}}")
-
 			div#page-content-wrapper
 				div.page-content.inset
 					div(ng-view='')

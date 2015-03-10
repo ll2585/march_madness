@@ -1,10 +1,10 @@
-angular.module('SideBarCtrl',  ['ui.bootstrap']).controller('SideBarController', ['$scope',  '$cookieStore', function($scope, $cookieStore) {
+angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideBarController', ['$scope',  '$cookieStore','UserService', 'AuthenticationService', function($scope, $cookieStore, UserService, AuthenticationService) {
 
     $scope.collapse = true;
 	$scope.isCollapsed = true;
-
+	$scope.name = true;
 	$scope.tabs = [
-		{ link : '/bracket', label : 'Bracket', class: 'glyphicon glyphicon-tasks', alignTo: 'bracket', myColor: "red" },
+		{ link : '/bracket-angular', label : 'Bracket', class: 'glyphicon glyphicon-tasks', alignTo: 'bracket', myColor: "red" },
 		{ link : '/box-angular', label : 'Box', class: 'glyphicon glyphicon-th', alignTo: 'box', myColor: "blue" },
 		{ link : '/minigame', label : 'MiniGame', class:'glyphicon glyphicon-user', alignTo: 'minigame', myColor: "green" },
 		{ link : '/achievements', label : 'Achievements', class:'glyphicon glyphicon-cup', alignTo: 'achievements', myColor: "green" }
