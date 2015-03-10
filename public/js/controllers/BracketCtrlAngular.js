@@ -1,10 +1,12 @@
-angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', ['$scope', '$http', function($scope, $http) {
+angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', ['$scope', '$rootScope', '$http', 'ModalService', function($scope, $rootScope, $http, ModalService) {
 	$scope.base_height = 20;
 	$http.get("/brackets.json").success(function(data){
 		$scope.data = data;
 	}).error(function(){
 		console.log("No data");
 	});
+
+    console.log($rootScope);
 
 	$scope.region_dict = {
 		"0": "west",
@@ -123,4 +125,25 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 	];
 
 
-}]);
+    ModalService.showModal({
+        templateUrl: "template.html",
+        controller: "ModalController"
+    }).then(function(modal) {
+        //it's a bootstrap element, use 'modal' to show it
+        modal.element.modal();
+        modal.close.then(function(result) {
+            if(result){
+                $rootScope.tour.restart();
+            }
+
+            console.log(result);
+        });
+    });
+
+}]).controller('ModalController', function($scope, close) {
+
+    $scope.close = function(result) {
+        close(result, 500); // close, but give 500ms for bootstrap to animate
+    };
+
+});

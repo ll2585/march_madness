@@ -29,10 +29,12 @@ html
 		script(src='/js/controllers/SideBarCtrl.js')
 		script(src='/js/controllers/BracketCtrlAngular.js')
 
-		script(src='/js/angular-ui-router.js')
-		script(src='/js/bootstrap-tour.js')
-		script(src='/js/angular-bootstrap-tour.js')
-		link(rel='stylesheet', href='/css/bootstrap-tour.css')
+		script(src='/js/angular-bootstrap-tour/bootstrap-tour.js')
+		script(src='/js/angular-bootstrap-tour/angular-bootstrap-tour.js')
+		link(rel='stylesheet', href='/css/angular-boostrap-tour/bootstrap-tour.css')
+
+		script(src='/js/angular-modal-service/angular-modal-service.js')
+		script(src='/js/ngStorage.js')
 		script(src='/js/dashboard.min.js')
 		script(src='/js/ui-bootstrap-tpls-0.12.1.min.js')
 		base(href="/")
@@ -41,6 +43,7 @@ html
 			// Sidebar
 			#sidebar-wrapper.sidebar(ng-controller="SideBarController as sidebar")
 				#row
+					a(href="/me") ME
 					div(collapse-width='isCollapsed', class="column column_1 collapse")
 						ul.sidebar
 							li.sidebar-welcome Welcome Luke
