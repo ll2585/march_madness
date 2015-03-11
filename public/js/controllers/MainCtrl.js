@@ -1,26 +1,47 @@
-angular.module('MainCtrl', ['bracketApp']).controller('MainController', ['$rootScope', '$scope', '$location', '$localStorage', '$window', 'UserService', 'AuthenticationService', '$http', 'messageCenterService', function($rootScope, $scope, $location, $localStorage, $window, UserService, AuthenticationService, $http, messageCenterService) {
+angular.module('MainCtrl', ['bracketApp']).controller('MainController', ['$rootScope', '$scope', '$location', '$localStorage', '$window', 'UserService', 'AuthenticationService', '$http', '$alert', '$cookieStore', 'userInfoFactory', function($rootScope, $scope, $location, $localStorage, $window, UserService, AuthenticationService, $http, $alert, $cookieStore, userInfoFactory) {
 
 	$scope.tagline = 'To the moon and back!';
+    $scope.show_sign_up = function(){
+        alert("SHOW");
+    }
 
     $scope.logIn = function logIn(username, password) {
-		var no_username = (username === undefined || username == '');
+        $scope.alert = {content: 'Best check yo self, you\'re not looking too good.', type: 'danger',
+            container: "#login-alert",
+            duration: 2};
+        var myAlert;
+        var no_username = (username === undefined || username == '');
 		var no_password = (password === undefined || password == '');
         if(no_username && no_password){
-			messageCenterService.add('danger', 'Please enter your information.', { timeout: 3000 });
+            $scope.alert.content = 'Please enter your information.';
+            myAlert = $alert($scope.alert);
+            myAlert.show();
+            console.log(myAlert);
 		}else if(no_password){
-			messageCenterService.add('danger', 'Please enter your username.', { timeout: 3000 });
+            $scope.alert.content = 'Please enter your password.';
+            myAlert = $alert($scope.alert);
+            myAlert.show();
 		}else if(no_username){
-			messageCenterService.add('danger', 'Please enter your password.', { timeout: 3000 });
+            $scope.alert.content = 'Please enter your username.';
+            myAlert = $alert($scope.alert);
+            myAlert.show();
 		}else if (!no_username && !no_password) {
             UserService.logIn(username, password).success(function(data) {
 				console.log("LIGGED INT");
                 AuthenticationService.isAuthenticated = true;
+                AuthenticationService.user = data.user.username;
+                AuthenticationService.userRole = data.user.role;
                 $window.sessionStorage.token = data.token;
+                $window.sessionStorage.user = data.user.username; // to fetch the user details on refresh
+                $window.sessionStorage.userRole = data.user.role; // to fetch the user details on refresh
 				console.log(AuthenticationService);
-                $location.path("/me");
+                $scope.getFlags();
+                $location.path("/");
             }).error(function(status, data) {
 				console.log("SOERROR");
-				messageCenterService.add('danger', status, { timeout: 3000 });
+                $scope.alert.content = status;
+                myAlert = $alert($scope.alert);
+                myAlert.show();
                 console.log(status);
                 console.log(data);
             });
@@ -33,7 +54,7 @@ angular.module('MainCtrl', ['bracketApp']).controller('MainController', ['$rootS
 			UserService.logOut().success(function(data) {
 				AuthenticationService.isAuthenticated = false;
 				delete $window.sessionStorage.token;
-				$location.path("/");
+				$location.path("/login");
 			}).error(function(status, data) {
 				console.log(status);
 				console.log(data);
@@ -44,34 +65,49 @@ angular.module('MainCtrl', ['bracketApp']).controller('MainController', ['$rootS
 		}
     }
 
-	$scope.register = function register(username, password, passwordConfirm) {
+	$scope.register = function register(username, email, name) {
 		if (AuthenticationService.isAuthenticated) {
-			$location.path("/me");
+			$location.path("/");
 		}
 		else {
-			UserService.register(username, password, passwordConfirm).success(function(data) {
+			UserService.register(username, email, name).success(function(data) {
 				$location.path("/login");
 			}).error(function(status, data) {
 				console.log(status);
 				console.log(data);
 			});
 		}
-	}
-
+	};
     $scope.token = $localStorage.token;
+    console.log($window.sessionStorage.data);
 
-}]).factory('UserService', function ($http) {
+
+
+}]).factory('UserService', function ($http, $window, AuthenticationService) {
 	return {
 		logIn: function(username, password) {
 			return $http.post('/login', {username: username, password: password});
 		},
 
 		logOut: function() {
-			return $http.get('/logout');
+            if (AuthenticationService.isAuthenticated) {
+
+                AuthenticationService.isAuthenticated = false;
+                delete AuthenticationService.user;
+                delete AuthenticationService.userRole;
+
+                delete $window.sessionStorage.token;
+                delete $window.sessionStorage.user;
+                delete $window.sessionStorage.userRole;
+
+                //$location.path("/login");
+                return $http.get('/logout');
+            }
+
 		},
 
-		register: function(username, password, passwordConfirmation) {
-			return $http.post( '/register', {username: username, password: password, passwordConfirmation: passwordConfirmation });
+		register: function(username, email, name) {
+			return $http.post( '/register', {username: username, email: email, name: name });
 		}
 	}
-});
+})

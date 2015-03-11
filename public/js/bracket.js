@@ -1,9 +1,17 @@
 angular.module('bracketApp', ['ngRoute', 'bracketRoutes', 'MainCtrl', 'BracketCtrl', 'BoxCtrlAngular', 'BracketCtrlAngular', 'NavBarCtrl', 'BracketService', 'BoxCtrl', 'BoxService', 'MiniGameCtrl', 'MiniGameService',
-    'SideBarCtrl', 'ui.bootstrap', 'ngCookies', 'bm.bsTour', 'angularModalService', 'ngStorage', 'MessageCenterModule'
-]).factory('AuthenticationService', function() {
+    'SideBarCtrl', 'ui.bootstrap', 'ngCookies', 'bm.bsTour', 'angularModalService', 'ngStorage', 'MessageCenterModule', 'mgcrea.ngStrap', 'MainPageCtrl'
+]).factory('AuthenticationService', function($window) {
 	var auth = {
 		isAuthenticated: false,
-		isAdmin: false
+		isAdmin: false,
+        check: function() {
+            if ($window.sessionStorage.token && $window.sessionStorage.user) {
+                this.isLogged = true;
+            } else {
+                this.isLogged = false;
+                delete this.user;
+            }
+        }
 	}
 
 	return auth;

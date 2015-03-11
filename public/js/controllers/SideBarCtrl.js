@@ -1,5 +1,15 @@
-angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideBarController', ['$scope',  '$cookieStore','UserService', 'AuthenticationService', function($scope, $cookieStore, UserService, AuthenticationService) {
-
+angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideBarController', ['$scope',  '$window','UserService', 'AuthenticationService', '$rootScope', function($scope, $window, UserService, AuthenticationService, $rootScope) {
+    if($window.sessionStorage.token){
+        AuthenticationService.isAuthenticated = true;
+    }else{
+        AuthenticationService.isAuthenticated = false;
+    }
+    $scope.isLoggedIn = AuthenticationService.isAuthenticated;
+    $scope.$watch(function(){
+        return AuthenticationService.isAuthenticated;
+    }, function (newVal, oldVal) {
+        $scope.isLoggedIn = AuthenticationService.isAuthenticated;
+    });
     $scope.collapse = true;
 	$scope.isCollapsed = true;
 	$scope.name = true;

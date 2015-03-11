@@ -133,7 +133,10 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
         modal.element.modal();
         modal.close.then(function(result) {
             if(result){
-                $rootScope.tour.restart();
+                console.log($rootScope);
+                $rootScope.$on('start-tour', function(event, obj){
+                    obj.tour.restart();
+                });
             }
 
             console.log(result);

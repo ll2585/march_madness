@@ -164,7 +164,9 @@
         self.init = function (options) {
             options.steps = orderSteps(steps);
             tour = new Tour(options);
-			$rootScope.tour = tour;
+            $rootScope.$emit('start-tour', {
+                tour: tour
+            });
             return tour;
         };
 

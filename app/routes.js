@@ -2,23 +2,26 @@ var Bracket      = require('.././Bracket.js');
 var User     = require('./models/User.js');
 var jwt        = require("jsonwebtoken");
 var expressJwt = require('express-jwt');
-var secret = "SECRET TOKEN";
+var secret = require('./secret.js');
+
+var api = require('./api.js');
 module.exports = function(app) {
     app.post('/register', function(req, res){
         var username = req.body.username || '';
-        var password = req.body.password || '';
-        var passwordConfirmation = req.body.passwordConfirmation || '';
+        var email = req.body.email || '';
+        var name = req.body.name || '';
 
-        if (username == '' || password == '' || password != passwordConfirmation) {
+        if (username == '' || email == '' || name == '') {
             return res.sendStatus(400);
         }
 
         var user = new User();
         user.username = username;
-        user.password = password;
+        user.email = email;
+        user.name = name;
 		console.log("REGISTERING");
 		console.log(username);
-		console.log(password);
+		console.log(name);
         user.save(function(err) {
             if (err) {
                 console.log(err);
@@ -73,24 +76,38 @@ module.exports = function(app) {
             }
 
             if (user == undefined) {
-				console.log("NOUSER");
                 return res.status(401).send("No user by that name.");
             }
 
             user.comparePassword(password, function(isMatch) {
                 if (!isMatch) {
                     console.log("Attempt failed to login with " + user.username);
-                    return res.sendStatus(401);
+                    return res.status(401).send("Incorrect password.");
                 }
 
-                var token = jwt.sign({id: user._id}, "SECRET TOKEN");
+                var token = jwt.sign({id: user._id}, secret());
 
-                return res.json({token:token});
+                return res.json({token:token, user: user});
             });
 
         });
     });
 
+    app.get('/getFlags', function(req, res){
+        var username = req.query.username;
+        var token = req.query.token;
+        var decoded = jwt.verify(token, secret());
+         User.findOne({username: username}, function (err, user) {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(401);
+            }
+            if(user._id==decoded.id){
+                var skipped_main_page = user.skipped_main_page === undefined;
+                return res.json({skipped_main_page:skipped_main_page});
+            }
+        });
+    });
 
 
 	function shuffle(array) {

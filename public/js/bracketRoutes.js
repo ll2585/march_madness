@@ -4,8 +4,9 @@ angular.module('bracketRoutes', []).config(['$routeProvider', '$locationProvider
 
 		// home page
 		.when('/', {
-			templateUrl: 'partials/home.html',
-			controller: 'MainController'
+			templateUrl: 'partials/home',
+			controller: 'MainPageController',
+            access: { requiredAuthentication: true }
 		})
 
 		.when('/bracket', {
@@ -29,32 +30,17 @@ angular.module('bracketRoutes', []).config(['$routeProvider', '$locationProvider
 			controller: 'BracketControllerAngular',
 			access: { requiredAuthentication: true }
 		})
-
         .when('/minigame', {
             templateUrl: 'partials/minigame',
             controller: 'MiniGameController',
 			access: { requiredAuthentication: true }
         })
-        .when('/login', {
-            templateUrl: 'partials/signin.html',
-            controller: 'MainController'
-        })
-        .when('/register', {
-                templateUrl: 'partials/signup.html',
-                controller: 'MainController'
-	   })
-		.when('/logout', {
-			templateUrl: 'partials/logout.html',
-			controller: 'MainController',
-			access: { requiredAuthentication: true }
+		.when('/login', {
+			templateUrl: 'partials/login',
+			controller: 'MainController'
 		})
-		.when('/me', {
-            templateUrl: 'partials/me.html',
-            controller: 'MainController',
-			access: { requiredAuthentication: true }
-        })
         .otherwise({
-            redirectTo: '/'
+            redirectTo: '/login'
         });
 
 	$locationProvider.html5Mode(true);
@@ -62,6 +48,7 @@ angular.module('bracketRoutes', []).config(['$routeProvider', '$locationProvider
 }]).config(function ($httpProvider) {
     $httpProvider.interceptors.push('TokenInterceptor');
 }).run(function($rootScope, $location, $window, AuthenticationService) {
+    AuthenticationService.check();
     $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
 		console.log("WE LOOKING");
 		console.log(AuthenticationService);
@@ -71,7 +58,21 @@ angular.module('bracketRoutes', []).config(['$routeProvider', '$locationProvider
             && !AuthenticationService.isAuthenticated && !$window.sessionStorage.token) {
 			console.log("REROOT BITCH");
             $location.path("/login");
+        }else {
+            // check if user object exists else fetch it. This is incase of a page refresh
+            if (!AuthenticationService.user) AuthenticationService.user = $window.sessionStorage.user;
+            if (!AuthenticationService.userRole) AuthenticationService.userRole = $window.sessionStorage.userRole;
         }
 
+
+    });
+
+    $rootScope.$on('$routeChangeSuccess', function(event, nextRoute, currentRoute) {
+        $rootScope.showMenu = AuthenticationService.isAuthenticated;
+        $rootScope.role = AuthenticationService.userRole;
+        // if the user is already logged in, take him to the home page
+        if (AuthenticationService.isAuthenticated == true && $location.path() == '/login') {
+            $location.path('/');
+        }
     });
 });

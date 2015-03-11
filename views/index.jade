@@ -14,6 +14,8 @@ html
 		script(src='https://code.angularjs.org/1.3.14/angular-resource.js')
 		script(src='https://code.angularjs.org/1.3.14/angular-route.js')
 		script(src='https://code.angularjs.org/1.3.14/angular-cookies.js')
+		script(src='//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.min.js')
+		script(src='//cdnjs.cloudflare.com/ajax/libs/angular-strap/2.1.2/angular-strap.tpl.min.js')
 
 		script(src='/js/bracket.js')
 		script(src='/js/nonangular/sidebar.js')
@@ -27,6 +29,7 @@ html
 		script(src='/js/services/MiniGameService.js')
 		script(src='/js/controllers/MainCtrl.js')
 		script(src='/js/controllers/SideBarCtrl.js')
+		script(src='/js/controllers/MainPageCtrl.js')
 		script(src='/js/controllers/BracketCtrlAngular.js')
 		script(src='/js/controllers/NavBarCtrl.js')
 
@@ -49,32 +52,36 @@ html
 					div#navbar.navbar-collapse.collapse
 						ul.nav.navbar-nav.navbar-right
 							li
-								a(href="/logout" ng-if="isLoggedIn") Logout
+								span(class="glyphicon glyphicon-question-sign", ng-click="startTutorial()")
+									a(href='') Start Tutotirla
+							li
+								a(href="/" ng-if="isLoggedIn" ng-click='logOut()') Logout
 
 
 			// Sidebar
 			#sidebar-wrapper.sidebar(ng-controller="SideBarController as sidebar")
-				#row
-					div(collapse-width='isCollapsed', class="column column_1 collapse")
-						ul.sidebar
-							li.sidebar-welcome Welcome Luke
-							li.sidebar-title#bracket Bracket
-							li.sidebar-list Your Standings
-							li.sidebar-list Scoreboard
-							li.sidebar-title#box Box
-							li.sidebar-list Your Standings
-							li.sidebar-title#minigame MiniGame
-							li.sidebar-list ???
-							li.sidebar-title#achievements Achievements
-							li.sidebar-list Total achievements:
-							li.sidebar-list Resistance Achievements:
-							li.sidebar-list TS Achievements:
-				ul.nav.nav-tabs.nav-stacked.col-md-2.controls
-					li.ng-scope
-						span.menu-icon.glyphicon.glyphicon-transfer(ng-click='isCollapsed = !isCollapsed')
-					li(ng-class='tabClass(tab)', ng-repeat='tab in tabs')
-						a(href='{{tab.link}}', ng-click='setSelectedTab(tab)', outer-tab, align-to='{{tab.alignTo}}', make-color = '{{tab.myColor}}')
-							span.menu-icon(class="{{tab.class}}")
+				div#sidebar(ng-if="isLoggedIn")
+					#row
+						div(collapse-width='isCollapsed', class="column column_1 collapse")
+							ul.sidebar
+								li.sidebar-welcome Welcome Luke
+								li.sidebar-title#bracket Bracket
+								li.sidebar-list Your Standings
+								li.sidebar-list Scoreboard
+								li.sidebar-title#box Box
+								li.sidebar-list Your Standings
+								li.sidebar-title#minigame MiniGame
+								li.sidebar-list ???
+								li.sidebar-title#achievements Achievements
+								li.sidebar-list Total achievements:
+								li.sidebar-list Resistance Achievements:
+								li.sidebar-list TS Achievements:
+					ul.nav.nav-tabs.nav-stacked.col-md-2.controls
+						li.ng-scope
+							span.menu-icon.glyphicon.glyphicon-transfer(ng-click='isCollapsed = !isCollapsed')
+						li(ng-class='tabClass(tab)', ng-repeat='tab in tabs')
+							a(href='{{tab.link}}', ng-click='setSelectedTab(tab)', outer-tab, align-to='{{tab.alignTo}}', make-color = '{{tab.myColor}}')
+								span.menu-icon(class="{{tab.class}}")
 			div#page-content-wrapper
 				div.page-content.inset
 					div(ng-view='')
