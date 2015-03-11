@@ -1,4 +1,4 @@
-var Bracket      = require('.././Bracket.js');
+var tournament      = require('.././march_madness/brackets.js')();
 var User     = require('./models/User.js');
 var jwt        = require("jsonwebtoken");
 var expressJwt = require('express-jwt');
@@ -98,16 +98,73 @@ module.exports = function(app) {
         var token = req.query.token;
         var decoded = jwt.verify(token, secret());
          User.findOne({username: username}, function (err, user) {
+			 console.log(user);
+			 console.log(user.flags);
             if (err) {
                 console.log(err);
                 return res.sendStatus(401);
             }
             if(user._id==decoded.id){
-                var skipped_main_page = user.skipped_main_page === undefined;
+                var skipped_main_page = user.flags.skipped_main_page;
                 return res.json({skipped_main_page:skipped_main_page});
             }
         });
     });
+
+	app.post('/savebracket', function(req, res){
+		var username = req.body.username;
+		var token = req.body.token;
+		var bracket = req.body.bracket;
+		var decoded = jwt.verify(token, secret());
+		User.findOne({username: username}, function (err, user) {
+			console.log(user);
+			console.log(user.flags);
+			if (err) {
+				console.log(err);
+				return res.sendStatus(401);
+			}
+			if(user._id==decoded.id){
+				var partial_update = {$set: {bracket: bracket}};
+				User.findOneAndUpdate({ username: username }, partial_update, function (err) {
+					if (err){
+						console.log("ERRROR");
+						console.log(err);
+					}else{
+						res.sendStatus(212);
+					}
+				});
+			}
+		});
+	});
+
+	app.post('/setFlags', function(req, res){
+		var username = req.body.username;
+		var token = req.body.token;
+		var flag = req.body.flag;
+		var val = req.body.val;
+		var decoded = jwt.verify(token, secret());
+		User.findOne({username: username}, function (err, user) {
+			console.log(user);
+			console.log(user.flags);
+			if (err) {
+				console.log(err);
+				return res.sendStatus(401);
+			}
+			if(user._id==decoded.id){
+				var temp = {};
+				temp[flag] = val;
+				var updated_flag = {$set: {flags: temp}};
+				User.findOneAndUpdate({ username: username }, updated_flag, function (err) {
+					if (err){
+						console.log(err);
+					}else{
+						return res.json({skipped_main_page:skipped_main_page});
+					}
+				});
+			}
+		});
+	});
+
 
 
 	function shuffle(array) {
@@ -136,7 +193,6 @@ module.exports = function(app) {
 		losing_numbers.push(shuffle([0, 9, 8, 7, 6, 5, 4, 3, 2, 1]));
 	}
 
-	var west_bracket = new Bracket();
 	var users = ["Luke", "Dean", "Liana", "Jenny", "Steve", "Jolyn"];
 	var boxes = [];
 	while(boxes.length < 100){
@@ -166,29 +222,7 @@ module.exports = function(app) {
 		res.json(json);
 	});
 
-	var west_bracket = new Bracket();
-	var east_bracket = new Bracket();
-	var north_bracket = new Bracket();
-	var south_bracket = new Bracket();
-	var championship_bracket = new Bracket();
-	west_bracket.makeTree(31);
-	east_bracket.makeTree(31);
-	north_bracket.makeTree(31);
-	south_bracket.makeTree(31);
-	championship_bracket.makeTree(7);
-	var tournament = {};
-	for(var i = 0; i < 16; i++){
-		west_bracket.insertToBottom("Team " + i);
-		east_bracket.insertToBottom("Team " + i);
-		north_bracket.insertToBottom("Team " + i);
-		south_bracket.insertToBottom("Team " + i);
 
-	}
-	tournament['west'] = west_bracket;
-	tournament['east'] = east_bracket;
-	tournament['south'] = south_bracket;
-	tournament['north'] = north_bracket;
-	tournament['championship'] = championship_bracket;
 	app.get('/brackets.json', function(req, res, next) {
 		var json = tournament;
 		res.json(json);

@@ -11,7 +11,9 @@ var User = new Schema({
     name: { type: String, required: true },
 	password: { type: String, required: false },
 	is_admin: { type: Boolean, default: false },
-	created: { type: Date, default: Date.now }
+	created: { type: Date, default: Date.now },
+	flags: {type: Object, default: {skipped_main_page: false}},
+	bracket: {type: Object, default: {}}
 });
 
 // Bcrypt middleware on UserSchema

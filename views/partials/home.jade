@@ -1,5 +1,15 @@
-|{{tagline}}
-
-div(tour)
-	div(tour-step order="0" title="Main Menu" content = "Hie" placement = "bottom") Hio
-	button(ng-click="tour.restart(true)") start
+.hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()')
+div.container
+	table.table.table-striped(st-table='displayedCollection', id='leader-board' st-safe-src="rowCollection" )
+		thead
+			tr
+				th(st-sort="rank") rank
+				th(st-sort="name") name
+				th(st-sort="score") score
+				th(st-sort="achievements") achievements
+		tbody
+			tr(ng-repeat='row in displayedCollection')
+				td {{row.rank}}
+				td {{row.name}}
+				td {{row.score}}
+				td {{row.achievements}}

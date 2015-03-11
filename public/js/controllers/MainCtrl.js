@@ -35,7 +35,6 @@ angular.module('MainCtrl', ['bracketApp']).controller('MainController', ['$rootS
                 $window.sessionStorage.user = data.user.username; // to fetch the user details on refresh
                 $window.sessionStorage.userRole = data.user.role; // to fetch the user details on refresh
 				console.log(AuthenticationService);
-                $scope.getFlags();
                 $location.path("/");
             }).error(function(status, data) {
 				console.log("SOERROR");
