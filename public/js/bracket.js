@@ -1,5 +1,5 @@
 angular.module('bracketApp', ['ngRoute', 'bracketRoutes', 'MainCtrl', 'BracketCtrl', 'BoxCtrlAngular', 'BracketCtrlAngular', 'NavBarCtrl', 'BracketService', 'BoxCtrl', 'BoxService', 'MiniGameCtrl', 'MiniGameService',
-    'SideBarCtrl', 'ui.bootstrap', 'ngCookies', 'bm.bsTour', 'angularModalService', 'ngStorage', 'MessageCenterModule', 'mgcrea.ngStrap', 'MainPageCtrl', 'ngJoyRide','smart-table'
+    'SideBarCtrl', 'ui.bootstrap', 'ngCookies', 'bm.bsTour', 'angularModalService', 'ngStorage', 'MessageCenterModule', 'mgcrea.ngStrap', 'MainPageCtrl', 'ngJoyRide','smart-table', 'ngSanitize', 'ngAnimate'
 ]).factory('AuthenticationService', function($window) {
 	var auth = {
 		isAuthenticated: false,

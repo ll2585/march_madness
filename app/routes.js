@@ -124,6 +124,7 @@ module.exports = function(app) {
 				return res.sendStatus(401);
 			}
 			if(user._id==decoded.id){
+				console.log(bracket['mid_west']['tree']);
 				var partial_update = {$set: {bracket: bracket}};
 				User.findOneAndUpdate({ username: username }, partial_update, function (err) {
 					if (err){
@@ -133,6 +134,26 @@ module.exports = function(app) {
 						res.sendStatus(212);
 					}
 				});
+			}
+		});
+	});
+
+	app.get('/savedBracket.json', function(req, res){
+		var username = req.query.username;
+		console.log(username);
+		User.findOne({username: username}, function (err, user) {
+			if (err) {
+				console.log(err);
+				return res.sendStatus(404);
+			}
+			else{
+				var bracket = user.bracket;
+				if(Object.keys(bracket).length == 0){
+					return res.status(404).send("No bracket found");
+				}else{
+					return res.json(bracket);
+				}
+
 			}
 		});
 	});

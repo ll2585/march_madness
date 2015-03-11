@@ -1,10 +1,11 @@
-angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', ['$scope', '$rootScope', '$http', 'ModalService', 'bracketFactory','$window', function($scope, $rootScope, $http, ModalService, bracketFactory, $window) {
+angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', ['$scope', '$rootScope', '$http', 'ModalService', 'bracketFactory','$window', '$modal', function($scope, $rootScope, $http, ModalService, bracketFactory, $window, $modal) {
 	$scope.base_height = 20;
 
 	$scope.loadBrackets = function(){
-		bracketFactory.getDefaultBracket().then(function(data) {
-			$scope.savedBracket = JSON.parse(JSON.stringify(data.data));
-			$scope.data = data.data;
+		bracketFactory.getSavedBracket($window.sessionStorage.user).then(function(data) {
+			$scope.data = data;
+			$scope.storeBracketAsSaved();
+
 			$scope.getTeamName=function(region, round, matchup, team_num){
 				var region = $scope.region_dict[region];
 				var team_id = Math.pow(2,round) + (2*matchup) + (team_num-1);
@@ -18,8 +19,8 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 				if($scope.data[region]['tree'][top_node_id]['top'] != null){
 					$scope.removeFromTop(regionID, name, $scope.data[region]['tree'][top_node_id]['top']);
 				}else if($scope.data[region]['tree'][top_node_id]['top'] == null && regionID != 4){
-					$scope.removeFromTop(4,name,regionID+4); //remove from championship
-					$scope.data["championship"]['tree'][regionID+4]['name'] = null;
+					$scope.removeFromTop(4,name,$scope.championship_map[region]); //remove from championship
+					$scope.data["championship"]['tree'][$scope.championship_map[region]]['name'] = null;
 				}
 			};
 			$scope.getChampion=function(regionID){
@@ -41,8 +42,10 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 
 				if($scope.data[region]['tree'][top_node_id]['top']==null){ //champion
 					console.log("CHAMPION");
-					console.log($scope.data["championship"]['tree'][regionID+4]);
-					$scope.data["championship"]['tree'][regionID+4]['name'] = team_name;
+					console.log($scope.data["championship"]['tree'][$scope.championship_map[region]]);
+					if(regionID != 4){
+						$scope.data["championship"]['tree'][$scope.championship_map[region]]['name'] = team_name; //0->4 1->6 2->5 3->7
+					}
 				}
 
 			};
@@ -54,7 +57,7 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 				var top_node_id = cur_team['top'];
 				var top_node;
 				if(top_node_id==null && regionID != 4){
-					top_node = $scope.data['championship']['tree'][regionID+4];
+					top_node = $scope.data['championship']['tree'][$scope.championship_map[region]];
 				}else if(top_node_id != null){
 
 					top_node = $scope.data[region]['tree'][top_node_id];
@@ -73,15 +76,20 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 				var i_have_name = cur_team['name'] != null;
 				var top_node_id = cur_team['top'];
 				var top_node;
+				if(regionID == 4 && team_id == 4){
+					console.log(cur_team);
+				}
 				if(top_node_id==null && regionID != 4){
-					top_node = $scope.data['championship']['tree'][regionID+4]
+					top_node = $scope.data['championship']['tree'][$scope.championship_map[region]]
 				}else if(top_node_id != null){
 					top_node = $scope.data[region]['tree'][top_node_id];
 				}else{
 					return false;
 				}
+
 				var top_node_has_name = top_node['name'] != null;
 				var top_node_does_not_have_my_name = top_node['name'] != cur_team['name'];
+
 				return (i_have_name && top_node_does_not_have_my_name && top_node_has_name);
 			}
 
@@ -90,21 +98,26 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 			}
 
 			$scope.saveChanges = function(){
-				var new_bracket = $scope.savedBracket;
+				var new_bracket = $scope.data;
 				bracketFactory.saveBracket($window.sessionStorage.token, $window.sessionStorage.user, new_bracket).success(function() {
 					alert("SAVED");
+					$scope.storeBracketAsSaved();
 				}).error(function(status, data) {
 					console.log("SOERROR");
 					console.log(status);
 					console.log(data);
 				});
 			}
+
+
 		});
 	};
 
 	$scope.loadBrackets();
 
-    console.log($rootScope);
+	$scope.storeBracketAsSaved = function(){
+		$scope.savedBracket = JSON.parse(JSON.stringify($scope.data));
+	}
 
 	$scope.region_dict = {
 		"0": "mid_west",
@@ -112,6 +125,13 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 		"2": "west",
 		"3": "south",
 		"4": "championship"
+	};
+
+	$scope.championship_map = {
+		"mid_west": 4,
+		"west": 5,
+		"east": 6,
+		"south": 7
 	};
 
 	$scope.matchupCount=function(n){
@@ -145,6 +165,16 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 	];
 
 
+	/**
+	var myModal = $modal({title: 'Holy guacamole!', content: 'Best check yo self, you\'re not looking too good.', placement: 'top', type: 'info', keyboard: true, show: false});
+	$scope.showModal = function() {
+		myModal.$promise.then(myModal.show);
+	};
+		$scope.hideModal = function() {
+		  myModal.$promise.then(myModal.hide);
+		};
+	$scope.showModal()
+
     ModalService.showModal({
         templateUrl: "template.html",
         controller: "ModalController"
@@ -154,14 +184,72 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
         modal.close.then(function(result) {
             if(result){
                 console.log($rootScope);
-                $rootScope.$on('start-tour', function(event, obj){
-                    obj.tour.restart();
-                });
+
             }
 
             console.log(result);
         });
     });
+	 **/
+
+	var count = 0;
+	$scope.startJoyRide = false;
+	$scope.start = function () {
+		if(count > 0){
+			generateAlternateConfig();
+		}
+		count++;
+		$scope.startJoyRide = true;
+
+	}
+//copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
+	$scope.displayedCollection = [].concat($scope.rowCollection);
+	function generateAlternateConfig(){
+		//This is to show that it can have dynamic configs which can change . The joyride would not need to be initialized again.
+		$scope.config[2].text = "I can have dynamic text that can change in between joyrides"
+	}
+	$scope.config = [
+
+		{
+			type: "title",
+			heading: "Welcome to the NG-Joyride demo",
+			text: '<div class="row"><div id="title-text" class="col-md-12"><span class="main-text">Welcome to <strong>Ng Joyride Demo</strong></span><br><span>( This demo will walk you through the features of Ng-Joyride. )</span><br/><br/><span class="small"><em>This can have custom html too !!!</em></span></div></div>',
+			curtainClass: "randomClass"
+
+		},
+		{
+			type: "element",
+			selector: ".jumbotron",
+			heading: "Title can have <em>HTML</em>",
+			text: "You are in the <em>home page.</em>",
+			placement: "bottom",
+			scroll: true
+		},
+		{
+			type: "element",
+			selector: ".container",
+			heading: "Step 1",
+			text: "I can come over any element.Even the background is customizable per step",
+			placement: "bottom",
+			curtainClass: "blueColour",
+			scroll: true
+		},
+		{
+			type: "element",
+			selector: ".championship-bracket",
+			heading: "Step 2",
+			text: "I can change placement",
+			placement: "right",
+			scroll: true
+		}
+	];
+
+	$rootScope.$on('start-tutorial', function(event, obj){
+		alert("TUT")
+	});
+
+	$scope.startJoyRide = true;
+	$scope.start();
 
 }]).controller('ModalController', function($scope, close) {
 
@@ -169,15 +257,23 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
         close(result, 500); // close, but give 500ms for bootstrap to animate
     };
 
-}).factory('bracketFactory', function($http) {
+}).factory('bracketFactory', function($http, $q) {
 	/** https://docs.angularjs.org/guide/providers **/
 	var urlBase = '';
 	var bracketFactory = {};
 
-	bracketFactory.getSavedBracket = function(token, username) {
-		return $http({
-			url: '/getFlags', method: "GET", params: {token: token, username: username}
+	bracketFactory.getSavedBracket = function(username) {
+		var deferred = $q.defer();
+		$http({
+			url: '/savedBracket.json', method: "GET", params: {username: username}
+		}).success(function(data){
+			deferred.resolve(data);
+		}).error(function(data){
+			alert("NO SAVED");
+			deferred.resolve(this.getDefaultBracket());
 		});
+
+		return deferred.promise;
 	};
 
 	bracketFactory.getDefaultBracket = function() {

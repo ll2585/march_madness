@@ -1,3 +1,4 @@
+.hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()')
 .jumbotron.text-center
 	h1 Geek City
 
@@ -6,11 +7,11 @@
 		div(class="championship-bracket")
 			div.row
 				div.col-xs-2.spacer spacer
-				div.col-xs-8.final-four#champion(ng-class="{'chosen-champion': getChampion(4) != null}") {{getChampion(4)}} {{getChampion(4) != null}}
+				div.col-xs-8.final-four#champion(ng-class="{'chosen-champion': getChampion(4) != null}") {{getChampion(4)}}
 				div.col-xs-2.spacer spacer
 			div.row
 				div.col-xs-1.spacer spacer
-				div.col-xs-3.final-four#finals-1(ng-class="{'team-selectable': canClick(4,1, 0, 1), 'team-chosen-to-lose':  choseToLose(4,1, 0, 2) } " ng-click="moveTop(4,1,0, 1)") {{getTeamName(4, 1, 0, 1)}}
+				div.col-xs-3.final-four#finals-1(ng-class="{'team-selectable': canClick(4,1, 0, 1), 'team-chosen-to-lose':  choseToLose(4,1, 0, 1) } " ng-click="moveTop(4,1,0, 1)") {{getTeamName(4, 1, 0, 1)}}
 				div.col-xs-4.spacer spacer
 				div.col-xs-3.final-four#finals-2(ng-class="{'team-selectable': canClick(4,1, 0, 2), 'team-chosen-to-lose':  choseToLose(4,1, 0, 2) } " ng-click="moveTop(4,1,0, 2)") {{getTeamName(4, 1, 0, 2)}}
 				div.col-xs-1.spacer spacer
