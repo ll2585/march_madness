@@ -17,10 +17,10 @@ south_bracket.makeTree(31);
 championship_bracket.makeTree(7);
 var tournament = {};
 for(var i = 0; i < mid_west_bracket_teams.length; i++){
-	mid_west_bracket.insertToBottom(mid_west_bracket_teams[i]);
-	west_bracket.insertToBottom(west_bracket_teams[i]);
-	east_bracket.insertToBottom(east_bracket_teams[i]);
-	south_bracket.insertToBottom(south_bracket_teams[i]);
+	mid_west_bracket.insertToBottom({'name': mid_west_bracket_teams[i]});
+	west_bracket.insertToBottom({'name': west_bracket_teams[i]});
+	east_bracket.insertToBottom({'name': east_bracket_teams[i]});
+	south_bracket.insertToBottom({'name': south_bracket_teams[i]});
 }
 
 tournament['mid_west'] = mid_west_bracket;

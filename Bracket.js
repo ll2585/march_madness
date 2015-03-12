@@ -2,9 +2,9 @@ function Bracket( ) {
 	this.tree = null;
 	this.first_key = null;
 }
-function Node(id, name) {
+function Node(id, team) {
 	this.id = id;
-	this.name = defaultFor(name, null);
+	this.team = defaultFor(team, null);
 	this.left = null;
 	this.right = null;
 	this.top = null;
@@ -53,22 +53,10 @@ Bracket.prototype = {
 			cur_node = next_row.shift();
 		}
 	},
-	getFirstName: function() {
-		return( this.firstName );
-	},
-	getFullName: function() {
-		return( this.firstName + " " + this.lastName );
-	},
-	getRoot: function() {
-		return( this.root );
-	},
-	getId: function(id) {
-		return( this.tree[id] );
-	},
 	insertToBottom: function(data, key) {
 		var node = this.tree[defaultFor(key, this.first_key)];
 		if(node['left'] == null){
-			node['name']= data;
+			node['team']= data;
 		}else if(this.isFull(node['left'])){
 			this.insertToBottom(data, node['right']);
 		}else{
@@ -77,17 +65,13 @@ Bracket.prototype = {
 	},
 	isFull: function(key) {
 		var node = this.tree[defaultFor(key, this.first_key)];
-		if(node['name'] != null){
+		if(node['team'] != null){
 			return true;
 		}
 		if(node['left'] == null && node['right'] == null){
 			return false;
 		}
 		return (this.isFull(node['left']) && this.isFull(node['right']))
-	},
-	moveUp: function(id) {
-		var top = this.tree[id]['top'];
-		this.tree[top]['name'] = this.tree[id]['name'];
 	}
 };
 

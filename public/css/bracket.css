@@ -72,7 +72,29 @@
     background-color: darkkhaki;
 }
 
+.pickCounter{
+    background-color: palevioletred;
+    position: absolute;
+    float: right;
+    right: 200px;
+    font-size: 400%;
+}
 
+.team-names {
+    background: gray;
+    text-align: center;
+}
+.rainbow {
+    background-image: -webkit-gradient( linear, left top, right top, color-stop(0, #ff0000), color-stop(0.6, #22f), color-stop(0.8, #2f2));
+    color:transparent;
+    -webkit-background-clip: text;
+}
+.finals-team {
+    background: ivory;
+    display: inline-block;
+    margin:0 7.5px;
+    text-align: left;
+}
 /* Fix for Bootstrap 3 with Angular UI Bootstrap */
 
 

@@ -44,6 +44,9 @@
             this.curtainClass = curtainClass;
             this.addClassToCurtain = addClassToCurtain;
             this.shouldDisablePrevious = shouldDisablePrevious;
+            /** written by me **/
+            this.scrollPadding = config.scrollPadding;
+
             function _generateTextForNext() {
 
                 if (isEnd) {
@@ -126,9 +129,12 @@
             }
 
             function _scrollToElement() {
-
+                var paddingTop = 0;
+                if(this.scrollPadding){
+                    paddingTop = this.scrollPadding;
+                }
                 $('html, body').animate({
-                    scrollTop: $fkEl.offset().top
+                    scrollTop: $fkEl.offset().top - paddingTop
                 }, 1000);
             }
 

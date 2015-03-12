@@ -137,6 +137,9 @@ module.exports = function(app) {
 			}
 		});
 	});
+    app.get('/bracket_joyride.json', function(req, res){
+        return res.json({"1": "HI!"});
+    });
 
 	app.get('/savedBracket.json', function(req, res){
 		var username = req.query.username;
