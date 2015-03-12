@@ -7,14 +7,18 @@
 			span.glyphicon.glyphicon-random
 		button.btn.btn-default(type='button', id="clear-bracket-button" ng-click="clearBracket()" ng-show = "doneWithTutorial || showErase")
 			span.glyphicon.glyphicon-erase
-		button.btn.btn-default.dropdown-toggle(type='button' , data-toggle='dropdown', id="show-colors-dropdown" ng-show = "doneWithTutorial || showColors")
-			span(class="rainbow glyphicon glyphicon-option-horizontal")
+		button.btn.btn-default.dropdown-toggle(type='button', dropdown-toggle , data-toggle='dropdown', id="show-options-dropdown" ng-show = "doneWithTutorial || showColors" dropdown is-open="status.isopen")
+			span(class="fa fa-eye")
 			span(class="caret")
-		ul.dropdown-menu(role='menu')
+		ul.dropdown-menu(role='menu' ng-click="$event.stopPropagation()")
 			li
-				a(href='#') Dropdown link
+				span(class="rainbow octicon octicon-paintcan", style="padding: 6px 12px;")
+				input(type="checkbox" ng-model="toggleColors")
+				|Show Colors
 			li
-				a(href='#') Dropdown link
+				span(class="fa fa-paw" , style="padding: 6px 12px;")
+				input(type="checkbox" ng-model="toggleMascots")
+				|Show Mascots
 
 	div.container
 		button(type="submit" class="btn btn-primary save-button" ng-if="changedBracket()" ng-click="saveChanges()") Save changes
@@ -28,22 +32,26 @@
 		div(class="championship-bracket")
 			div.row
 				div.col-xs-2.spacer spacer
-				div.col-xs-8.final-four#champion(ng-class="{'chosen-champion': getChampion(4) != null}") {{getChampion(4)}}
+				div.col-xs-8.final-four#champion(ng-class="{'chosen-champion': getChampion(4) != null}")
+					span(ng-if="toggleColors && getChampionColor() !== '' && getChampion(4) !== null", class="glyphicon glyphicon-tag", ng-style="{'color': getChampionColor()}")
+					| {{getChampion(4)}}
 				div.col-xs-2.spacer spacer
 			div.row(id="finals-match")
 				div.col-xs-1.spacer spacer
-				div.col-xs-3.final-four#finals-1(ng-class="{'team-selectable': canClick(4,1, 0, 1), 'team-chosen-to-lose':  choseToLose(4,1, 0, 1) } " ng-click="moveTop(4,1,0, 1)") {{getTeamName(4, 1, 0, 1)}}
-				div.col-xs-4.spacer spacer
-				div.col-xs-3.final-four#finals-2(ng-class="{'team-selectable': canClick(4,1, 0, 2), 'team-chosen-to-lose':  choseToLose(4,1, 0, 2) } " ng-click="moveTop(4,1,0, 2)") {{getTeamName(4, 1, 0, 2)}}
+				div(ng-repeat="i in [1,2]")
+					div.col-xs-3.final-four(id="finals-{{i}}", ng-class="{'team-selectable': canClick(4,1,0,i), 'team-chosen-to-lose':  choseToLose(4,1,0,i) } ", ng-click="moveTop(4,1,0,i)")
+						span(ng-if="toggleColors && getTeamColor(4, 1, 0, i) !== '' && getTeam(4, 1, 0, i) !== null", class="glyphicon glyphicon-tag", ng-style="{'color': getTeamColor(4, 1, 0, i)}")
+						|{{getTeamName(4, 1, 0, i)}}
+					div.col-xs-4.spacer(ng-if="i==1") spacer
 				div.col-xs-1.spacer spacer
+
 			div.row
-				div.col-xs-2.final-four#region-1-winner(ng-class="{'team-selectable': canClick(4,2,0,1), 'team-chosen-to-lose':  choseToLose(4,2,0, 1) } " ng-click="moveTop(4,2,0,1)") {{getTeamName(4,2,0, 1)}}
-				div.col-xs-1.spacer spacer
-				div.col-xs-2.final-four#region-3-winner(ng-class="{'team-selectable': canClick(4,2,0,2), 'team-chosen-to-lose':  choseToLose(4,2,0, 2) } " ng-click="moveTop(4,2,0,2)") {{getTeamName(4,2,0, 2)}}
-				div.col-xs-2.spacer spacer
-				div.col-xs-2.final-four#region-2-winner(ng-class="{'team-selectable': canClick(4,2,1, 1), 'team-chosen-to-lose':  choseToLose(4,2,1,1) } " ng-click="moveTop(4,2,1,1)") {{getTeamName(4,2,1, 1)}}
-				div.col-xs-1.spacer spacer
-				div.col-xs-2.final-four#region-4-winner(ng-class="{'team-selectable': canClick(4,2,1,2), 'team-chosen-to-lose':  choseToLose(4,2,1,2) } " ng-click="moveTop(4,2,1,2)") {{getTeamName(4,2,1, 2)}}
+				div(ng-repeat="i in [1,3,2,4]")
+					div.col-xs-2.final-four(id="region-{{i}}-winner", ng-class="{'team-selectable': canClick(4,2,(i+1)%2,round(i/2)), 'team-chosen-to-lose':  choseToLose(4,2,(i+1)%2, round(i/2)) } ", ng-click="moveTop(4,2,(i+1)%2,round(i/2))")
+						span(ng-if="toggleColors && getTeamColor(4,2,(i+1)%2, round(i/2)) !== '' && getTeam(4,2,(i+1)%2, round(i/2)) !== null", class="glyphicon glyphicon-tag", ng-style="{'color': getTeamColor(4, 2, (i+1)%2, round(i/2))}")
+						|{{getTeamName(4,2,(i+1)%2, round(i/2))}}
+					div.col-xs-1.spacer(ng-if="i<3") spacer
+					div.col-xs-2.spacer(ng-if="i==3") spacer
 		div.teams
 			div(ng-repeat="k in [0,1,2,3]")
 				div(ng-if="k==2", class="buffer")
@@ -52,9 +60,13 @@
 						div(ng-repeat="j in matchupCount($index) track by $index" class="matchup matchup-{{$index}}" ng-class="{'joyridecustom1': (k == 0 && i == 0 && $index == 0), 'joyridecustom2': (k == 0 && i == 1 && $index == 0), 'joyridecustom3': (k == 0 && i == 3 && $index == 0)}")
 							//starts with 2^i and then goes to 2^(i+1)-1 but in reverse; the 1 in the function is whether it is first team or second team
 							div.firstTeam(style='height: {{getNewHeight($parent.$index)}}px;', ng-click="moveTop(k,(4-$parent.$index), $index, 1)")
-								div(class = "team", ng-class="{'team-selectable': canClick(k,(4-$parent.$index), $index, 1), 'team-chosen-to-lose':  choseToLose(k,(4-$parent.$index), $index, 1)  } ") {{getTeamName(k, (4-$parent.$index), $index, 1)}}
+								div(class = "team", ng-class="{'team-selectable': canClick(k,(4-$parent.$index), $index, 1), 'team-chosen-to-lose':  choseToLose(k,(4-$parent.$index), $index, 1)  } ")
+									span(ng-if="toggleColors && getTeamColor(k, (4-i), $index, 1) !== '' && getTeam(k, (4-i), $index, 1) !== null ", class="glyphicon glyphicon-tag", ng-style="{'color': getTeamColor(k, (4-i), $index, 1)}")
+									|{{getTeamName(k, (4-$parent.$index), $index, 1)}}
 							div(class="firstSpacer" ng-class="{'firstSpacer-right': ($parent.$parent.$index%2==1), 'firstSpacer-left': ($parent.$parent.$index%2==0)}", style = "height: {{getNewHeight($parent.$index)}}px;")
 							div(class="secondTeam" ng-class="{'secondTeam-right': ($parent.$parent.$index%2==1), 'secondTeam-left': ($parent.$parent.$index%2==0)}", style='height: {{getNewHeight($parent.$index)}}px;', ng-click="moveTop(k,(4-$parent.$index), $index, 2)")
-								div(class = "team", ng-class="{'team-selectable': canClick(k,(4-$parent.$index), $index, 2), 'team-chosen-to-lose':  choseToLose(k,(4-$parent.$index), $index, 2) } ") {{getTeamName(k, (4-$parent.$index), $index, 2)}}
+								div(class = "team", ng-class="{'team-selectable': canClick(k,(4-$parent.$index), $index, 2), 'team-chosen-to-lose':  choseToLose(k,(4-$parent.$index), $index, 2) } ")
+									span(ng-if="toggleColors  && getTeamColor(k, (4-i), $index, 2) !== '' && getTeam(k, (4-i), $index, 2) !== null ", class="glyphicon glyphicon-tag", ng-style="{'color': getTeamColor(k, (4-i), $index, 2)}")
+									|{{getTeamName(k, (4-$parent.$index), $index, 2)}}
 							div(class="secondSpacer", style = "height: {{getNewHeight($parent.$index)}}px;")
 link(rel='stylesheet', href='/css/bracket.css')

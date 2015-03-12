@@ -5,7 +5,13 @@ var expressJwt = require('express-jwt');
 var secret = require('./secret.js');
 
 var api = require('./api.js');
+
 module.exports = function(app) {
+
+		app.get('/async.json', function(req, res){
+			return res.json(test);
+		});
+
     app.post('/register', function(req, res){
         var username = req.body.username || '';
         var email = req.body.email || '';
@@ -182,7 +188,7 @@ module.exports = function(app) {
 					if (err){
 						console.log(err);
 					}else{
-						return res.json({skipped_main_page:skipped_main_page});
+						res.sendStatus(212);
 					}
 				});
 			}

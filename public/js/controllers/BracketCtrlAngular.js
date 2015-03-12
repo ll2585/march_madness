@@ -1,5 +1,10 @@
-angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', ['$scope', '$rootScope', '$http', 'ModalService', 'bracketFactory','$window', '$modal', function($scope, $rootScope, $http, ModalService, bracketFactory, $window, $modal) {
+angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketControllerAngular', ['$scope', '$rootScope', '$http', 'ModalService', 'bracketFactory','$window', '$modal', function($scope, $rootScope, $http, ModalService, bracketFactory, $window, $modal) {
 	$scope.base_height = 20;
+	$scope.round = function(x){
+		return Math.round(x);
+	}
+	$scope.toggleColors = true;
+	$scope.toggleMascots = true;
     $scope.completedPicks = 0;
     $scope.finalsPicked = false;
     $scope.showPickCounter = false;
@@ -11,7 +16,41 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 			$scope.data = data;
 			$scope.storeBracketAsSaved();
 
+			$scope.status = {
+				isopen: false
+			};
 
+			$scope.toggled = function(open) {
+				$log.log('Dropdown is now: ', open);
+			};
+
+			$scope.toggleDropdown = function($event) {
+				$event.preventDefault();
+				$event.stopPropagation();
+				$scope.status.isopen = !$scope.status.isopen;
+			};
+			$scope.getTeamColor=function(regionID, round, matchup, team_num, team_id_given){
+				var region = $scope.region_dict[regionID];
+				var team_id = team_id_given !== undefined ? team_id_given : Math.pow(2,round) + (2*matchup) + (team_num-1);
+				if($scope.data[region]['tree'][team_id] == undefined){
+					console.log(round)
+					console.log(matchup)
+					console.log(team_num)
+					console.log(team_id);
+				}
+				if($scope.data[region]['tree'][team_id]['team']==null){
+					return null;
+				}
+				return ($scope.data[region]['tree'][team_id]['team']['color']);
+			};
+			$scope.getTeam=function(regionID, round, matchup, team_num, team_id_given){
+				var region = $scope.region_dict[regionID];
+				var team_id = team_id_given !== undefined ? team_id_given : Math.pow(2,round) + (2*matchup) + (team_num-1);
+				if($scope.data[region]['tree'][team_id]['team']==null){
+					return null;
+				}
+				return ($scope.data[region]['tree'][team_id]['team']);
+			};
 			$scope.getTeamName=function(regionID, round, matchup, team_num, team_id_given){
 				var region = $scope.region_dict[regionID];
 				var team_id = team_id_given !== undefined ? team_id_given : Math.pow(2,round) + (2*matchup) + (team_num-1);
@@ -20,13 +59,13 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
                 }
 				return ($scope.data[region]['tree'][team_id]['team']['name']);
 			};
-            $scope.setTeamName=function(region, round, matchup, team_num, name, team_id_given){
+            $scope.setTeam=function(region, round, matchup, team_num, team, team_id_given){
                 var region = $scope.region_dict[region];
                 var team_id = team_id_given !== undefined ? team_id_given : Math.pow(2,round) + (2*matchup) + (team_num-1);
                 if($scope.data[region]['tree'][team_id]['team']==null){
                     $scope.data[region]['tree'][team_id]['team'] = {}
                 }
-                $scope.data[region]['tree'][team_id]['team']['name'] = name;
+                $scope.data[region]['tree'][team_id]['team'] = JSON.parse(JSON.stringify(team));
             };
 			$scope.removeFromTop=function(regionID, name, top_node_id){
 				var region = $scope.region_dict[regionID];
@@ -45,7 +84,9 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 			$scope.getChampion=function(regionID){
 				var region = $scope.region_dict[regionID];
                 return $scope.getTeamName(regionID, 0, 0,1);
-
+			};
+			$scope.getChampionColor=function(){
+				return $scope.getTeamColor(4, 0, 0,1);
 			};
 			$scope.moveTop=function(regionID, round, matchup, team_num, forced){
 
@@ -60,9 +101,10 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 				var region = $scope.region_dict[regionID];
 				var team_id = Math.pow(2,round) + (2*matchup) + (team_num-1);
 				var top_node_id = $scope.data[region]['tree'][team_id]['top'];
+				var team = $scope.getTeam(regionID, 0, 0,team_id);
 				var team_name = $scope.getTeamName(regionID, 0, 0,team_id);
 
-				$scope.setTeamName(regionID,0,0,top_node_id,team_name);
+				$scope.setTeam(regionID,0,0,top_node_id,team);
 				var other_team_id = $scope.data[region]['tree'][top_node_id]['left'] == team_id ? $scope.data[region]['tree'][top_node_id]['right'] : $scope.data[region]['tree'][top_node_id]['left'];
 				var other_team_name = $scope.getTeamName(regionID,0,0,other_team_id);
 				if(other_team_name != null){
@@ -71,7 +113,7 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
 
 				if($scope.data[region]['tree'][top_node_id]['top']==null){ //champion
 					if(regionID != 4){
-						$scope.setTeamName(4,0,0,$scope.championship_map[region],team_name); //0->4 1->6 2->5 3->7
+						$scope.setTeam(4,0,0,$scope.championship_map[region],team); //0->4 1->6 2->5 3->7
 					}
 				}
 
@@ -447,7 +489,7 @@ angular.module('BracketCtrlAngular', []).controller('BracketControllerAngular', 
         },
         {
             type: "element",
-            selector: "#show-colors-dropdown",
+            selector: "#show-options-dropdown",
             heading: "Basics (2)",
             text: "Click this button to show icons relating to achievements. There are literally tens of ways to win achievements. Remember, whoever gets the most achievements wins money too!",
             placement: "bottom",

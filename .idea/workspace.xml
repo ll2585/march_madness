@@ -2,17 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3a5daaae-fd62-448f-8b50-091a79a9573e" name="Default" comment="finish joyriding">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/angular-tour/angular-tour-tpls.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/css/angular-tour/angular-tour.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/css/angular-boostrap-tour/bootstrap-tour.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/march_madness/joyride_text/bracket_joyride_text.txt" />
-      <change type="DELETED" beforePath="C:\Users\Luke\IdeaProjects\march_madness\.idea\workspace.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Bracket.js" afterPath="$PROJECT_DIR$/Bracket.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/img/glyphicons/06.eps" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/img/glyphicons/glyphicons.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/css/octicons/octicons-local.ttf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/css/octicons/octicons.eot" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/css/octicons/octicons.ttf" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/css/octicons/octicons.woff" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/css/octicons/LICENSE.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/css/octicons/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/css/glyphicons/bootstrap.icon-large.min.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/img/glyphicons/cat_line_art.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/march_madness/csv2json.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/march_madness/east.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/march_madness/midwest.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/css/octicons/octicons.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/css/octicons/octicons.less" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/css/octicons/octicons.svg" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/march_madness/south.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/css/octicons/sprockets-octicons.scss" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/march_madness/test.csv" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/march_madness/test_async.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/march_madness/west.csv" />
+      <change type="DELETED" beforePath="C:\Users\luke.li\Google Drive\javascript\march_madness\.idea\workspace.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/controllers/BracketCtrlAngular.js" afterPath="$PROJECT_DIR$/public/js/controllers/BracketCtrlAngular.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/partials/bracket-angular.jade" afterPath="$PROJECT_DIR$/views/partials/bracket-angular.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/bracket.css" afterPath="$PROJECT_DIR$/public/css/bracket.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/march_madness/brackets.js" afterPath="$PROJECT_DIR$/march_madness/brackets.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/ng-joyride/ng-joyride.js" afterPath="$PROJECT_DIR$/public/js/ng-joyride/ng-joyride.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/index.jade" afterPath="$PROJECT_DIR$/views/index.jade" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes.js" afterPath="$PROJECT_DIR$/app/routes.js" />
     </list>
     <ignored path="march_madness.iws" />
@@ -39,11 +55,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="User.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/models/User.js">
+      <file leaf-file-name="index.jade" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/views/index.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1071">
-              <caret line="3" column="26" selection-start-line="3" selection-start-column="26" selection-end-line="3" selection-end-column="26" />
+            <state vertical-scroll-proportion="0.6" vertical-offset="37" max-vertical-offset="1751">
+              <caret line="23" column="65" selection-start-line="23" selection-start-column="65" selection-end-line="23" selection-end-column="65" />
               <folding />
             </state>
           </provider>
@@ -52,40 +68,8 @@
       <file leaf-file-name="bracket-angular.jade" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/partials/bracket-angular.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1105">
-              <caret line="5" column="128" selection-start-line="5" selection-start-column="128" selection-end-line="5" selection-end-column="128" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ng-joyride.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/ng-joyride/ng-joyride.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.33333334" vertical-offset="3374" max-vertical-offset="8891">
-              <caret line="208" column="34" selection-start-line="208" selection-start-column="27" selection-end-line="208" selection-end-column="34" />
-              <folding>
-                <marker date="1426140460709" expanded="true" signature="784:788" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BracketCtrlAngular.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/controllers/BracketCtrlAngular.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.551724" vertical-offset="2218" max-vertical-offset="9265">
-              <caret line="146" column="25" selection-start-line="146" selection-start-column="25" selection-end-line="146" selection-end-column="25" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="bracket_joyride_text.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/march_madness/joyride_text/bracket_joyride_text.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
-              <caret line="14" column="63" selection-start-line="14" selection-start-column="63" selection-end-line="14" selection-end-column="63" />
+            <state vertical-scroll-proportion="-4.9827585" vertical-offset="0" max-vertical-offset="1309">
+              <caret line="17" column="8" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
               <folding />
             </state>
           </provider>
@@ -94,28 +78,28 @@
       <file leaf-file-name="bracket.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/js/bracket.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="952">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="952">
               <caret line="1" column="192" selection-start-line="1" selection-start-column="182" selection-end-line="1" selection-end-column="192" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Bracket.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Bracket.js">
+      <file leaf-file-name="BracketCtrlAngular.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/js/controllers/BracketCtrlAngular.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="480" max-vertical-offset="1496">
-              <caret line="74" column="5" selection-start-line="74" selection-start-column="5" selection-end-line="74" selection-end-column="5" />
+            <state vertical-scroll-proportion="-1.7586207" vertical-offset="0" max-vertical-offset="9979">
+              <caret line="6" column="32" selection-start-line="6" selection-start-column="32" selection-end-line="6" selection-end-column="32" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
+      <file leaf-file-name="bracket.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/css/bracket.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.90586144" vertical-offset="0" max-vertical-offset="612">
-              <caret line="30" column="19" selection-start-line="30" selection-start-column="19" selection-end-line="30" selection-end-column="19" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1142" max-vertical-offset="2040">
+              <caret line="90" column="1" selection-start-line="90" selection-start-column="1" selection-end-line="90" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -124,8 +108,8 @@
       <file leaf-file-name="routes.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/routes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2111" max-vertical-offset="4709">
-              <caret line="139" column="29" selection-start-line="139" selection-start-column="14" selection-end-line="139" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4811">
+              <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -134,8 +118,28 @@
       <file leaf-file-name="brackets.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/march_madness/brackets.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="663">
-              <caret line="25" column="42" selection-start-line="25" selection-start-column="42" selection-end-line="25" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="680">
+              <caret line="7" column="66" selection-start-line="7" selection-start-column="66" selection-end-line="7" selection-end-column="66" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_async.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/march_madness/test_async.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="408">
+              <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="csv2json.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/march_madness/csv2json.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510">
+              <caret line="2" column="41" selection-start-line="2" selection-start-column="41" selection-end-line="2" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -149,12 +153,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/models/user.js" />
-        <option value="$PROJECT_DIR$/public/javascripts/localang.js" />
-        <option value="$PROJECT_DIR$/views/partials/signup.jade" />
         <option value="$PROJECT_DIR$/app/socket-routes.js" />
         <option value="$PROJECT_DIR$/public/js/controllers/BoxCtrl.js" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/public/js/services/BracketService.js" />
         <option value="$PROJECT_DIR$/views/partials/minigame.jade" />
         <option value="$PROJECT_DIR$/public/js/controllers/BracketCtrl.js" />
@@ -191,15 +191,19 @@
         <option value="$PROJECT_DIR$/views/partials/box-angular.jade" />
         <option value="$PROJECT_DIR$/public/modal/modal.tpl.html" />
         <option value="$PROJECT_DIR$/public/js/bracket.js" />
-        <option value="$PROJECT_DIR$/views/index.jade" />
         <option value="$PROJECT_DIR$/march_madness/joyride_text/bracket_joyride_text.txt" />
-        <option value="$PROJECT_DIR$/app/routes.js" />
         <option value="$PROJECT_DIR$/public/css/bracket.css" />
         <option value="$PROJECT_DIR$/public/js/ng-joyride/ng-joyride.js" />
-        <option value="$PROJECT_DIR$/views/partials/bracket-angular.jade" />
         <option value="$PROJECT_DIR$/Bracket.js" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/march_madness/test.csv" />
+        <option value="$PROJECT_DIR$/march_madness/csv2json.js" />
+        <option value="$PROJECT_DIR$/march_madness/test_async.js" />
+        <option value="$PROJECT_DIR$/app/routes.js" />
         <option value="$PROJECT_DIR$/march_madness/brackets.js" />
         <option value="$PROJECT_DIR$/public/js/controllers/BracketCtrlAngular.js" />
+        <option value="$PROJECT_DIR$/views/partials/bracket-angular.jade" />
+        <option value="$PROJECT_DIR$/views/index.jade" />
       </list>
     </option>
   </component>
@@ -240,6 +244,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -456,10 +462,22 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="march_madness" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="march_madness" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -777,6 +795,7 @@
       <workItem from="1426015351622" duration="10570000" />
       <workItem from="1426083328936" duration="25532000" />
       <workItem from="1426127454368" duration="16861000" />
+      <workItem from="1426169011132" duration="11852000" />
     </task>
     <task id="LOCAL-00001" summary="trying to do authentication">
       <created>1425479515582</created>
@@ -842,7 +861,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="216884000" />
+    <option name="totallyTimeSpent" value="228736000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -871,7 +890,6 @@
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32972974" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3297062" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -879,8 +897,8 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32829374" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32995737" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32826087" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36205018" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32824427" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36126223" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32752994" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -893,6 +911,7 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32826087" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
@@ -960,35 +979,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/views/partials/box.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="731">
-          <caret line="27" column="36" selection-start-line="9" selection-start-column="0" selection-end-line="27" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/controllers/BoxCtrlFooterAngular.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.43074325" vertical-offset="0" max-vertical-offset="1122">
-          <caret line="15" column="23" selection-start-line="15" selection-start-column="23" selection-end-line="15" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/partials/footer.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="592">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/controllers/BracketCtrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="849" max-vertical-offset="1632">
-          <caret line="62" column="65" selection-start-line="62" selection-start-column="46" selection-end-line="62" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/partials/boxes-table.jade">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="592">
@@ -1018,13 +1008,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/ngStorage.js">
+      <provider editor-type-id="sourcemapFileViewerProvider">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.30357143" vertical-offset="0" max-vertical-offset="119">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
         </state>
-      </provider>
-      <provider editor-type-id="sourcemapFileViewerProvider">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config/db.js">
@@ -1038,13 +1028,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-4.576923" vertical-offset="0" max-vertical-offset="323">
           <caret line="7" column="32" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-16.346153" vertical-offset="34" max-vertical-offset="799">
-          <caret line="27" column="29" selection-start-line="27" selection-start-column="29" selection-end-line="27" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -1066,7 +1049,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="374" max-vertical-offset="1598">
           <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1222,19 +1204,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/controllers/MainPageCtrl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2074">
-          <caret line="15" column="20" selection-start-line="15" selection-start-column="20" selection-end-line="15" selection-end-column="47" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/secret.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="136">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="2" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1246,44 +1219,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/css/bracket.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1295" max-vertical-offset="2040">
-          <caret line="88" column="22" selection-start-line="88" selection-start-column="22" selection-end-line="88" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/partials/home.jade">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
           <caret line="0" column="70" selection-start-line="0" selection-start-column="62" selection-end-line="0" selection-end-column="70" />
-          <folding>
-            <marker date="1426127448746" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1426127448746" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1426127448746" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1426127448746" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1426127448746" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1426127448746" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/index.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="394" max-vertical-offset="1717">
-          <caret line="69" column="33" selection-start-line="69" selection-start-column="33" selection-end-line="69" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/ng-joyride/ng-joyride.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334" vertical-offset="3374" max-vertical-offset="8891">
+        <state vertical-scroll-proportion="0.0" vertical-offset="3374" max-vertical-offset="8891">
           <caret line="208" column="34" selection-start-line="208" selection-start-column="27" selection-end-line="208" selection-end-column="34" />
-          <folding>
-            <marker date="1426140460709" expanded="true" signature="784:788" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1295,26 +1243,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/partials/bracket-angular.jade">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1105">
-          <caret line="5" column="128" selection-start-line="5" selection-start-column="128" selection-end-line="5" selection-end-column="128" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/routes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2111" max-vertical-offset="4709">
-          <caret line="139" column="29" selection-start-line="139" selection-start-column="14" selection-end-line="139" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/march_madness/joyride_text/bracket_joyride_text.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
           <caret line="14" column="63" selection-start-line="14" selection-start-column="63" selection-end-line="14" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="612">
+          <caret line="27" column="12" selection-start-line="27" selection-start-column="12" selection-end-line="27" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/controllers/MainPageCtrl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.7931035" vertical-offset="1402" max-vertical-offset="2074">
+          <caret line="92" column="31" selection-start-line="92" selection-start-column="14" selection-end-line="92" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.961538" vertical-offset="0" max-vertical-offset="833">
+          <caret line="29" column="19" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="19" />
           <folding />
         </state>
       </provider>
@@ -1327,6 +1286,57 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/march_madness/test.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.2666667" vertical-offset="0" max-vertical-offset="187">
+          <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="com.intellij.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/march_madness/csv2json.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="510">
+          <caret line="2" column="41" selection-start-line="2" selection-start-column="41" selection-end-line="2" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/routes.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4811">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/march_madness/test_async.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="408">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/march_madness/brackets.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="680">
+          <caret line="7" column="66" selection-start-line="7" selection-start-column="66" selection-end-line="7" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/css/bracket.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1142" max-vertical-offset="2040">
+          <caret line="90" column="1" selection-start-line="90" selection-start-column="1" selection-end-line="90" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/bracket.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="952">
@@ -1335,26 +1345,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/march_madness/brackets.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="663">
-          <caret line="25" column="42" selection-start-line="25" selection-start-column="42" selection-end-line="25" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/controllers/BracketCtrlAngular.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.551724" vertical-offset="2218" max-vertical-offset="9265">
-          <caret line="146" column="25" selection-start-line="146" selection-start-column="25" selection-end-line="146" selection-end-column="25" />
+        <state vertical-scroll-proportion="-1.7586207" vertical-offset="0" max-vertical-offset="9979">
+          <caret line="6" column="32" selection-start-line="6" selection-start-column="32" selection-end-line="6" selection-end-column="32" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/views/partials/bracket-angular.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.90586144" vertical-offset="0" max-vertical-offset="612">
-          <caret line="30" column="19" selection-start-line="30" selection-start-column="19" selection-end-line="30" selection-end-column="19" />
+        <state vertical-scroll-proportion="-4.9827585" vertical-offset="0" max-vertical-offset="1309">
+          <caret line="17" column="8" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/index.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6" vertical-offset="37" max-vertical-offset="1751">
+          <caret line="23" column="65" selection-start-line="23" selection-start-column="65" selection-end-line="23" selection-end-column="65" />
           <folding />
         </state>
       </provider>
