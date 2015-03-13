@@ -14,8 +14,8 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
 	$scope.isCollapsed = true;
 	$scope.name = true;
 	$scope.tabs = [
-		{ link : '/bracket-angular', label : 'Bracket', class: 'glyphicon glyphicon-tasks', alignTo: 'bracket', myColor: "red" },
-		{ link : '/box-angular', label : 'Box', class: 'glyphicon glyphicon-th', alignTo: 'box', myColor: "blue" },
+		{ link : '/bracket-angular', label : 'Bracket', class: 'icon-bracket', alignTo: 'bracket', myColor: "red" },
+		{ link : '/box-angular', label : 'Box', class: 'icon-boxes', alignTo: 'box', myColor: "blue" },
 		{ link : '/minigame', label : 'MiniGame', class:'glyphicon glyphicon-user', alignTo: 'minigame', myColor: "green" },
 		{ link : '/achievements', label : 'Achievements', class:'glyphicon glyphicon-cup', alignTo: 'achievements', myColor: "green" }
 	];
@@ -150,6 +150,7 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
 				element.css("top", new_top);
 				element.css("background-color", col_hex);
 				element.css("content", "RED");
+				element.css("font-size", "large");
 
 			}
 		}

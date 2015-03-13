@@ -21,7 +21,7 @@ html
 		link(rel='stylesheet', href='/css/ng-joyride/ng-joyride.css')
 		link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css')
 		link(rel='stylesheet', href="/css/octicons/octicons.css")
-		link(rel='stylesheet', href="/css/octicons/octicons.css")
+		link(rel='stylesheet', href="/css/custom/style.css")
 
 		script(src='/js/bracket.js')
 		script(src='/js/nonangular/sidebar.js')
@@ -57,12 +57,15 @@ html
 		div#page-wrapper.active
 			nav(class="navbar navbar-default navbar-fixed-top" ng-controller="NavBarController as sidebar")
 				div.container
-					div.navbar-header {{name}}
+					div.navbar-header
+						a(href="/")
+							span(class="glyphicon glyphicon-home")
+							| {{name}}
 					div#navbar.navbar-collapse.collapse
 						ul.nav.navbar-nav.navbar-right
 							li
 								span(class="glyphicon glyphicon-question-sign", ng-click="startTutorial()")
-									a(href='') Start Tutotrial
+									a(href='') Start Tutorial
 							li
 								a(href="/" ng-if="isLoggedIn" ng-click='logOut()') Logout
 

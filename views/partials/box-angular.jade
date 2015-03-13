@@ -1,52 +1,38 @@
+.hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()')
 .jumbotron.text-center
 	h1 Nerds and Proud
 	p {{tagline}}
 	div.container(ng-init="init")
-		table.table.table-bordered
-			tr
-				td(colspan=7) spacer
-				td(colspan=10) Winning Team
-			-var games = ['Championship', 'Finals', 'Semifinals', 'Quarterfinals', 'Round of 32', 'Round of 64'];
-			tr(ng-repeat="row in winning_team" class="winning-rows")
-				td(ng-if="$index == 0" rowspan=16, id='{{losing_label}}' style="width:20px")
-				td(ng-if="$index == 0" colspan=6, rowspan=6, id='big-space')
-				td(id="winning-team-row-{{$index}}") {{row[0]}}
-				td(ng-repeat="cell in row" ng-if="$index > 0") {{cell}}
-			tr(class="losing-cols")
-				td(ng-repeat="cell in losing_team" id="losing-team-col-{{$index}}") {{cell[0]}}
-				td(ng-repeat="p in players[0] track by $index" ng-class="{'you': '{{p}}'=='Luke'}") {{p}}
-			tr(ng-repeat="i in [1,2,3,4,5,6,7,8,9]" class="losing-cols")
-				td(ng-repeat="cell in losing_team") {{cell[i]}}
-				td(ng-repeat="p in players[i] track by $index" ng-class="{'you': '{{p}}'=='Luke'}") {{p}}
-		rotate-me(id="losing-team-label", my-parent='losing-label' loaded = 'loaded') Losing Team
-		draw-line(ng-repeat="i in [0,1,2,3,4,5]" from="winning-team-row-{{$index}}" to="losing-team-col-{{$index}}" loaded = 'loaded') {{6-$index}}
+		.the-box
+			.mytable
+				.myrow
+					.big-spacer-cell big spacer
+					.empty-cell#winning-cols
+						.mytable
+							div(ng-repeat="row in winning_team", class="winning-rows myrow")
+								div(id="winning-team-row-{{$index}}" class="number-cell")
+									span(ng-if="($index == 5)", class="joyridecustom1") {{row[0]}}
+									span(ng-if="($index == 4)", class="joyridecustom4") {{row[0]}}
+									span(ng-if="($index != 5 && $index != 4)") {{row[0]}}
+								div(ng-repeat="cell in row" ng-if="$index > 0" class="number-cell winning-numbers") {{cell}}
+				.myrow#losing-rows
+					.empty-cell
+						.mytable#losing-table
+							div(class="losing-cols myrow")
+								div(ng-repeat="cell in losing_team" id="losing-team-col-{{$index}}", class="number-cell losing-numbers")
+									span(ng-if="($index == 5)", class="joyridecustom2") {{cell[0]}}
+									span(ng-if="($index != 5)") {{cell[0]}}
+							div(ng-repeat="i in [1,2,3,4,5,6,7,8,9]", class="losing-cols myrow")
+								div(ng-repeat="cell in losing_team", class="number-cell losing-numbers") {{cell[i]}}
+					.empty-cell
+						.mytable
+							div(ng-repeat="i in [0,1,2,3,4,5,6,7,8,9]", class="losing-cols myrow")
+								div(ng-repeat="p in players[i] track by $index", ng-class="{'you': '{{p}}'=='Luke'}", class="number-cell player-cell")
+									span(ng-if="(i == 0 &&  $index == 0)", class="joyridecustom3") {{p}}
+									span(ng-if="(i != 0 ||  $index != 0)") {{p}}
+		center-me(id="losing-team-label", my-parent='losing-rows', loaded = 'loaded', vertical='true', padding='8') Losing Team
+		center-me(id="winning-team-label", my-parent='winning-cols', loaded = 'loaded', vertical='false', padding='8') Winning Team
+		draw-line(ng-repeat="i in [0,1,2,3,4,5]" from="winning-team-row-{{$index}}" to="losing-team-col-{{$index}}", loaded = 'loaded') {{6-$index}}
 
-		//
-			-for(var i = 0; i < games.length; i++)
-				tr(id= 'round-' + i, height='34px')
-					-if(i == 0)
-						td(rowspan=16, id='losing-label')
-						td(colspan=6, rowspan=6, id='big-space')
-					-for(var j = 0; j < winning_numbers[0].length; j++)
-						td= winning_numbers[i][j]
-			-for(var j = 0; j < losing_numbers[0].length; j++)
-				tr
-					-for(var i = 0; i < games.length; i++)
-						td(width='34px')= losing_numbers[i][j]
-					-for(var i = 0; i < winning_numbers[0].length; i++)
-						-var user = boxes[i+j*winning_numbers[0].length];
-						-console.log(boxes[i+j*10])
-						-if(user == curUser)
-							td.you= user
-						-else
-							td= user
-	//
-		div(id="losing-team-label", rotate-me='', my-parent='losing-label') Losing Team
-		div(class="forty-five-degrees", rotate-me-45='', my-parent='round-0', my-offset='0' , style="left: 280px; top: 410px") 6
-		div(class="forty-five-degrees", rotate-me-45='', my-parent='round-1', my-offset='1', style="left: 360px; top: 410px") 5
-		div(class="forty-five-degrees", rotate-me-45='', my-parent='round-2', my-offset='2', style="left: 440px; top: 410px") 4
-		div(class="forty-five-degrees", rotate-me-45='', my-parent='round-3', my-offset='3', style="left: 520px; top: 410px") 3
-		div(class="forty-five-degrees", rotate-me-45='', my-parent='round-4', my-offset='4', style="left: 600px; top: 410px") 2
-		div(class="forty-five-degrees", rotate-me-45='', my-parent='round-5', my-offset='5', style="left: 660px; top: 410px") 1
 
 link(rel='stylesheet', href='/css/box-angular.css')

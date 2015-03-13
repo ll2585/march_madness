@@ -43,6 +43,21 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 				}
 				return ($scope.data[region]['tree'][team_id]['team']['color']);
 			};
+			$scope.getTeamMascot=function(regionID, round, matchup, team_num, team_id_given){
+				var region = $scope.region_dict[regionID];
+				var team_id = team_id_given !== undefined ? team_id_given : Math.pow(2,round) + (2*matchup) + (team_num-1);
+				if($scope.data[region]['tree'][team_id] == undefined){
+					console.log(round)
+					console.log(matchup)
+					console.log(team_num)
+					console.log(team_id_given)
+					console.log(team_id);
+				}
+				if($scope.data[region]['tree'][team_id]['team']==null){
+					return null;
+				}
+				return ($scope.data[region]['tree'][team_id]['team']['mascot']);
+			};
 			$scope.getTeam=function(regionID, round, matchup, team_num, team_id_given){
 				var region = $scope.region_dict[regionID];
 				var team_id = team_id_given !== undefined ? team_id_given : Math.pow(2,round) + (2*matchup) + (team_num-1);
@@ -87,6 +102,9 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 			};
 			$scope.getChampionColor=function(){
 				return $scope.getTeamColor(4, 0, 0,1);
+			};
+			$scope.getChampionMascot=function(){
+				return $scope.getTeamMascot(4, 0, 0,1);
 			};
 			$scope.moveTop=function(regionID, round, matchup, team_num, forced){
 
@@ -324,7 +342,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 	}
 	$scope.config = [
 
-		{
+		{//0
 			type: "title",
 			heading: "THE BRACKET",
 			text: '<div class="row"><div id="title-text" class="col-md-12"><span class="main-text">Welcome to <strong>THE BRACKET</strong></span><br><span>Please click "Next" to learn how to make picks, or click "Skip" if you already know.</span></div></div>',
@@ -339,7 +357,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             scrollPadding: 250,
             scroll: true
 		},
-		{
+		{//2
 			type: "element",
 			selector: ".joyridecustom1",
 			heading: "Basics (2)",
@@ -363,7 +381,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             scrollPadding: 70,
             scroll: true
         },
-        {
+        {//5
             type: "element",
             selector: ".teams",
             heading: "Basics (2)",
@@ -392,7 +410,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             type: "function",
             fn: 'demoFunction2'
         },
-        {
+        {//9
             type: "element",
             selector: ".joyridecustom3",
             heading: "Basics (2)",
@@ -432,7 +450,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             scrollPadding: 250,
             scroll: true
         },
-        {
+        {//13
             type: "element",
             selector: ".final-score",
             heading: "Basics (2)",
@@ -459,7 +477,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             type: "function",
             fn: 'showShuffleJoyride'
         },
-        {
+        {//17
             type: "element",
             selector: "#shuffle-button",
             heading: "Basics (2)",
@@ -473,7 +491,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             type: "function",
             fn: 'showEraseJoyride'
         },
-        {
+        {//19
             type: "element",
             selector: "#clear-bracket-button",
             heading: "Basics (2)",
@@ -496,7 +514,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             curtainClass: "blueColour",
             scrollPadding: 250,
             scroll: true
-        },{
+        },{//22
             type: "title",
             heading: "The End",
             text: 'That is it. Thank you for reading all these tips, have fun!',
@@ -509,6 +527,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
     };
     $scope.demoFunction2 = function(){
         $scope.randomizePicks(true);
+
 
     };
     $scope.demoFunction3 = function(){

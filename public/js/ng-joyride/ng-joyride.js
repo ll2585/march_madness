@@ -348,6 +348,8 @@
                 };
 
 
+
+
                 var $fkEl;
                 function hasReachedEnd() {
                     return currentStepCount === (steps.length - 1);
@@ -505,7 +507,8 @@
 
                         }
 
-                    });
+                    }
+					);
                 }
             }
         };
