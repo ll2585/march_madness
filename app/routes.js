@@ -7,10 +7,53 @@ var secret = require('./secret.js');
 var api = require('./api.js');
 
 module.exports = function(app) {
+    app.use('/api', expressJwt({
+        secret : secret()
+    }).unless({path: ['/api/auth','/api/things','/api/auth/signup']}));
 
-		app.get('/async.json', function(req, res){
-			return res.json(test);
-		});
+    function isLuke(req, res, next) {
+
+        // do any checks you want to in here
+        console.log(req.session);
+        // CHECK THE USER STORED IN SESSION FOR A CUSTOM VARIABLE
+        // you can do this however you want with whatever variables you set up
+        if (req.session.token !== undefined){
+            var decoded = jwt.verify(req.session.token, secret());
+            User.findOne({_id: decoded.id}, function (err, user) {
+                if (err) {
+                    console.log(err);
+                    return res.sendStatus(401);
+                }
+                var is_admin = user.is_admin;
+                if(is_admin){
+                    console.log("LUKE!!")
+                    next();
+                }else {
+                    console.log("NOT LUKE?!")
+                    return res.status(401).send("NOT LUKE BITCH");
+                }
+            });
+
+
+        }
+
+        // IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
+        else{
+            res.redirect('/');
+        }
+
+    }
+    app.get('/admin', isLuke, function(req, res) {
+        console.log("GOING HOME");
+        return res.render("admin")
+    });
+    app.get('/admin/brackets-opened', isLuke, function(req, res) {
+        return res.json({'brackets-opened': tournament.brackets_opened()});
+    });
+
+    app.get('/async.json', function(req, res){
+        return res.json(test);
+    });
 
     app.post('/register', function(req, res){
         var username = req.body.username || '';
@@ -90,9 +133,16 @@ module.exports = function(app) {
                     console.log("Attempt failed to login with " + user.username);
                     return res.status(401).send("Incorrect password.");
                 }
+                req.user = user;
+                console.log("SET REQ USER")
+                console.log(req.user);
+                console.log(req.session);
+
 
                 var token = jwt.sign({id: user._id}, secret());
-
+                req.session['token'] = token;
+                console.log("ADDED THE TOKEN!??!")
+                console.log(req.session);
                 return res.json({token:token, user: user});
             });
 
@@ -223,7 +273,7 @@ module.exports = function(app) {
 		losing_numbers.push(shuffle([0, 9, 8, 7, 6, 5, 4, 3, 2, 1]));
 	}
 
-	var users = ["Luke", "Dean", "Liana", "Jenny", "Steve", "Jolyn"];
+	var users = ["luke", "Dean", "Liana", "Jenny", "Steve", "Jolyn", "Elaine", "Lillian", "Jane", "Liping", "Alex", "Kawin"];
 	var boxes = [];
 	while(boxes.length < 100){
 		if(100-boxes.length < users.length){ //not even so fill with no one

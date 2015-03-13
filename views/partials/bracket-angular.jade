@@ -1,6 +1,6 @@
 .hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()')
 .jumbotron.text-center
-	h1 Geek City
+	h1 THE BRACKET
 	div.pickCounter(ng-show="doneWithTutorial || showPickCounter") {{pickCountTotal()['Completed Picks']}}/{{pickCountTotal()['Total Picks']}}
 	.btn-group(role='group')
 		button.btn.btn-default(type='button', id="shuffle-button" ng-click="randomizePicks()" ng-show = "doneWithTutorial || showShuffle")
@@ -63,13 +63,13 @@
 						div(ng-repeat="j in matchupCount($index) track by $index" class="matchup matchup-{{$index}}" ng-class="{'joyridecustom1': (k == 0 && i == 0 && $index == 0), 'joyridecustom2': (k == 0 && i == 1 && $index == 0), 'joyridecustom3': (k == 0 && i == 3 && $index == 0)}")
 							//starts with 2^i and then goes to 2^(i+1)-1 but in reverse; the 1 in the function is whether it is first team or second team
 							div.firstTeam(style='height: {{getNewHeight($parent.$index)}}px;', ng-click="moveTop(k,(4-$parent.$index), $index, 1)")
-								div(class = "team", ng-class="{'team-selectable': canClick(k,(4-$parent.$index), $index, 1), 'team-chosen-to-lose':  choseToLose(k,(4-$parent.$index), $index, 1)  } ")
+								div(class = "team", ng-class="{'team-selectable': canClick(k,(4-$parent.$index), $index, 1), 'team-chosen-to-lose':  choseToLose(k,(4-$parent.$index), $index, 1), 'region-{{k}}-champ-in-region-round': getTeamName(k, (4-$parent.$index), $index, 1)==getTeamName(k, 0, 0, 0,1) && (4-$parent.$index)==1 } ")
 									span(ng-if="toggleColors && getTeamColor(k, (4-i), $index, 1) !== '' && getTeam(k, (4-i), $index, 1) !== null ", class="glyphicon glyphicon-tag", ng-style="{'color': getTeamColor(k, (4-i), $index, 1)}")
 									span(ng-if="toggleMascots && getTeamMascot(k, (4-i), $index, 1) !== '' && getTeam(k, (4-i), $index, 1) !== null", class="icon-{{getTeamMascot(k, (4-i), $index, 1)}}")
 									|{{getTeamName(k, (4-$parent.$index), $index, 1)}}
 							div(class="firstSpacer" ng-class="{'firstSpacer-right': ($parent.$parent.$index%2==1), 'firstSpacer-left': ($parent.$parent.$index%2==0)}", style = "height: {{getNewHeight($parent.$index)}}px;")
 							div(class="secondTeam" ng-class="{'secondTeam-right': ($parent.$parent.$index%2==1), 'secondTeam-left': ($parent.$parent.$index%2==0)}", style='height: {{getNewHeight($parent.$index)}}px;', ng-click="moveTop(k,(4-$parent.$index), $index, 2)")
-								div(class = "team", ng-class="{'team-selectable': canClick(k,(4-$parent.$index), $index, 2), 'team-chosen-to-lose':  choseToLose(k,(4-$parent.$index), $index, 2) } ")
+								div(class = "team", ng-class="{'team-selectable': canClick(k,(4-$parent.$index), $index, 2), 'team-chosen-to-lose':  choseToLose(k,(4-$parent.$index), $index, 2), 'region-{{k}}-champ-in-region-round': getTeamName(k, (4-$parent.$index), $index, 2)==getTeamName(k, 0, 0, 0,1)&& (4-$parent.$index)==1 } ")
 									span(ng-if="toggleColors  && getTeamColor(k, (4-i), $index, 2) !== '' && getTeam(k, (4-i), $index, 2) !== null ", class="glyphicon glyphicon-tag", ng-style="{'color': getTeamColor(k, (4-i), $index, 2)}")
 									span(ng-if="toggleMascots && getTeamMascot(k, (4-i), $index, 2) !== '' && getTeam(k, (4-i), $index, 2) !== null", class="icon-{{getTeamMascot(k, (4-i), $index, 2)}}")
 									|{{getTeamName(k, (4-$parent.$index), $index, 2)}}

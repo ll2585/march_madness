@@ -23,7 +23,12 @@ var uriUtil = require('mongodb-uri');
 
 mongoose.connect(uriUtil.formatMongoose(configDB['local-url'])); //THISLISTENS TO PORT ALREADY LOL DO THIS AFTER AUTH
 
+var MongoStore = require('connect-mongo')(session);
 
+app.use(session({
+    secret: 'foo',
+    store: new MongoStore({ mongooseConnection: mongoose.connection })
+}));
 
 
 //require('./config/passport')(passport); // pass passport for configuration

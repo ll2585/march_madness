@@ -32,6 +32,7 @@ angular.module('MainCtrl', ['bracketApp']).controller('MainController', ['$rootS
                 AuthenticationService.user = data.user.username;
                 AuthenticationService.userRole = data.user.role;
                 $window.sessionStorage.token = data.token;
+                $window.sessionStorage.name = data.user.name;
                 $window.sessionStorage.user = data.user.username; // to fetch the user details on refresh
                 $window.sessionStorage.userRole = data.user.role; // to fetch the user details on refresh
 				console.log(AuthenticationService);

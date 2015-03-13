@@ -159,9 +159,33 @@
 
             }
 
+            function reloadConfig(newConfig, isEnd){
+                this.content = $sce.trustAsHtml(newConfig.text);
+                this.selector = newConfig.selector;
+                this.heading = newConfig.heading;
+                this.placement = newConfig.placement;
+                this.scroll = newConfig.scroll;
+                /** written by me **/
+                this.scrollPadding = newConfig.scrollPadding;
+                this.popoverTemplate = '<div class=\"row\"><div id=\"pop-over-text\" class=\"col-md-12\">' + this.content + '</div></div><hr><div class=\"row\"><div class=\"col-md-4 center\"><a class=\"skipBtn pull-left\" type=\"button\"><i class=\"glyphicon glyphicon-ban-circle\" class=\"mr5\"></i>&nbsp; Skip</a></div><div class=\"col-md-8\"><div class=\"pull-right\"><button id=\"prevBtn\" class=\"prevBtn btn btn-xs\" type=\"button\"><i class=\"glyphicon glyphicon-chevron-left\"></i>&nbsp;Previous</button> <button id=\"nextBtn\" class=\"nextBtn btn btn-xs btn-primary\" type=\"button\">' + _generateTextForNext() + '</button></div></div></div>';
+
+
+                function _generateTextForNext() {
+
+                    if (isEnd) {
+
+                        return 'Finish';
+                    } else {
+                        return 'Next&nbsp;<i class=\"glyphicon glyphicon-chevron-right\">'
+
+                    }
+                }
+            }
+
             return {
                 generate: generate,
-                cleanUp: cleanUp
+                cleanUp: cleanUp,
+                reloadConfig: reloadConfig
 
             }
 
@@ -508,8 +532,26 @@
                         }
 
                     }
+
+
 					);
+                    for(var i = 0; i < scope.config.length; i++){
+                        scope.$watchCollection('config['+i+']', function (newval, oldval) {
+                            if(newval){
+
+                                if(newval.type == 'element'){
+
+                                    steps[newval.index].reloadConfig(newval, newval.index === (options.config.length-1));
+                                }
+                            }
+                        });
+                    }
+
+
+
+
                 }
+
             }
         };
 

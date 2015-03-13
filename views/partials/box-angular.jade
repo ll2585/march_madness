@@ -1,7 +1,7 @@
 .hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()')
 .jumbotron.text-center
-	h1 Nerds and Proud
-	p {{tagline}}
+	h1 THE BOX
+	br
 	div.container(ng-init="init")
 		.the-box
 			.mytable
@@ -9,27 +9,25 @@
 					.big-spacer-cell big spacer
 					.empty-cell#winning-cols
 						.mytable
-							div(ng-repeat="row in winning_team", class="winning-rows myrow")
-								div(id="winning-team-row-{{$index}}" class="number-cell")
-									span(ng-if="($index == 5)", class="joyridecustom1") {{row[0]}}
-									span(ng-if="($index == 4)", class="joyridecustom4") {{row[0]}}
-									span(ng-if="($index != 5 && $index != 4)") {{row[0]}}
-								div(ng-repeat="cell in row" ng-if="$index > 0" class="number-cell winning-numbers") {{cell}}
+							div(ng-repeat="(index1, row) in winning_team", class="winning-rows myrow")
+								div(id="winning-team-row-{{index1}}" class="number-cell")
+									span(ng-class="{'joyridecustom1': 0 == first_coords[1] && index1==5, 'joyridecustom4': 0 == first_coords[1] && index1==4}") {{row[0]}}
+								div(ng-repeat="(index2, cell) in row" ng-if="index2 > 0" class="number-cell winning-numbers")
+									span(ng-class="{'joyridecustom1': index2 == first_coords[1] && index1==5, 'joyridecustom4': index2 == first_coords[1] && index1==4}") {{cell}}
 				.myrow#losing-rows
 					.empty-cell
 						.mytable#losing-table
 							div(class="losing-cols myrow")
-								div(ng-repeat="cell in losing_team" id="losing-team-col-{{$index}}", class="number-cell losing-numbers")
-									span(ng-if="($index == 5)", class="joyridecustom2") {{cell[0]}}
-									span(ng-if="($index != 5)") {{cell[0]}}
+								div(ng-repeat="(index1, cell) in losing_team" id="losing-team-col-{{index1}}", class="number-cell losing-numbers")
+									span(ng-class="{'joyridecustom2': 0 == first_coords[0] && index1==5, 'joyridecustom5': 0 == first_coords[0] && index1==4}") {{cell[0]}}
 							div(ng-repeat="i in [1,2,3,4,5,6,7,8,9]", class="losing-cols myrow")
-								div(ng-repeat="cell in losing_team", class="number-cell losing-numbers") {{cell[i]}}
+								div(ng-repeat="(index1, cell) in losing_team", class="number-cell losing-numbers")
+									span(ng-class="{'joyridecustom2': i == first_coords[0] && index1==5, 'joyridecustom5': i == first_coords[0] && index1==4}") {{cell[i]}}
 					.empty-cell
 						.mytable
 							div(ng-repeat="i in [0,1,2,3,4,5,6,7,8,9]", class="losing-cols myrow")
-								div(ng-repeat="p in players[i] track by $index", ng-class="{'you': '{{p}}'=='Luke'}", class="number-cell player-cell")
-									span(ng-if="(i == 0 &&  $index == 0)", class="joyridecustom3") {{p}}
-									span(ng-if="(i != 0 ||  $index != 0)") {{p}}
+								div(ng-repeat="p in players[i] track by $index", ng-class="{'you': {{p == myName}}}", class="number-cell player-cell")
+									span( ng-class="{'joyridecustom3': i == first_coords[0] && $index == first_coords[1]}") {{p}}
 		center-me(id="losing-team-label", my-parent='losing-rows', loaded = 'loaded', vertical='true', padding='8') Losing Team
 		center-me(id="winning-team-label", my-parent='winning-cols', loaded = 'loaded', vertical='false', padding='8') Winning Team
 		draw-line(ng-repeat="i in [0,1,2,3,4,5]" from="winning-team-row-{{$index}}" to="losing-team-col-{{$index}}", loaded = 'loaded') {{6-$index}}

@@ -32,12 +32,6 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 			$scope.getTeamColor=function(regionID, round, matchup, team_num, team_id_given){
 				var region = $scope.region_dict[regionID];
 				var team_id = team_id_given !== undefined ? team_id_given : Math.pow(2,round) + (2*matchup) + (team_num-1);
-				if($scope.data[region]['tree'][team_id] == undefined){
-					console.log(round)
-					console.log(matchup)
-					console.log(team_num)
-					console.log(team_id);
-				}
 				if($scope.data[region]['tree'][team_id]['team']==null){
 					return null;
 				}
@@ -46,13 +40,6 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 			$scope.getTeamMascot=function(regionID, round, matchup, team_num, team_id_given){
 				var region = $scope.region_dict[regionID];
 				var team_id = team_id_given !== undefined ? team_id_given : Math.pow(2,round) + (2*matchup) + (team_num-1);
-				if($scope.data[region]['tree'][team_id] == undefined){
-					console.log(round)
-					console.log(matchup)
-					console.log(team_num)
-					console.log(team_id_given)
-					console.log(team_id);
-				}
 				if($scope.data[region]['tree'][team_id]['team']==null){
 					return null;
 				}
@@ -340,15 +327,18 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 		$scope.startJoyRide = true;
 
 	}
+    var index = 0;
 	$scope.config = [
 
 		{//0
+            index: index++,
 			type: "title",
 			heading: "THE BRACKET",
 			text: '<div class="row"><div id="title-text" class="col-md-12"><span class="main-text">Welcome to <strong>THE BRACKET</strong></span><br><span>Please click "Next" to learn how to make picks, or click "Skip" if you already know.</span></div></div>',
 			curtainClass: "championship-bracket"
 		},
 		{
+            index: index++,
 			type: "element",
 			selector: ".teams",
 			heading: "Basics (1)",
@@ -358,6 +348,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             scroll: true
 		},
 		{//2
+            index: index++,
 			type: "element",
 			selector: ".joyridecustom1",
 			heading: "Basics (2)",
@@ -368,10 +359,12 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             scroll: true
 		},
 		{
+            index: index++,
 			type: "function",
 			fn: 'demoFunction'
 		},
         {
+            index: index++,
             type: "element",
             selector: ".joyridecustom2",
             heading: "Basics (2)",
@@ -382,6 +375,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             scroll: true
         },
         {//5
+            index: index++,
             type: "element",
             selector: ".teams",
             heading: "Basics (2)",
@@ -392,10 +386,12 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             scroll: true
         },
         {
+            index: index++,
             type: "function",
             fn: 'showPickCounterJoyride'
         },
         {
+            index: index++,
             type: "element",
             selector: ".pickCounter",
             heading: "Basics (2)",
@@ -407,20 +403,34 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 
         },
         {
+            index: index++,
             type: "function",
             fn: 'demoFunction2'
         },
         {//9
+            index: index++,
             type: "element",
             selector: ".joyridecustom3",
             heading: "Basics (2)",
-            text: "Here is a sample completed bracket. Notice that the champion chosen in this region...",
+            text: "Here is a sample completed bracket.",
             placement: "left",
             curtainClass: "blueColour",
             scrollPadding: 70,
             scroll: true
         },
         {
+            index: index++,
+            type: "element",
+            selector: makeJoyRideChampion(),
+            heading: "Basics (2)",
+            text: "[replaced]",
+            placement: "left",
+            curtainClass: "blueColour",
+            scrollPadding: 170,
+            scroll: true
+        },
+        {
+            index: index++,
             type: "element",
             selector: "#region-1-winner",
             heading: "Basics (2)",
@@ -431,26 +441,29 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             scroll: true
             },
         {
+            index: index++,
             type: "element",
             selector: "#finals-match",
             heading: "Basics (2)",
-            text: "Note that these two teams are forecast to be in the finals...",
+            text: "[replaced]",
             placement: "bottom",
             curtainClass: "blueColour",
             scrollPadding: 250,
             scroll: true
         },
         {
+            index: index++,
             type: "element",
             selector: "#champion",
             heading: "Basics (2)",
-            text: "..., and this team is forecast to win. You will receive massive points if this actually happens.",
+            text: "[replaced]",
             placement: "bottom",
             curtainClass: "blueColour",
             scrollPadding: 250,
             scroll: true
         },
-        {//13
+        {//14
+            index: index++,
             type: "element",
             selector: ".final-score",
             heading: "Basics (2)",
@@ -461,6 +474,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             scroll: true
         },
         {
+            index: index++,
             type: "element",
             selector: ".save-button",
             heading: "Basics (2)",
@@ -470,14 +484,17 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             scrollPadding: 250,
             scroll: true
         },{
+            index: index++,
             type: "function",
             fn: 'demoFunction3'
         },
         {
+            index: index++,
             type: "function",
             fn: 'showShuffleJoyride'
         },
-        {//17
+        {//18
+            index: index++,
             type: "element",
             selector: "#shuffle-button",
             heading: "Basics (2)",
@@ -488,10 +505,12 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             scroll: true
         },
         {
+            index: index++,
             type: "function",
             fn: 'showEraseJoyride'
         },
-        {//19
+        {//20
+            index: index++,
             type: "element",
             selector: "#clear-bracket-button",
             heading: "Basics (2)",
@@ -502,10 +521,12 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             scroll: true
         },
         {
+            index: index++,
             type: "function",
             fn: 'showColorsJoyride'
         },
         {
+            index: index++,
             type: "element",
             selector: "#show-options-dropdown",
             heading: "Basics (2)",
@@ -514,7 +535,8 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             curtainClass: "blueColour",
             scrollPadding: 250,
             scroll: true
-        },{//22
+        },{//23
+            index: index++,
             type: "title",
             heading: "The End",
             text: 'That is it. Thank you for reading all these tips, have fun!',
@@ -527,13 +549,18 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
     };
     $scope.demoFunction2 = function(){
         $scope.randomizePicks(true);
-
+        $scope.config['10'].text = "Notice that the champion chosen in this region (" + $scope.getTeamName(0,0,0,1) + ")..."
+        $scope.config['12'].text = "Note that " + $scope.getTeamName(4,0,0,2) +  " and " +  $scope.getTeamName(4,0,0,3) + " are forecast to be in the finals..."
+        $scope.config['13'].text = "..., and "+  $scope.getTeamName(4,0,0,1) +" is forecast to win. You will receive massive points if this actually happens."
 
     };
     $scope.demoFunction3 = function(){
         $scope.clearBracket();
 
     };
+    function makeJoyRideChampion(){
+        return ".region-0-champ-in-region-round"
+    }
 	$rootScope.$on('start-tutorial', function(event, obj){
         $scope.start();
 	});
