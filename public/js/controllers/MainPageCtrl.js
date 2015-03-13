@@ -90,7 +90,7 @@ angular.module('MainPageCtrl', ['bm.bsTour']).controller('MainPageController', [
 
 	$scope.onFinish = function () {
 		userInfoFactory.sendFlags($window.sessionStorage.token, $window.sessionStorage.user, 'skipped_main_page', true);
-		scope.skipped_main_page = true;
+		$scope.skipped_main_page = true;
 		$rootScope.$broadcast('CLOSE_MODAL');
 
 
@@ -98,20 +98,4 @@ angular.module('MainPageCtrl', ['bm.bsTour']).controller('MainPageController', [
 
 
 
-}]).factory('userInfoFactory', function($http) {
-    /** https://docs.angularjs.org/guide/providers **/
-    var urlBase = '';
-    var userInfoFactory = {};
-
-    userInfoFactory.getFlags = function(token, username) {
-        return $http({
-            url: '/getFlags', method: "GET", params: {token: token, username: username}
-        });
-    };
-
-	userInfoFactory.sendFlags = function(token, username, flag, val) {
-		return $http.post( '/setFlags', {username: username, token: token, flag: flag, val: val });
-	};
-
-    return userInfoFactory;
-});
+}]);

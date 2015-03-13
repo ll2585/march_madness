@@ -48,4 +48,20 @@ angular.module('bracketApp', ['ngRoute', 'bracketRoutes', 'MainCtrl', 'BracketCt
 			return $q.reject(rejection);
 		}
 	};
+}).factory('userInfoFactory', function($http) {
+	/** https://docs.angularjs.org/guide/providers **/
+	var urlBase = '';
+	var userInfoFactory = {};
+
+	userInfoFactory.getFlags = function(token, username) {
+		return $http({
+			url: '/getFlags', method: "GET", params: {token: token, username: username}
+		});
+	};
+
+	userInfoFactory.sendFlags = function(token, username, flag, val) {
+		return $http.post( '/setFlags', {username: username, token: token, flag: flag, val: val });
+	};
+
+	return userInfoFactory;
 });

@@ -1,8 +1,8 @@
-angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketControllerAngular', ['$scope', '$rootScope', '$http', 'ModalService', 'bracketFactory','$window', '$modal', function($scope, $rootScope, $http, ModalService, bracketFactory, $window, $modal) {
+angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketControllerAngular', ['$scope', '$rootScope', '$http', 'ModalService', 'bracketFactory','$window', 'userInfoFactory', function($scope, $rootScope, $http, ModalService, bracketFactory, $window, userInfoFactory) {
 	$scope.base_height = 20;
 	$scope.round = function(x){
 		return Math.round(x);
-	}
+	};
 	$scope.toggleColors = true;
 	$scope.toggleMascots = true;
     $scope.completedPicks = 0;
@@ -274,7 +274,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 
 
             $scope.finalsPicked = ($scope.getTeamName(4, 1, 0, 1) != null && $scope.getTeamName(4, 1, 0, 2) != null )
-
+			$scope.getFlags();
 
 
 		});
@@ -568,25 +568,38 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
     $scope.doneWithTutorial = false;
     $scope.showPickCounterJoyride = function(){
         $scope.showPickCounter = true;
-    }
+    };
     $scope.showShuffleJoyride = function(){
         $scope.showShuffle = true;
-    }
+    };
     $scope.showEraseJoyride = function(){
         $scope.showErase = true;
-    }
+    };
     $scope.showColorsJoyride = function(){
         $scope.showColors = true;
-    }
-	$scope.start();
-
-}]).controller('ModalController', function($scope, close) {
-
-    $scope.close = function(result) {
-        close(result, 500); // close, but give 500ms for bootstrap to animate
     };
 
-}).factory('bracketFactory', function($http, $q) {
+
+	$scope.getFlags = function(){
+		if(!$window.sessionStorage.userFlags){
+			userInfoFactory.getFlags($window.sessionStorage.token, $window.sessionStorage.user).then(function(data) {
+				console.log(data);
+				$scope.skipped_bracket_page = data.data.skipped_bracket_page;
+				if(!$scope.skipped_bracket_page){
+					$scope.start();
+				}
+			});
+		}
+	};
+
+
+	$scope.onFinish = function () {
+		$scope.skipped_bracket_page = true;
+		userInfoFactory.sendFlags($window.sessionStorage.token, $window.sessionStorage.user, 'skipped_bracket_page', true);
+
+	};
+
+}]).factory('bracketFactory', function($http, $q) {
 	/** https://docs.angularjs.org/guide/providers **/
 	var urlBase = '';
 	var bracketFactory = {};

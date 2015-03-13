@@ -89,6 +89,7 @@ function send_mail(){
     });
 }
 //******************************************************
-
+var setUpServer = require('./setupServer.js');
+setUpServer();
 app.listen(port);
 console.log("Listening on port " + port);

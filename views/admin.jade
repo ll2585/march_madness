@@ -30,5 +30,19 @@ html
 		script(src='/js/smart-table/smart-table.js')
 	body(ng-app="adminApp" ng-controller="AdminController")
 		|{{hi}}
-		button(ng-click="close-brackets" ng-show="brackets_opened") Close Brackets
-		button(ng-click="open-brackets" ng-show="!brackets_opened") Close Brackets
+		button(ng-click="toggleBrackets(false)" ng-show="brackets_opened") Close Brackets
+		button(ng-click="toggleBrackets(true)" ng-show="!brackets_opened") Open Brackets
+		br
+		select(ng-model='region')
+			option(value='mid_west') Mid-west
+			option(value='west') West
+			option(value='south') South
+			option(value='east') East
+			option(value='championship') Championship
+		div(ng-repeat="(level, i) in levels(region) track by $index")
+			hr
+			div(ng-if="level==0") CHAMPION
+				div(class="champion-name")
+			div(ng-if="level != 0") {{matchupName(region, level)}}
+				div(ng-repeat="(matchup, j) in getMatchups(level) track by $index")
+					|{{getTeamName(region, level, matchup, 1)}} v. {{getTeamName(region, level, matchup, 2)}}
