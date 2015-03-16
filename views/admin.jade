@@ -33,7 +33,31 @@ html
 			|{{hi}}
 			button(ng-click="toggleBrackets(false)" ng-show="brackets_opened") Close Brackets
 			button(ng-click="toggleBrackets(true)" ng-show="!brackets_opened") Open Brackets
+			hr
+			|USERS
+			table(class="table table-condensed table-striped table-bordered")
+				thead
+					tr
+						th username
+						th email
+				tbody
+					tr(ng-repeat="u in users")
+						td {{u.username}}
+						td {{u.email}}
+			hr
+			|NUMBERS AND THE BOX
 			br
+			|Winning Numbers: {{winning_numbers}}
+			br
+			|Losing Numbers: {{losing_numbers}}
+			br
+			|Player Numbers: {{player_numbers}}
+			br
+			button(ng-click="generateNumbers()" ng-show="!numbers_generated") Generate Numbers
+			button(ng-click="generateNumbers()" ng-show="numbers_generated") Regenerate Numbers
+			button(ng-click="saveNumbers()", ng-show="numbers_generated && !brackets_opened") Save Numbers
+			#saved-numbers-alert
+			hr
 			select(ng-model='region')
 				option(value='mid_west') Mid-west
 				option(value='west') West
@@ -103,7 +127,7 @@ html
 					div.col-xs-1
 						input(type="checkbox" ng-model="achievementsByUser[selectedUserForAchievements][i]['owned']")
 			#saved-achievements-alert
-			button(ng-click="saveAchievements()") Save Moneyboard
+			button(ng-click="saveAchievements()") Save Achievements
 
 
 link(rel='stylesheet', href='/css/admin.css')

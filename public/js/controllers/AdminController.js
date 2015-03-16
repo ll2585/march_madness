@@ -11,18 +11,96 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
     $scope.init = function(){
 		$http.get('/admin/getAllSettings').success(function(data){
 			$scope.settings = data;
-			$scope.brackets_opened = data['brackets_opened']
+			console.log("SETTINGS!!")
+			console.log(data);
+			$scope.brackets_opened = data['bracketOpened']
 			$scope.officialBracket = data['officialBracket']
             $scope.moneyBoard = data['moneyBoard'];
             $scope.achievements = data['achievements'];
             $scope.achievementsByUser = data['achievementsByUser'];
+			$scope.boxWinningsByUser = data['boxWinningsByUser'];
+			$scope.numbers_generated = data['winning_numbers'] !== null;
+			$scope.winning_numbers = data['winning_numbers'];
+			$scope.losing_numbers = data['losing_numbers'];
+			$scope.player_numbers = data['player_numbers'];
+			console.log("were the numbers generated?")
+			console.log(data['winning_numbers'])
+			console.log($scope.numbers_generated)
             if($scope.achievementsByUser==null){
                 $scope.achievementsByUser = {};
             }
+			if($scope.boxWinningsByUser==null){
+				$scope.boxWinningsByUser = {};
+			}
             console.log($scope.achievements);
             $scope.toggleMultiple = function(i) {
                 $scope.moneyBoard[i]['player'] = $scope.moneyBoard[i]['player'].slice(0,1)
             };
+			$scope.generateNumbers = function(){
+				if($scope.numbers_generated){
+					if(!confirm("Are you sure? They have been generated already!")){
+						return;
+					}
+				}
+
+				var user_usernames = [];
+				function shuffle(array) {
+					var currentIndex = array.length, temporaryValue, randomIndex;
+
+					// While there remain elements to shuffle...
+					while (0 !== currentIndex) {
+
+						// Pick a remaining element...
+						randomIndex = Math.floor(Math.random() * currentIndex);
+						currentIndex -= 1;
+
+						// And swap it with the current element.
+						temporaryValue = array[currentIndex];
+						array[currentIndex] = array[randomIndex];
+						array[randomIndex] = temporaryValue;
+					}
+
+					return array;
+				}
+				for(var u in $scope.users){
+					user_usernames.push($scope.users[u].username);
+				}
+				var winning_numbers = [];
+				var losing_numbers = [];
+
+				for (var i = 0; i < 6; i++) {
+					winning_numbers.push(shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]));
+					losing_numbers.push(shuffle([0, 9, 8, 7, 6, 5, 4, 3, 2, 1]));
+				}
+
+				var boxes = [];
+				while (boxes.length < 100) {
+					if (100 - boxes.length < user_usernames.length) { //not even so fill with no one
+						boxes.push("None");
+					} else {
+						for (var j = 0; j < user_usernames.length; j++) {
+							boxes.push(user_usernames[j]);
+						}
+					}
+				}
+				shuffle(boxes); //split it up into 10 arrays of size 10
+				var players = [];
+				var temp = [];
+				for (var i = 0; i < boxes.length; i++) {
+					if ((i % 10) == 0) {
+						if (temp.length == 10) {
+							players.push(temp);
+						}
+						var temp = [];
+					}
+					temp.push(boxes[i]);
+				}
+				players.push(temp);
+				$scope.losing_numbers = losing_numbers
+				$scope.winning_numbers = winning_numbers
+				$scope.player_numbers = players;
+				$scope.numbers_generated = true;
+			}
             $scope.toggleSelection = function(name, i) {
                 var selection = $scope.getMultipleLeaderSelection(i);
                 var idx = selection.indexOf(name);
@@ -164,7 +242,7 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
                                         user_info["Worst Pick"]['info'] = left_team_name + " v. " + right_team_name + ": " + name + " chose " + chosen_team_name + " to win but they lost by a score of " + left_score + " to " + right_score + ", for a difference of " + difference
                                     }
                                 }
-                                
+
                             }else{
                                 //correct team chosen, not first round
 
@@ -181,7 +259,7 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
                                     }
                                 }
                             }
-                            
+
                             //if left is red and your left is red and this isnt left and your this isnt that, or with right, then get a red point
                             if((left_team_color == 'red' && left_team_name==your_left_team.name && winning_team!= left_team_name) ||
                                 (right_team_color == 'red' && right_team_name==your_right_team.name && winning_team!= right_team_name)){
@@ -583,6 +661,55 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
 
 
 
+
+				//box achievements
+				console.log($scope.boxWinningsByUser)
+				if(!(username in $scope.boxWinningsByUser) && official['championship']['tree'][1]['team'] !== null){
+					giveAchievement("Knocked Out");
+				}
+				if(username in $scope.boxWinningsByUser){
+					var myWins = $scope.boxWinningsByUser[username]
+					if(myWins.length == 1 && official['championship']['tree'][1]['team'] !== null){
+						giveAchievement("Long Count");
+					}
+					if(myWins.length >= 10){
+						giveAchievement("Journeyman");
+					}
+					if(myWins.length >= 25){
+						giveAchievement("Gatekeeper");
+					}
+					if(myWins.length >= 50){
+						giveAchievement("Contender");
+					}
+					var round_wins = {};
+					var round_achievements = {
+						1: "Left Hook",
+						2: "Right Jab",
+						3: "Left Cross",
+						4: "Uppercut",
+						5: "Liver Shot",
+						6: "One Hit KO"
+					}
+					for(var i = 0; i < myWins.length; i++){
+						var win = myWins[i];
+						if(!(win.round in round_wins)){
+							round_wins[win.round] = 1;
+						}else{
+							round_wins[win.round] += 1;
+						}
+						if(round_wins[win.round] > 2){
+							giveAchievement("One-two Combo");
+						}
+						if(round_wins[win.round] > 4){
+							giveAchievement("Outpoint");
+						}
+						if(round_wins[win.round] > 8){
+							giveAchievement("Below the Belt");
+						}
+						giveAchievement(round_achievements[win.round]);
+					}
+
+				}
                 return achievements
             }
 
@@ -721,11 +848,83 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
                     }
                 }
                 console.log($scope.achievementsByUser)
-                $scope.recalculateScores();
+				if($scope.brackets_opened){
+					$scope.recalculateBox()
+					$scope.recalculateScores();
+				}
+
             }).error(function(data){
                 console.log(data);
             });
+			$scope.recalculateBox = function(){
+				$scope.boxWinningsByUser = {} // reset this...
+				var box_dict = {};
+				for(var i = 1; i < 7; i++){
+					box_dict['round_' + i] = {};
+				}
+				for(var i = 0; i < $scope.winning_numbers.length; i++){ //0->6,1->5...
+					var winning_number_dict = {};
+					for(var j = 0; j < $scope.winning_numbers[i].length; j++){
+						winning_number_dict[$scope.winning_numbers[i][j]] = j;
+					}
+					box_dict['round_' + (6-i)]['winning_dict'] = winning_number_dict;
+				}
+				for(var i = 0; i < $scope.losing_numbers.length; i++){
+					var losing_number_dict = {};
+					for(var j = 0; j < $scope.losing_numbers[i].length; j++){
+						losing_number_dict[$scope.losing_numbers[i][j]] = j;
+					}
+					box_dict['round_' + (6-i)]['losing_dict'] = losing_number_dict;
+				}
+				var roundMap = {
+					1: "Round of 64",
+					2: "Round of 32",
+					3: "Round of 16",
+					4: "Elite Eight",
+					5: "Final Four",
+					6: "National Championship Game"
+				};
+				var official = $scope.officialBracket;
+				for(var region in official){
+					for(var team_id in official[region]['tree']){
+						var node = official[region]['tree'][team_id];
 
+						if(node.team !== null && node.left !== null){
+							var round = $scope.getRound(team_id); //this looks at the WINNER of each matchup and then looks at the left and right, to prevent double counting
+							var box_round = 4-round; //regions: 3 = 1, 2 = 2, 1 = 3, 0 = 4; championship: 1 = 5, 0 = 6
+							if(region=='championship'){
+								box_round = 6-round;
+							}
+							console.log(box_round)
+
+							var left_node = official[region]['tree'][node.left];
+							var right_node = official[region]['tree'][node.right];
+							var winning_team_node = left_node.score > right_node.score ? left_node: right_node;
+							var losing_team_node = left_node.score < right_node.score ? left_node: right_node;
+							var winning_score = winning_team_node.score;
+							var losing_score = losing_team_node.score;
+							var winning_number = winning_score % 10;
+							var losing_number = losing_score % 10;
+							var winner_index = box_dict['round_' + box_round]['winning_dict'][winning_number]
+							var loser_index = box_dict['round_' + box_round]['losing_dict'][losing_number]
+							var winner_username = $scope.player_numbers[loser_index][winner_index]
+
+							if(!(winner_username in $scope.boxWinningsByUser)){
+								$scope.boxWinningsByUser[winner_username] = [];
+							}
+							$scope.boxWinningsByUser[winner_username].push({round: box_round, winning_team: winning_team_node.team.name, losing_team: losing_team_node.team.name,
+							winning_score: winning_score, losing_score: losing_score, winning_number: winning_number, losing_number: losing_number})
+						}
+
+					}
+				}
+
+				$http.post('/admin/setSetting', {setting: 'boxWinningsByUser', val: $scope.boxWinningsByUser }).success(function(data){
+					console.log("SAVED BOX WININGS!");
+				}).error(function(data){
+
+				});
+			}
             $scope.recalculateScores = function(){
                 for(var s in $scope.users){
                     var user =  $scope.users[s];
@@ -808,10 +1007,39 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
                 }
 
             }
+			$scope.saveNumbers = function() {
+				$http.post('/admin/setSetting', {setting: 'winning_numbers', val: $scope.winning_numbers }).success(function(data){
+					console.log("SAVED winning numbers");
+					$http.post('/admin/setSetting', {setting: 'losing_numbers', val: $scope.losing_numbers }).success(function(data){
+						console.log("SAVED losing numbers");
+						$http.post('/admin/setSetting', {setting: 'player_numbers', val: $scope.player_numbers }).success(function(data){
+							console.log("SAVED player numbers");
+							var myAlert = $alert({content: 'Saved!.', type: 'success',
+								container: "#saved-numbers-alert",
+								duration:1,
+								show: true});
+						}).error(function(data){
+							console.log("No data1");
+						});
+					}).error(function(data){
+						console.log("No data2");
+					});
+				}).error(function(data){
+					console.log("No data3");
+
+				});
+
+			};
             $scope.saveOfficialBracket = function() {
+				if($scope.brackets_opened) {
+					alert("CLOSE THE FUCKIGN BRACKETS IDIOT");
+					return;
+				}
                 $http.post('/admin/setSetting', {setting: 'officialBracket', val: $scope.officialBracket }).success(function(data){
                     console.log("SAVED!");
+					$scope.recalculateBox()
                     $scope.recalculateScores()
+
                     var myAlert = $alert({content: 'Saved!.', type: 'success',
                         container: "#saved-alert",
                         duration:1,
@@ -823,6 +1051,10 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
 
             };
             $scope.saveMoneyboard = function() {
+				if($scope.brackets_opened) {
+					alert("CLOSE THE FUCKIGN BRACKETS IDIOT");
+					return;
+				}
                 $http.post('/admin/setSetting', {setting: 'moneyBoard', val: $scope.moneyBoard }).success(function(data){
                     console.log("SAVED!");
                     var myAlert = $alert({content: 'Saved!.', type: 'success',
@@ -836,6 +1068,10 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
 
             };
             $scope.saveAchievements = function() {
+				if($scope.brackets_opened) {
+					alert("CLOSE THE FUCKIGN BRACKETS IDIOT");
+					return;
+				}
                 $http.post('/admin/setSetting', {setting: 'achievementsByUser', val: $scope.achievementsByUser }).success(function(data){
                     console.log("SAVED!");
                     var myAlert = $alert({content: 'Saved!.', type: 'success',

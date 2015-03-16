@@ -108,3 +108,13 @@ body{
     padding-bottom: 3px;
     border: 1px solid #ddd;
 }
+
+.scoreboard-row-0{
+    background-color: azure;
+}
+.scoreboard-row-1{
+    background-color: indianred;
+}
+.your-win{
+    font-weight: bold
+}

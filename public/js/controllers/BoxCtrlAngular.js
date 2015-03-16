@@ -1,20 +1,25 @@
 
-angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope', '$http', '$rootScope', '$window', function($scope, $http, $rootScope, $window) {
+angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope', '$http', '$rootScope', '$window', 'userInfoFactory', function($scope, $http, $rootScope, $window, userInfoFactory) {
 	$scope.winning_team = [1,2,3,4,5,6,7];
 	$scope.init = function(){
-		$http.get("/boxes.json").success(function(data){
+		$http({
+			url: '/boxes.json', method: "GET", params: {username: $window.sessionStorage.user}
+		}).success(function(data){
 			$scope.json_data = data
 			$scope.winning_team = $scope.json_data['winning_numbers'];
 			$scope.losing_team = $scope.json_data['losing_numbers'];
 			$scope.players = $scope.json_data['users'];
+
             var found_first_instance = false;
             for(var i = 0; i < $scope.players.length; i++){
                 if(found_first_instance){
                     break;
                 }
+				console.log("FOUND FIRST?" +  $scope.myName)
                 for(var j = 0; j < $scope.players[i].length; j++){
                     if($scope.players[i][j] == $scope.myName){
                         $scope.first_coords = [i,j];
+
                         found_first_instance = true;
                         break;
                     }
@@ -25,7 +30,29 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 			$scope.loaded = true;
             $scope.config[4].text = "If the winning team has a score ending in " + winning_num + " (like 1"+winning_num+", 2"+winning_num+", 3"+winning_num+", 4"+winning_num+", etc.)"
 			$scope.config[5].text = "And the losing team has a score ending in " + losing_num + " (like 1"+losing_num+", 2"+losing_num+", 3"+losing_num+", 4"+losing_num+", etc.) so the final score is something like 4"+winning_num + "-3" + losing_num
-            $scope.start();
+			$scope.getFlags();
+
+			if(!$scope.brackets_opened){
+				$http({
+					url: '/boxes_scoreboard.json', method: "GET", params: {username: $window.sessionStorage.user}
+				}).success(function(data){
+					$scope.box_scoreboard=  data;
+					$scope.box_scoreboard_by_round = [];
+					for(var u in $scope.box_scoreboard){
+						for(var i = 0; i < $scope.box_scoreboard[u].length; i++){
+							var temp = {};
+							var this_game = $scope.box_scoreboard[u][i]
+							temp['round'] = this_game.round;
+							temp['winning_team'] = this_game.winning_team;
+							temp['winning_score'] = this_game.winning_score;
+							temp['losing_team'] = this_game.losing_team;
+							temp['losing_score'] = this_game.losing_score;
+							temp['player'] = u
+							$scope.box_scoreboard_by_round.push(temp);
+						}
+					}
+				});
+			}
 		}).error(function(){
 			console.log("No data");
 		});
@@ -33,12 +60,33 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 	};
 	$scope.tagline = "Don't get boxed in!";
 	$scope.losing_label = "losing-label";
-    $scope.myName = $window.sessionStorage.name;
+    $scope.myName = $window.sessionStorage.user;
+	$scope.brackets_opened = false;
+	$http.get('/is_bracket_opened.json').success(function(data){
+		console.log("IS B OP")
+		$scope.brackets_opened = data['result']
+		console.log(data);
+	}).error(function(data){
+		console.log(data);
+	});
 
-
+	$scope.getFlags = function(){
+		if(!$window.sessionStorage.userFlags){
+			userInfoFactory.getFlags($window.sessionStorage.token, $window.sessionStorage.user).then(function(data) {
+				console.log("GOT FLAGS")
+				console.log(data);
+				$scope.doneWithTutorial = data.data.skipped_boxes_page;
+				if(!$scope.doneWithTutorial){
+					$scope.start();
+				}
+			});
+		}
+	};
 
 	$scope.onFinish = function(){
 		$scope.doneWithTutorial = true;
+		console.log("DONE WITH TUT")
+		userInfoFactory.sendFlags($window.sessionStorage.token, $window.sessionStorage.user, 'skipped_boxes_page', true);
 	}
 
 	$scope.startJoyRide = false;
@@ -173,7 +221,6 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 		$scope.start();
 	});
 
-	$scope.doneWithTutorial = false;
 	$scope.loaded = false;
 	$scope.init();
 }]).directive('centerMe', function($timeout, $window) {

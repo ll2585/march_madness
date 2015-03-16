@@ -1,6 +1,10 @@
 .hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()')
 .jumbotron.text-center
 	h1 THE BOX
+	h2 THE BRACKET {{username}}
+		span(ng-show="brackets_opened") &nbspIS OPENED
+		span(ng-show="!brackets_opened") &nbspIS CLOSED
+	h3(ng-show="brackets_opened") This is a demo box.
 	br
 	div.container(ng-init="init")
 		.the-box
@@ -31,6 +35,37 @@
 		center-me(id="losing-team-label", my-parent='losing-rows', loaded = 'loaded', vertical='true', padding='8') Losing Team
 		center-me(id="winning-team-label", my-parent='winning-cols', loaded = 'loaded', vertical='false', padding='8') Winning Team
 		draw-line(ng-repeat="i in [0,1,2,3,4,5]" from="winning-team-row-{{$index}}" to="losing-team-col-{{$index}}", loaded = 'loaded') {{6-$index}}
-
+		hr
+		table(class="your_scores table table-condensed table-striped table-bordered", ng-show="!brackets_opened") Your Scores
+			thead
+				tr
+					th Round
+					th Winning Team
+					th Losing Team
+			tbody
+				tr(ng-repeat="game in box_scoreboard[myName]")
+					td {{game.round}}
+					td {{game.winning_team}}
+						br
+						|{{game.winning_score}}
+					td {{game.losing_team}}
+						br
+						|{{game.losing_score}}
+		hr
+		div.box-scoreboard(ng-show="!brackets_opened") ALL SCORES
+			div.row
+				div.col-xs-3 Round
+				div.col-xs-3 Winning Team
+				div.col-xs-3 Losing Team
+				div.col-xs-3 Player
+			div.row(ng-repeat="(i, game) in box_scoreboard_by_round", class="scoreboard-row-{{i%2}}", ng-class="{'your-win': game.player == myName}")
+				div.col-xs-3 {{game.round}}
+				div.col-xs-3 {{game.winning_team}}
+					br
+					|{{game.winning_score}}
+				div.col-xs-3 {{game.losing_team}}
+					br
+					|{{game.losing_score}}
+				div.col-xs-3 {{game.player}}
 
 link(rel='stylesheet', href='/css/box-angular.css')

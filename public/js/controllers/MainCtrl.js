@@ -36,6 +36,7 @@ angular.module('MainCtrl', ['bracketApp']).controller('MainController', ['$rootS
                 $window.sessionStorage.user = data.user.username; // to fetch the user details on refresh
                 $window.sessionStorage.userRole = data.user.role; // to fetch the user details on refresh
 				console.log(AuthenticationService);
+
                 $location.path("/");
             }).error(function(status, data) {
 				console.log("SOERROR");
@@ -71,6 +72,9 @@ angular.module('MainCtrl', ['bracketApp']).controller('MainController', ['$rootS
 		}
 		else {
 			UserService.register(username, email, name).success(function(data) {
+				$scope.alert.content = 'Signed up! Check your email for your password.';
+				myAlert = $alert($scope.alert);
+				myAlert.show();
 				$location.path("/login");
 			}).error(function(status, data) {
 				console.log(status);

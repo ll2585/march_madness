@@ -32,7 +32,6 @@ angular.module('bracketRoutes', []).config(['$routeProvider', '$locationProvider
 		})
         .when('/bracket-angular/:name', {
             templateUrl: function(name) {
-                console.log(name);
                 return 'partials/bracket-angular/' + name.name;
             },
             controller: 'BracketControllerAngular',
@@ -59,8 +58,6 @@ angular.module('bracketRoutes', []).config(['$routeProvider', '$locationProvider
     AuthenticationService.check();
     $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
 		console.log("WE LOOKING");
-		console.log(AuthenticationService);
-		console.log($window.sessionStorage.token);
         //redirect only if both isAuthenticated is false and no token is set
         if (nextRoute != null && nextRoute.access != null && nextRoute.access.requiredAuthentication
             && !AuthenticationService.isAuthenticated && !$window.sessionStorage.token) {

@@ -1,10 +1,8 @@
 angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketControllerAngular', ['$scope', '$rootScope', '$http', 'ModalService', 'bracketFactory','$window', 'userInfoFactory', function($scope, $rootScope, $http, ModalService, bracketFactory, $window, userInfoFactory) {
 	$scope.base_height = 20;
     $scope.setUsername = function(n){
-        console.log(n);
         $scope.username = n == undefined ? $window.sessionStorage.user :  n;
-        console.log($scope.username);
-    }
+    };
 	$scope.round = function(x){
 		return Math.round(x);
 	};
@@ -15,7 +13,8 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
             return Math.pow(2,(4-round)) + (2*matchup) + (team_num-1);
         }
         
-    }
+    };
+	$scope.brackets_opened = false;
 	$scope.toggleColors = true;
 	$scope.toggleMascots = true;
     $scope.completedPicks = 0;
@@ -24,9 +23,15 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
     $scope.showShuffle = false;
     $scope.showErase = false;
     $scope.showColors = false;
+	$http.get('/is_bracket_opened.json').success(function(data){
+		console.log("IS B OP")
+		$scope.brackets_opened = data['result']
+		console.log(data);
+	}).error(function(data){
+		console.log(data);
+	});
 	$scope.loadBrackets = function(){
         $scope.$watch("username", function() {
-            console.log($scope.username);
             bracketFactory.getSavedBracket($scope.username).then(function (data) {
                 $scope.data = data;
                 $scope.finals_1_projected_score = $scope.data['championship']['tree'][2]['score']
@@ -94,7 +99,6 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                     }
 
                     $scope.data[region]['tree'][team_id]['team'] = JSON.parse(JSON.stringify(team));
-                    console.log($scope.data[region]['tree'][team_id]['team'])
                 };
                 $scope.removeFromTop = function (regionID, name, top_node_id) {
                     var region = $scope.region_dict[regionID];
@@ -121,7 +125,9 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                     return $scope.getTeamMascot(4, 0, 0, 0, 1);
                 };
                 $scope.moveTop = function (regionID, round, matchup, team_num, forced, team_id_given) {
-
+					if(!$scope.brackets_opened){
+						return;
+					}
                     if (forced === undefined) {
                         var iAmforced = false;
                     } else {
@@ -134,11 +140,9 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                     var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
 
                     var top_node_id = $scope.data[region]['tree'][team_id]['top'];
-                    console.log("MOVING UP " + top_node_id)
                     var team = $scope.getTeam(regionID, 0, 0, 0, team_id);
                     var team_name = $scope.getTeamName(regionID, 0, 0, 0, team_id);
                     $scope.setTeam(regionID, 0, 0, 0, team, top_node_id);
-                    console.log("MOVING UP " + $scope.getTeamName(regionID, 0, 0, 0, top_node_id))
                     var other_team_id = $scope.data[region]['tree'][top_node_id]['left'] == team_id ? $scope.data[region]['tree'][top_node_id]['right'] : $scope.data[region]['tree'][top_node_id]['left'];
                     var other_team_name = $scope.getTeamName(regionID, 0, 0, 0, other_team_id);
                     if (other_team_name != null) {
@@ -204,12 +208,16 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                         $scope.storeBracketAsSaved();
                     }).error(function (status, data) {
                         console.log("SOERROR");
+						alert(status);
                         console.log(status);
                         console.log(data);
                     });
                 };
 
                 $scope.clearBracket = function () {
+					if(!$scope.brackets_opened){
+						return;
+					}
                     for (var k = 0; k < 4; k++) {
                         var region = $scope.region_dict[k];
                         for (var j = 16; j < 32; j++) {
@@ -226,6 +234,9 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                 };
 
                 $scope.randomizePicks = function (forced) {
+					if(!$scope.brackets_opened){
+						return;
+					}
                     if (forced === undefined) {
                         var iAmforced = false;
                     } else {
@@ -304,7 +315,6 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                 $scope.finalsPicked = ($scope.getTeamName(4, 0, 0, 0, 1) != null && $scope.getTeamName(4, 0, 0, 0, 2) != null )
                 $scope.getFlags();
                 bracketFactory.getScoreboard($window.sessionStorage.user).then(function (data) {
-                    console.log(data);
                     $scope.score = data;
                     $scope.myScore = data[$scope.username]
                 });
@@ -370,9 +380,6 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                         var node = $scope.officialBracket[region]['tree'][team_id];
                         var myChoice = $scope.getTeamName(regionID, 0, 0, 0, team_id);
                         var result = officialName == myChoice;
-                        if (regionID == 0 && team_id == 9) {
-                            console.log(officialName)
-                        }
                         return (myChoice == officialName) && (officialName != null)
                     };
                     $scope.incorrectTeam = function (regionID, round, matchup, team_num, team_id_given) {
@@ -416,10 +423,9 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                     };
 
                     $scope.getTeamEliminated = function (regionID, team_id, myChosenTeamName) {
-                        var testMe = regionID == 0 && team_id == 3 && myChosenTeamName == "LSU"
+                        var testMe = regionID == 0 && team_id == 22 && myChosenTeamName == "Northern Iowa"
                         var region = $scope.region_dict[regionID];
                         var node = $scope.officialBracket[region]['tree'][team_id];
-
                         if (node.left == null) {
                             return node.team.name != myChosenTeamName;
                         }
@@ -432,6 +438,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                                 return true;
                             }
                         }
+
                         return $scope.getTeamEliminated(regionID, node.left, myChosenTeamName) && $scope.getTeamEliminated(regionID, node.right, myChosenTeamName);
                     };
 
@@ -822,6 +829,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 
 	bracketFactory.saveBracket = function(token, username, bracket) {
 		console.log("SAVING?");
+
 		return $http.post( '/savebracket', {username: username, token: token, bracket: bracket});
 	};
 

@@ -7,7 +7,8 @@ var Q = require('Q');
 var api = require('./api.js');
 var ServerSettings     = require('./models/ServerSettings.js');
 var setUpServer = require('../setupServer.js');
-var settings = {'bracketOpened': false, 'officialBracket': null, 'scores': null, 'moneyBoard': null, 'achievements': null, 'achievementsByUser': null}; //get settings first - cache settings so we dont connect to db all the time
+var settings = {'bracketOpened': false, 'officialBracket': null, 'scores': null, 'moneyBoard': null, 'achievements': null, 'achievementsByUser': null,
+'winning_numbers': null, 'losing_numbers': null, 'player_numbers': null, 'boxWinningsByUser': null}; //get settings first - cache settings so we dont connect to db all the time
 console.log("!@$@%");
 var settings_loaded = false;
 var initial_settings = setUpServer.initialSettings()
@@ -114,6 +115,12 @@ module.exports = function(app) {
 	});
 	app.get('/admin/getSetting', isLuke, function (req, res) {
 		var setting = req.query.setting;
+		return res.json({'result': settings[setting]});
+	});
+
+	app.get('/is_bracket_opened.json', function (req, res) {
+		var setting = 'bracketOpened'
+		console.log()
 		return res.json({'result': settings[setting]});
 	});
 
@@ -284,6 +291,10 @@ module.exports = function(app) {
 				return res.sendStatus(401);
 			}
 			if (user._id == decoded.id) {
+				if(!settings['bracketOpened']){
+					console.log("ITS CLOSED")
+					return res.status(406).send("Not Acceptable - Brackets Closed. Please refresh.");
+				}
 				console.log(bracket['mid_west']['tree']);
 				var partial_update = {$set: {bracket: bracket}};
 				User.findOneAndUpdate({username: username}, partial_update, function (err) {
@@ -351,6 +362,7 @@ module.exports = function(app) {
     app.get('/scoreboard.json', function (req, res) {
         var username = req.query.username;
         console.log(username);
+		console.log("SOMEONE WANTS A SCOREBOARD");
         User.findOne({username: username}, function (err, user) {
             if (err) {
                 console.log(err);
@@ -368,6 +380,28 @@ module.exports = function(app) {
             }
         });
     });
+
+	app.get('/boxes_scoreboard.json', function (req, res) {
+		var username = req.query.username;
+		console.log(username);
+		console.log("SOMEONE WANTS A BOXBOARD");
+		User.findOne({username: username}, function (err, user) {
+			if (err) {
+				console.log(err);
+				return res.sendStatus(404);
+			}
+			else {
+				var boxes_scoreboard = settings['boxWinningsByUser'];
+				if (Object.keys(boxes_scoreboard).length == 0) {
+					return res.status(404).send("No bracket found");
+				} else {
+
+					return res.json(boxes_scoreboard);
+				}
+
+			}
+		});
+	});
 
 	app.post('/setFlags', function (req, res) {
 
@@ -421,41 +455,56 @@ module.exports = function(app) {
 		return array;
 	}
 
-	var winning_numbers = [];
-	var losing_numbers = [];
 
-	for (var i = 0; i < 6; i++) {
-		winning_numbers.push(shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]));
-		losing_numbers.push(shuffle([0, 9, 8, 7, 6, 5, 4, 3, 2, 1]));
-	}
 
-	var users = ["luke", "Dean", "Liana", "Jenny", "Steve", "Jolyn", "Elaine", "Lillian", "Jane", "Liping", "Alex", "Kawin"];
-	var boxes = [];
-	while (boxes.length < 100) {
-		if (100 - boxes.length < users.length) { //not even so fill with no one
-			boxes.push("None");
-		} else {
-			for (var j = 0; j < users.length; j++) {
-				boxes.push(users[j]);
+	function generate_demo_numbers(username){
+		var winning_numbers = [];
+		var losing_numbers = [];
+
+		for (var i = 0; i < 6; i++) {
+			winning_numbers.push(shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]));
+			losing_numbers.push(shuffle([0, 9, 8, 7, 6, 5, 4, 3, 2, 1]));
+		}
+
+		var users = [username, "Lucia", "Nina", "Rupert", "Asher", "Finola", "Denver", "Faris", "Illtyd", "Mamie", "Olga", "Luiza"];
+		var boxes = [];
+		while (boxes.length < 100) {
+			if (100 - boxes.length < users.length) { //not even so fill with no one
+				boxes.push("None");
+			} else {
+				for (var j = 0; j < users.length; j++) {
+					boxes.push(users[j]);
+				}
 			}
 		}
-	}
-	shuffle(boxes); //split it up into 10 arrays of size 10
-	var players = [];
-	var temp = [];
-	for (var i = 0; i < boxes.length; i++) {
-		if ((i % 10) == 0) {
-			if (temp.length == 10) {
-				players.push(temp);
+		shuffle(boxes); //split it up into 10 arrays of size 10
+		var players = [];
+		var temp = [];
+		for (var i = 0; i < boxes.length; i++) {
+			if ((i % 10) == 0) {
+				if (temp.length == 10) {
+					players.push(temp);
+				}
+				var temp = [];
 			}
-			var temp = [];
+			temp.push(boxes[i]);
 		}
-		temp.push(boxes[i]);
+		players.push(temp);
+		return{
+			winning_numbers: winning_numbers, losing_numbers: losing_numbers, users: players
+		}
+		console.log(username + " WANTS BOXES LOLOLOL")
 	}
-	players.push(temp);
 	app.get('/boxes.json', function (req, res, next) {
-		var json = {winning_numbers: winning_numbers, losing_numbers: losing_numbers, users: players};
-		res.json(json);
+		if(settings['bracketOpened']){
+			var demo_numbers = generate_demo_numbers(req.query.username);
+			var json = demo_numbers;
+			res.json(json);
+		}else{
+			var json = {winning_numbers: settings['winning_numbers'], losing_numbers: settings['losing_numbers'], users: settings['player_numbers']};
+			res.json(json);
+		}
+
 	});
 
 
@@ -502,6 +551,7 @@ module.exports = function(app) {
         console.log(req.params.name);
         console.log("IS THERE A FUCKING NAME");
 		var setting = "bracketOpened";
+		console.log("WTF BRACKETS OEPNED" + settings[setting])
 		res.render('.' + req.path, {opened: settings[setting]});
 
 	});

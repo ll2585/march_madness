@@ -25,7 +25,8 @@ for(var i = 0; i < money_categories.length; i++){
 }
 var achievements = ["Completed Bracket", "I Say I Like Dogs", "But I Really Like Cats", "Random Picker", "Good Guesser", "Insider Trader", "Minigame Champion", "My Best Friend",
     "Jackpot", "Numbers Whiz", "Possible Billionaire", "Two for Two", "25% Chance", "Frontrunner", "1 and Done", "Tough Luck", "18-1", "Payback", "Blackout", "A New Hope",
-"Merlin", "Mordred", "Assassin", "Reverser", "Hunter", "Percival", "Lancelot", "Oberon", "Morgana", "Lady of the Lake", "Excalibur", "I'm feeling 22",
+	"Knocked Out",	"Left Hook",	"Right Jab",	"Left Cross",	"Uppercut",	"Liver Shot",	"One Hit KO",	"Long Count",	"Journeyman", "Gatekeeper",	 "Contender",	"One-two Combo",	"Outpoint",  "Below the Belt",
+	"Merlin", "Mordred", "Assassin", "Reverser", "Hunter", "Percival", "Lancelot", "Oberon", "Morgana", "Lady of the Lake", "Excalibur", "I'm feeling 22",
 "You love the game", "I'm on the bleachers", "Remember how that lasted for a day?", "Haters gonna hate", "Burning red", "All there's left to do is run", "Now I'm lying on the cold hard ground", "We come back everytime"];
 
 var initialSettings = [
@@ -34,7 +35,11 @@ var initialSettings = [
     {setting: 'scores', type: 'obj', val: []},
     {setting: 'moneyBoard', type: 'obj', val: money_category_dict},
     {setting: 'achievements', type: 'obj', val: achievements},
-    {setting: 'achievementsByUser', type: 'obj', val: null}
+    {setting: 'achievementsByUser', type: 'obj', val: null},
+	{setting: 'winning_numbers', type: 'obj', val: null},
+	{setting: 'losing_numbers', type: 'obj', val: null},
+	{setting: 'player_numbers', type: 'obj', val: null},
+	{setting: 'boxWinningsByUser', type: 'obj', val: null}
 ]
 module.exports= {
     insertSettingsIntoMongo: function () {
