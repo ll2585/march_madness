@@ -1,8 +1,21 @@
 angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketControllerAngular', ['$scope', '$rootScope', '$http', 'ModalService', 'bracketFactory','$window', 'userInfoFactory', function($scope, $rootScope, $http, ModalService, bracketFactory, $window, userInfoFactory) {
 	$scope.base_height = 20;
+    $scope.setUsername = function(n){
+        console.log(n);
+        $scope.username = n == undefined ? $window.sessionStorage.user :  n;
+        console.log($scope.username);
+    }
 	$scope.round = function(x){
 		return Math.round(x);
 	};
+    $scope.getTeamID = function(region, round, matchup, team_num){
+        if(region == 4){
+            return Math.pow(2,(2-round)) + (2*matchup) + (team_num-1);
+        }else{
+            return Math.pow(2,(4-round)) + (2*matchup) + (team_num-1);
+        }
+        
+    }
 	$scope.toggleColors = true;
 	$scope.toggleMascots = true;
     $scope.completedPicks = 0;
@@ -12,273 +25,424 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
     $scope.showErase = false;
     $scope.showColors = false;
 	$scope.loadBrackets = function(){
-		bracketFactory.getSavedBracket($window.sessionStorage.user).then(function(data) {
-			$scope.data = data;
-			$scope.storeBracketAsSaved();
+        $scope.$watch("username", function() {
+            console.log($scope.username);
+            bracketFactory.getSavedBracket($scope.username).then(function (data) {
+                $scope.data = data;
+                $scope.finals_1_projected_score = $scope.data['championship']['tree'][2]['score']
+                $scope.finals_2_projected_score = $scope.data['championship']['tree'][3]['score']
+                $scope.storeBracketAsSaved();
 
-			$scope.status = {
-				isopen: false
-			};
+                $scope.status = {
+                    isopen: false
+                };
 
-			$scope.toggled = function(open) {
-				$log.log('Dropdown is now: ', open);
-			};
+                $scope.toggled = function (open) {
+                    $log.log('Dropdown is now: ', open);
+                };
 
-			$scope.toggleDropdown = function($event) {
-				$event.preventDefault();
-				$event.stopPropagation();
-				$scope.status.isopen = !$scope.status.isopen;
-			};
-			$scope.getTeamColor=function(regionID, round, matchup, team_num, team_id_given){
-				var region = $scope.region_dict[regionID];
-				var team_id = team_id_given !== undefined ? team_id_given : Math.pow(2,round) + (2*matchup) + (team_num-1);
-				if($scope.data[region]['tree'][team_id]['team']==null){
-					return null;
-				}
-				return ($scope.data[region]['tree'][team_id]['team']['color']);
-			};
-			$scope.getTeamMascot=function(regionID, round, matchup, team_num, team_id_given){
-				var region = $scope.region_dict[regionID];
-				var team_id = team_id_given !== undefined ? team_id_given : Math.pow(2,round) + (2*matchup) + (team_num-1);
-				if($scope.data[region]['tree'][team_id]['team']==null){
-					return null;
-				}
-				return ($scope.data[region]['tree'][team_id]['team']['mascot']);
-			};
-			$scope.getTeam=function(regionID, round, matchup, team_num, team_id_given){
-				var region = $scope.region_dict[regionID];
-				var team_id = team_id_given !== undefined ? team_id_given : Math.pow(2,round) + (2*matchup) + (team_num-1);
-				if($scope.data[region]['tree'][team_id]['team']==null){
-					return null;
-				}
-				return ($scope.data[region]['tree'][team_id]['team']);
-			};
-			$scope.getTeamName=function(regionID, round, matchup, team_num, team_id_given){
-				var region = $scope.region_dict[regionID];
-				var team_id = team_id_given !== undefined ? team_id_given : Math.pow(2,round) + (2*matchup) + (team_num-1);
-                if($scope.data[region]['tree'][team_id]['team']==null){
-                    return null;
-                }
-				return ($scope.data[region]['tree'][team_id]['team']['name']);
-			};
-            $scope.setTeam=function(region, round, matchup, team_num, team, team_id_given){
-                var region = $scope.region_dict[region];
-                var team_id = team_id_given !== undefined ? team_id_given : Math.pow(2,round) + (2*matchup) + (team_num-1);
-                if($scope.data[region]['tree'][team_id]['team']==null){
-                    $scope.data[region]['tree'][team_id]['team'] = {}
-                }
-                $scope.data[region]['tree'][team_id]['team'] = JSON.parse(JSON.stringify(team));
-            };
-			$scope.removeFromTop=function(regionID, name, top_node_id){
-				var region = $scope.region_dict[regionID];
-				if($scope.getTeamName(regionID, 0, 0,top_node_id) == name){
-					$scope.data[region]['tree'][top_node_id]['team'] = null;
-				}
-				if($scope.data[region]['tree'][top_node_id]['top'] != null){
-					$scope.removeFromTop(regionID, name, $scope.data[region]['tree'][top_node_id]['top']);
-				}else if($scope.data[region]['tree'][top_node_id]['top'] == null && regionID != 4) {
-                    $scope.removeFromTop(4, name, $scope.championship_map[region]); //remove from championship
-                    if ($scope.getTeamName(4, 0, 0,$scope.championship_map[region]) == name) {
-                        $scope.data["championship"]['tree'][$scope.championship_map[region]]['team'] = null;
+                $scope.toggleDropdown = function ($event) {
+                    $event.preventDefault();
+                    $event.stopPropagation();
+                    $scope.status.isopen = !$scope.status.isopen;
+                };
+                $scope.getTeamColor = function (regionID, round, matchup, team_num, team_id_given) {
+                    var region = $scope.region_dict[regionID];
+                    var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+                    if ($scope.data[region]['tree'][team_id]['team'] == null) {
+                        return null;
                     }
-				}
-			};
-			$scope.getChampion=function(regionID){
-				var region = $scope.region_dict[regionID];
-                return $scope.getTeamName(regionID, 0, 0,1);
-			};
-			$scope.getChampionColor=function(){
-				return $scope.getTeamColor(4, 0, 0,1);
-			};
-			$scope.getChampionMascot=function(){
-				return $scope.getTeamMascot(4, 0, 0,1);
-			};
-			$scope.moveTop=function(regionID, round, matchup, team_num, forced){
+                    return ($scope.data[region]['tree'][team_id]['team']['color']);
+                };
+                $scope.getTeamMascot = function (regionID, round, matchup, team_num, team_id_given) {
+                    var region = $scope.region_dict[regionID];
+                    var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+                    if ($scope.data[region]['tree'][team_id]['team'] == null) {
+                        return null;
+                    }
+                    return ($scope.data[region]['tree'][team_id]['team']['mascot']);
+                };
+                $scope.getTeam = function (regionID, round, matchup, team_num, team_id_given) {
+                    var region = $scope.region_dict[regionID];
+                    var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+                    if ($scope.data[region]['tree'][team_id]['team'] == null) {
+                        return null;
+                    }
+                    return ($scope.data[region]['tree'][team_id]['team']);
+                };
+                $scope.getTeamSeed = function (regionID, round, matchup, team_num, team_id_given) {
+                    var region = $scope.region_dict[regionID];
+                    var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+                    if ($scope.data[region]['tree'][team_id]['team'] == null) {
+                        return null;
+                    }
+                    return ($scope.data[region]['tree'][team_id]['team']['seed']);
+                };
+                $scope.getTeamName = function (regionID, round, matchup, team_num, team_id_given) {
+                    var region = $scope.region_dict[regionID];
+                    var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+                    if ($scope.data[region]['tree'][team_id]['team'] == null) {
+                        return null;
+                    }
+                    return ($scope.data[region]['tree'][team_id]['team']['name']);
+                };
+                $scope.setTeam = function (regionID, round, matchup, team_num, team, team_id_given) {
+                    var region = $scope.region_dict[regionID];
+                    var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+                    if ($scope.data[region]['tree'][team_id]['team'] == null) {
+                        $scope.data[region]['tree'][team_id]['team'] = {}
+                    }
 
-                if(forced === undefined){
-                    var iAmforced = false;
-                }else{
-                    var iAmforced = true;
-                }
-                if(!$scope.doneWithTutorial && !iAmforced){
-                    return;
-                }
-				var region = $scope.region_dict[regionID];
-				var team_id = Math.pow(2,round) + (2*matchup) + (team_num-1);
-				var top_node_id = $scope.data[region]['tree'][team_id]['top'];
-				var team = $scope.getTeam(regionID, 0, 0,team_id);
-				var team_name = $scope.getTeamName(regionID, 0, 0,team_id);
-
-				$scope.setTeam(regionID,0,0,top_node_id,team);
-				var other_team_id = $scope.data[region]['tree'][top_node_id]['left'] == team_id ? $scope.data[region]['tree'][top_node_id]['right'] : $scope.data[region]['tree'][top_node_id]['left'];
-				var other_team_name = $scope.getTeamName(regionID,0,0,other_team_id);
-				if(other_team_name != null){
-					$scope.removeFromTop(regionID, other_team_name, top_node_id);
-				}
-
-				if($scope.data[region]['tree'][top_node_id]['top']==null){ //champion
-					if(regionID != 4){
-						$scope.setTeam(4,0,0,$scope.championship_map[region],team); //0->4 1->6 2->5 3->7
-					}
-				}
-
-			};
-			$scope.canClick=function(regionID, round, matchup, team_num){
-				var region = $scope.region_dict[regionID];
-				var team_id = Math.pow(2,round) + (2*matchup) + (team_num-1);
-				var cur_team = $scope.data[region]['tree'][team_id];
-				var i_have_name = $scope.getTeamName(regionID,0,0,team_id) != null;
-				var top_node_id = cur_team['top'];
-				var top_node;
-				if(top_node_id==null && regionID != 4){
-					top_node = $scope.data['championship']['tree'][$scope.championship_map[region]];
-				}else if(top_node_id != null){
-
-					top_node = $scope.data[region]['tree'][top_node_id];
-				}else{
-					return false;
-				}
-
-				var no_top_selected =$scope.getTeamName(regionID,0,0,top_node_id) == null;
-				var top_node_has_my_name = $scope.getTeamName(regionID,0,0,top_node_id) == $scope.getTeamName(regionID,0,0,team_id);
-				return (i_have_name && no_top_selected) || (i_have_name && top_node_has_my_name);
-			}
-			$scope.choseToLose=function(regionID, round, matchup, team_num){
-				var region = $scope.region_dict[regionID];
-				var team_id = Math.pow(2,round) + (2*matchup) + (team_num-1);
-				var cur_team = $scope.data[region]['tree'][team_id];
-				var i_have_name = $scope.getTeamName(regionID,0,0,team_id) != null;
-				var top_node_id = cur_team['top'];
-				var top_node;
-				if(top_node_id==null && regionID != 4){
-					top_node = $scope.data['championship']['tree'][$scope.championship_map[region]]
-				}else if(top_node_id != null){
-					top_node = $scope.data[region]['tree'][top_node_id];
-				}else{
-					return false;
-				}
-
-				var top_node_has_name = $scope.getTeamName(regionID,0,0,top_node_id) != null;
-				var top_node_does_not_have_my_name = $scope.getTeamName(regionID,0,0,top_node_id) != $scope.getTeamName(regionID,0,0,team_id);
-
-				return (i_have_name && top_node_does_not_have_my_name && top_node_has_name);
-			}
-
-			$scope.changedBracket = function(){
-				return JSON.stringify($scope.savedBracket) !== JSON.stringify($scope.data);
-			};
-
-			$scope.saveChanges = function(){
-				var new_bracket = $scope.data;
-				bracketFactory.saveBracket($window.sessionStorage.token, $window.sessionStorage.user, new_bracket).success(function() {
-					alert("SAVED");
-					$scope.storeBracketAsSaved();
-				}).error(function(status, data) {
-					console.log("SOERROR");
-					console.log(status);
-					console.log(data);
-				});
-			};
-
-            $scope.clearBracket = function(){
-                for (var k = 0; k < 4; k++) {
-                    var region = $scope.region_dict[k];
-                    for (var j = 16; j < 32; j++) {
-                        var node = $scope.data[region]['tree'][j];
-                        if ($scope.getTeamName(k,0,0,j) != null) {
-                            var top_node_id = node['top'];
-
-                            var team_name = $scope.getTeamName(k,0,0,j);
-
-                            $scope.removeFromTop(k, team_name, top_node_id);
+                    $scope.data[region]['tree'][team_id]['team'] = JSON.parse(JSON.stringify(team));
+                    console.log($scope.data[region]['tree'][team_id]['team'])
+                };
+                $scope.removeFromTop = function (regionID, name, top_node_id) {
+                    var region = $scope.region_dict[regionID];
+                    if ($scope.getTeamName(regionID, 0, 0, 0, top_node_id) == name) {
+                        $scope.data[region]['tree'][top_node_id]['team'] = null;
+                    }
+                    if ($scope.data[region]['tree'][top_node_id]['top'] != null) {
+                        $scope.removeFromTop(regionID, name, $scope.data[region]['tree'][top_node_id]['top']);
+                    } else if ($scope.data[region]['tree'][top_node_id]['top'] == null && regionID != 4) {
+                        $scope.removeFromTop(4, name, $scope.championship_map[region]); //remove from championship
+                        if ($scope.getTeamName(4, 0, 0, 0, $scope.championship_map[region]) == name) {
+                            $scope.data["championship"]['tree'][$scope.championship_map[region]]['team'] = null;
                         }
                     }
-                }
-            };
+                };
+                $scope.getChampion = function (regionID) {
+                    var region = $scope.region_dict[regionID];
+                    return $scope.getTeamName(regionID, 0, 0, 0, 1);
+                };
+                $scope.getChampionColor = function () {
+                    return $scope.getTeamColor(4, 0, 0, 0, 1);
+                };
+                $scope.getChampionMascot = function () {
+                    return $scope.getTeamMascot(4, 0, 0, 0, 1);
+                };
+                $scope.moveTop = function (regionID, round, matchup, team_num, forced, team_id_given) {
 
-            $scope.randomizePicks = function(forced) {
-                if(forced === undefined){
-                    var iAmforced = false;
-                }else{
-                    var iAmforced = true;
+                    if (forced === undefined) {
+                        var iAmforced = false;
+                    } else {
+                        var iAmforced = true;
+                    }
+                    if (!$scope.skipped_bracket_page && !iAmforced) {
+                        return;
+                    }
+                    var region = $scope.region_dict[regionID];
+                    var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+
+                    var top_node_id = $scope.data[region]['tree'][team_id]['top'];
+                    console.log("MOVING UP " + top_node_id)
+                    var team = $scope.getTeam(regionID, 0, 0, 0, team_id);
+                    var team_name = $scope.getTeamName(regionID, 0, 0, 0, team_id);
+                    $scope.setTeam(regionID, 0, 0, 0, team, top_node_id);
+                    console.log("MOVING UP " + $scope.getTeamName(regionID, 0, 0, 0, top_node_id))
+                    var other_team_id = $scope.data[region]['tree'][top_node_id]['left'] == team_id ? $scope.data[region]['tree'][top_node_id]['right'] : $scope.data[region]['tree'][top_node_id]['left'];
+                    var other_team_name = $scope.getTeamName(regionID, 0, 0, 0, other_team_id);
+                    if (other_team_name != null) {
+                        $scope.removeFromTop(regionID, other_team_name, top_node_id);
+                    }
+
+                    if ($scope.data[region]['tree'][top_node_id]['top'] == null) { //champion
+                        if (regionID != 4) {
+                            $scope.setTeam(4, 0, 0, 0, team, $scope.championship_map[region]); //0->4 1->6 2->5 3->7
+                        }
+                    }
+
+                };
+                $scope.canClick = function (regionID, round, matchup, team_num) {
+                    var region = $scope.region_dict[regionID];
+                    var team_id = $scope.getTeamID(regionID, round, matchup, team_num);
+                    var cur_team = $scope.data[region]['tree'][team_id];
+                    var i_have_name = $scope.getTeamName(regionID, 0, 0, 0, team_id) != null;
+                    var top_node_id = cur_team['top'];
+                    var top_node;
+                    if (top_node_id == null && regionID != 4) {
+                        top_node = $scope.data['championship']['tree'][$scope.championship_map[region]];
+                    } else if (top_node_id != null) {
+
+                        top_node = $scope.data[region]['tree'][top_node_id];
+                    } else {
+                        return false;
+                    }
+
+                    var no_top_selected = $scope.getTeamName(regionID, 0, 0, 0, top_node_id) == null;
+                    var top_node_has_my_name = $scope.getTeamName(regionID, 0, 0, 0, top_node_id) == $scope.getTeamName(regionID, 0, 0, 0, team_id);
+                    return (i_have_name && no_top_selected) || (i_have_name && top_node_has_my_name);
                 }
-                if(!$scope.doneWithTutorial && !iAmforced){
-                    return;
+                $scope.choseToLose = function (regionID, round, matchup, team_num) {
+                    var region = $scope.region_dict[regionID];
+                    var team_id = $scope.getTeamID(regionID, round, matchup, team_num);
+                    var cur_team = $scope.data[region]['tree'][team_id];
+                    var i_have_name = $scope.getTeamName(regionID, 0, 0, 0, team_id) != null;
+                    var top_node_id = cur_team['top'];
+                    var top_node;
+                    if (top_node_id == null && regionID != 4) {
+                        top_node = $scope.data['championship']['tree'][$scope.championship_map[region]]
+                    } else if (top_node_id != null) {
+                        top_node = $scope.data[region]['tree'][top_node_id];
+                    } else {
+                        return false;
+                    }
+
+                    var top_node_has_name = $scope.getTeamName(regionID, 0, 0, 0, top_node_id) != null;
+                    var top_node_does_not_have_my_name = $scope.getTeamName(regionID, 0, 0, 0, top_node_id) != $scope.getTeamName(regionID, 0, 0, 0, team_id);
+
+                    return (i_have_name && top_node_does_not_have_my_name && top_node_has_name);
                 }
-                var round = 4;
-                //go from 8 to 15, and then 4 to 7, and then 2 to 3 and then 1
-                for (var k = 0; k < 4; k++) {
-                    var region = $scope.region_dict[k];
-                    for (var j = 3; j > -1; j--) {
-                        for (var i = Math.pow(2, j); i < Math.pow(2, j + 1); i++) {
-                            var node = $scope.data[region]['tree'][i];
-                            if ($scope.getTeamName(k,0,0,i) == null) {
-                                var new_node;
-                                if ($window.Math.random() > 0.5) {
-                                    new_node = 1;
-                                } else {
-                                    new_node = 2;
+
+                $scope.changedBracket = function () {
+                    return JSON.stringify($scope.savedBracket) !== JSON.stringify($scope.data);
+                };
+
+                $scope.saveChanges = function () {
+                    var new_bracket = $scope.data;
+                    bracketFactory.saveBracket($window.sessionStorage.token, $window.sessionStorage.user, new_bracket).success(function () {
+                        alert("SAVED");
+                        $scope.storeBracketAsSaved();
+                    }).error(function (status, data) {
+                        console.log("SOERROR");
+                        console.log(status);
+                        console.log(data);
+                    });
+                };
+
+                $scope.clearBracket = function () {
+                    for (var k = 0; k < 4; k++) {
+                        var region = $scope.region_dict[k];
+                        for (var j = 16; j < 32; j++) {
+                            var node = $scope.data[region]['tree'][j];
+                            if ($scope.getTeamName(k, 0, 0, 0, j) != null) {
+                                var top_node_id = node['top'];
+
+                                var team_name = $scope.getTeamName(k, 0, 0, 0, j);
+
+                                $scope.removeFromTop(k, team_name, top_node_id);
+                            }
+                        }
+                    }
+                };
+
+                $scope.randomizePicks = function (forced) {
+                    if (forced === undefined) {
+                        var iAmforced = false;
+                    } else {
+                        var iAmforced = true;
+                    }
+                    if (!$scope.skipped_bracket_page && !iAmforced) {
+                        return;
+                    }
+                    var round = 4;
+                    //go from 8 to 15, and then 4 to 7, and then 2 to 3 and then 1
+                    for (var k = 0; k < 4; k++) {
+                        var region = $scope.region_dict[k];
+                        for (var j = 3; j > -1; j--) {
+                            for (var i = Math.pow(2, j); i < Math.pow(2, j + 1); i++) {
+                                var node = $scope.data[region]['tree'][i];
+                                if ($scope.getTeamName(k, 0, 0, 0, i) == null) {
+                                    var winning_team;
+                                    if ($window.Math.random() > 0.5) {
+                                        winning_team = node.left;
+                                    } else {
+                                        winning_team = node.right;
+                                    }
+                                    $scope.moveTop(k, 0, 0, 0, forced, winning_team);
+
                                 }
-                                $scope.moveTop(k, j + 1, i - Math.pow(2, j), new_node, forced);
-
                             }
                         }
                     }
-                }
-                for (var j = 1; j > -1; j--) {
-                    for (var i = Math.pow(2, j); i < Math.pow(2, j + 1); i++) {
-                        var node = $scope.data['championship']['tree'][i];
-                        if ($scope.getTeamName(4,0,0,i) == null) {
-                            var new_node;
-                            if ($window.Math.random() > 0.5) {
-                                new_node = 1;
-                            } else {
-                                new_node = 2;
-                            }
-                            $scope.moveTop(4, j + 1, i - Math.pow(2, j), new_node, forced);
-
-                        }
-                    }
-                }
-
-            }
-
-            $scope.pickCountTotal = function() {
-                var picks = 0;
-                var total_picks = 0;
-                //go from 8 to 15, and then 4 to 7, and then 2 to 3 and then 1
-                for (var k = 0; k < 4; k++) {
-                    var region = $scope.region_dict[k];
-                    for (var j = 3; j > -1; j--) {
+                    for (var j = 1; j > -1; j--) {
                         for (var i = Math.pow(2, j); i < Math.pow(2, j + 1); i++) {
-                            var node = $scope.data[region]['tree'][i];
+                            var node = $scope.data['championship']['tree'][i];
+                            if ($scope.getTeamName(4, 0, 0, 0, i) == null) {
+                                var winning_team;
+                                if ($window.Math.random() > 0.5) {
+                                    winning_team = node.left;
+                                } else {
+                                    winning_team = node.right;
+                                }
+                                $scope.moveTop(4, 0, 0, 0, forced, winning_team);
+
+                            }
+                        }
+                    }
+
+                }
+
+                $scope.pickCountTotal = function () {
+                    var picks = 0;
+                    var total_picks = 0;
+                    //go from 8 to 15, and then 4 to 7, and then 2 to 3 and then 1
+                    for (var k = 0; k < 4; k++) {
+                        var region = $scope.region_dict[k];
+                        for (var j = 3; j > -1; j--) {
+                            for (var i = Math.pow(2, j); i < Math.pow(2, j + 1); i++) {
+                                var node = $scope.data[region]['tree'][i];
+                                total_picks += 1;
+                                if ($scope.getTeamName(k, 0, 0, 0, i) != null) {
+                                    picks += 1;
+                                }
+                            }
+                        }
+                    }
+                    for (var j = 1; j > -1; j--) {
+                        for (var i = Math.pow(2, j); i < Math.pow(2, j + 1); i++) {
+                            var node = $scope.data['championship']['tree'][i];
                             total_picks += 1;
-                            if ($scope.getTeamName(k,0,0,i) != null) {
+                            if ($scope.getTeamName(4, 0, 0, 0, i) != null) {
                                 picks += 1;
                             }
                         }
                     }
-                }
-                for (var j = 1; j > -1; j--) {
-                    for (var i = Math.pow(2, j); i < Math.pow(2, j + 1); i++) {
-                        var node = $scope.data['championship']['tree'][i];
-                        total_picks += 1;
-                        if ($scope.getTeamName(4,0,0,i) != null) {
-                            picks += 1;
+                    return {'Total Picks': total_picks, 'Completed Picks': picks};
+                };
+
+
+                $scope.finalsPicked = ($scope.getTeamName(4, 0, 0, 0, 1) != null && $scope.getTeamName(4, 0, 0, 0, 2) != null )
+                $scope.getFlags();
+                bracketFactory.getScoreboard($window.sessionStorage.user).then(function (data) {
+                    console.log(data);
+                    $scope.score = data;
+                    $scope.myScore = data[$scope.username]
+                });
+                bracketFactory.getOfficialBracket($window.sessionStorage.user).then(function (data) {
+                    $scope.officialBracket = data;
+                    $scope.getOfficialTeamColor = function (regionID, round, matchup, team_num, team_id_given) {
+                        var region = $scope.region_dict[regionID];
+                        var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+                        if ($scope.officialBracket[region]['tree'][team_id]['team'] == null) {
+                            return null;
                         }
-                    }
-                }
-                return {'Total Picks': total_picks, 'Completed Picks': picks};
-            };
+                        return ($scope.officialBracket[region]['tree'][team_id]['team']['color']);
+                    };
+                    $scope.getOfficialTeamMascot = function (regionID, round, matchup, team_num, team_id_given) {
+                        var region = $scope.region_dict[regionID];
+                        var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+                        if ($scope.officialBracket[region]['tree'][team_id]['team'] == null) {
+                            return null;
+                        }
+                        return ($scope.officialBracket[region]['tree'][team_id]['team']['mascot']);
+                    };
+                    $scope.getOfficialTeam = function (regionID, round, matchup, team_num, team_id_given) {
+
+                        var region = $scope.region_dict[regionID];
+                        var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+                        if ($scope.officialBracket[region]['tree'][team_id]['team'] == null) {
+                            return null;
+                        }
+                        return ($scope.officialBracket[region]['tree'][team_id]['team']);
+                    };
+                    $scope.getOfficialTeamName = function (regionID, round, matchup, team_num, team_id_given) {
+                        var region = $scope.region_dict[regionID];
+                        var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+
+                        if ($scope.officialBracket[region]['tree'][team_id]['team'] == null) {
+                            return null;
+                        }
+                        return ($scope.officialBracket[region]['tree'][team_id]['team']['name']);
+                    };
+                    $scope.getOfficialTeamSeed = function (regionID, round, matchup, team_num, team_id_given) {
+                        var region = $scope.region_dict[regionID];
+                        var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+                        if ($scope.officialBracket[region]['tree'][team_id]['team'] == null) {
+                            return null;
+                        }
+                        return ($scope.officialBracket[region]['tree'][team_id]['team']['seed']);
+                    };
+                    $scope.getOfficialChampion = function (regionID) {
+                        return $scope.getOfficialTeamName(regionID, 0, 0, 0, 1);
+                    };
+                    $scope.getOfficialChampionColor = function () {
+                        return $scope.getOfficialTeamColor(4, 0, 0, 0, 1);
+                    };
+                    $scope.getOfficialChampionMascot = function () {
+                        return $scope.getOfficialTeamMascot(4, 0, 0, 0, 1);
+                    };
+
+                    $scope.correctTeam = function (regionID, round, matchup, team_num, team_id_given) {
+                        if (regionID != 4 && round == 0) return false;
+                        var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+                        var region = $scope.region_dict[regionID];
+                        var officialName = $scope.getOfficialTeamName(regionID, 0, 0, 0, team_id);
+                        var node = $scope.officialBracket[region]['tree'][team_id];
+                        var myChoice = $scope.getTeamName(regionID, 0, 0, 0, team_id);
+                        var result = officialName == myChoice;
+                        if (regionID == 0 && team_id == 9) {
+                            console.log(officialName)
+                        }
+                        return (myChoice == officialName) && (officialName != null)
+                    };
+                    $scope.incorrectTeam = function (regionID, round, matchup, team_num, team_id_given) {
+                        if (regionID != 4 && round == 0) return false;
+                        var officialName = $scope.getOfficialTeamName(regionID, round, matchup, team_num);
+                        var myChoice = $scope.getTeamName(regionID, round, matchup, team_num);
+
+                        var region = $scope.region_dict[regionID];
+                        var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+                        var result = officialName != myChoice;
+                        var myChosenTeamName = $scope.data[region]['tree'][team_id]['team']['name'];
+                        var is_eliminated = $scope.getTeamEliminated(regionID, team_id, myChosenTeamName);
+                        if (is_eliminated) {
+
+                            return true;
+                        }
+                        return result && officialName != null
+                    };
+                    $scope.getScore = function (regionID, round, matchup, team_num, team_id_given) {
+                        var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+                        var region = $scope.region_dict[regionID];
+                        var node = $scope.officialBracket[region]['tree'][team_id];
+                        if (node.team == null) return null;
+                        return node.score
+                    };
+                    $scope.teamChosen = function (regionID, round, matchup, team_num, team_id_given) {
+                        var region = $scope.region_dict[regionID];
+                        var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+                        var node = $scope.officialBracket[region]['tree'][team_id];
+                        var myChosenTeamName = $scope.data[region]['tree'][team_id]['team']['name'];
+
+                        if (round == 0) {
+                            return myChosenTeamName == node.team.name
+                        }
+                        var topNode = $scope.getOfficialTeamName(regionID, 0, 0, 0, node.top);
+                        var officialName = $scope.getOfficialTeamName(regionID, 0, 0, 0, team_id);
+                        var officialLeftName = $scope.getOfficialTeamName(regionID, 0, 0, 0, node.left);
+
+                        var officialRightName = $scope.getOfficialTeamName(regionID, 0, 0, 0, node.right);
+                        return ((officialLeftName == myChosenTeamName || officialRightName == myChosenTeamName) || (!$scope.getTeamEliminated(regionID, node.left, myChosenTeamName) || !$scope.getTeamEliminated(regionID, node.right, myChosenTeamName))) && (officialName == null)
+                    };
+
+                    $scope.getTeamEliminated = function (regionID, team_id, myChosenTeamName) {
+                        var testMe = regionID == 0 && team_id == 3 && myChosenTeamName == "LSU"
+                        var region = $scope.region_dict[regionID];
+                        var node = $scope.officialBracket[region]['tree'][team_id];
+
+                        if (node.left == null) {
+                            return node.team.name != myChosenTeamName;
+                        }
+                        if (node.team == null && (($scope.getOfficialTeamName(regionID, 0, 0, 0, node.left) == myChosenTeamName) || ($scope.getOfficialTeamName(regionID, 0, 0, 0, node.right) == myChosenTeamName))) {
+                            return false;
+                        }
+                        if (node.team != null) {
+                            if (node.team.name != myChosenTeamName && (($scope.getOfficialTeamName(regionID, 0, 0, 0, node.left) == myChosenTeamName) || ($scope.getOfficialTeamName(regionID, 0, 0, 0, node.right) == myChosenTeamName))) {
+
+                                return true;
+                            }
+                        }
+                        return $scope.getTeamEliminated(regionID, node.left, myChosenTeamName) && $scope.getTeamEliminated(regionID, node.right, myChosenTeamName);
+                    };
+
+                }, function (error) {
+                    console.log(error);
+                });
 
 
-
-            $scope.finalsPicked = ($scope.getTeamName(4, 1, 0, 1) != null && $scope.getTeamName(4, 1, 0, 2) != null )
-			$scope.getFlags();
-
-
-		});
-	};
+            });
+        });
+    };
 
 	$scope.loadBrackets();
 
@@ -313,16 +477,14 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 		return $scope.base_height*(Math.pow(2,i));
 	};
 
-    $scope.onFinish = function(){
-        $scope.doneWithTutorial = true;
-    }
+
 
 	$scope.startJoyRide = false;
 	$scope.start = function () {
         $scope.showShuffle = false;
         $scope.showErase = false;
         $scope.showColors = false;
-        $scope.doneWithTutorial = false;
+        $scope.skipped_bracket_page = false;
         $scope.showPickCounter = false;
 		$scope.startJoyRide = true;
 
@@ -549,9 +711,9 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
     };
     $scope.demoFunction2 = function(){
         $scope.randomizePicks(true);
-        $scope.config['10'].text = "Notice that the champion chosen in this region (" + $scope.getTeamName(0,0,0,1) + ")..."
-        $scope.config['12'].text = "Note that " + $scope.getTeamName(4,0,0,2) +  " and " +  $scope.getTeamName(4,0,0,3) + " are forecast to be in the finals..."
-        $scope.config['13'].text = "..., and "+  $scope.getTeamName(4,0,0,1) +" is forecast to win. You will receive massive points if this actually happens."
+        $scope.config['10'].text = "Notice that the champion chosen in this region (" + $scope.getTeamName(0,0,0,0,1) + ")..."
+        $scope.config['12'].text = "Note that " + $scope.getTeamName(4,0,0,0,2) +  " and " +  $scope.getTeamName(4,0,0,0,3) + " are forecast to be in the finals..."
+        $scope.config['13'].text = "..., and "+  $scope.getTeamName(4,0,0,0,1) +" is forecast to win. You will receive massive points if this actually happens."
 
     };
     $scope.demoFunction3 = function(){
@@ -565,7 +727,6 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
         $scope.start();
 	});
 
-    $scope.doneWithTutorial = false;
     $scope.showPickCounterJoyride = function(){
         $scope.showPickCounter = true;
     };
@@ -583,7 +744,6 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 	$scope.getFlags = function(){
 		if(!$window.sessionStorage.userFlags){
 			userInfoFactory.getFlags($window.sessionStorage.token, $window.sessionStorage.user).then(function(data) {
-				console.log(data);
 				$scope.skipped_bracket_page = data.data.skipped_bracket_page;
 				if(!$scope.skipped_bracket_page){
 					$scope.start();
@@ -630,6 +790,35 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
         });
         return deferred.promise;
 	};
+
+    bracketFactory.getOfficialBracket = function(username) {
+        var deferred = $q.defer();
+        $http({
+            url: '/officialbracket.json', method: "GET", params: {username: username}
+        }).success(function(data){
+            deferred.resolve(data);
+        }).error(function(){
+            deferred.reject("No official bracket yet.")
+
+        });
+
+        return deferred.promise;
+    };
+
+    bracketFactory.getScoreboard = function(username) {
+        var deferred = $q.defer();
+        $http({
+            url: '/scoreboard.json', method: "GET", params: {username: username}
+        }).success(function(data){
+            deferred.resolve(data);
+        }).error(function(){
+            deferred.reject("No official bracket yet.")
+
+        });
+
+        return deferred.promise;
+    };
+
 
 	bracketFactory.saveBracket = function(token, username, bracket) {
 		console.log("SAVING?");

@@ -1,15 +1,29 @@
 .hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()')
 div.container
-	table.table.table-striped(st-table='displayedCollection', id='leader-board' st-safe-src="rowCollection" )
+	div#brackets-opened-tag THE BRACKET
+		if opened
+			| &nbspIS OPENED
+		else
+			| &nbspIS CLOSED
+	table.table.table-striped(st-table='displayedCollection', id='leader-board' st-safe-src="scoreboard" )
 		thead
 			tr
-				th(st-sort="rank") rank
-				th(st-sort="name") name
-				th(st-sort="score") score
-				th(st-sort="achievements") achievements
+				th(st-sort="rank") Rank
+				th(st-sort="name") Name
+				div(class='round-scores')
+					th(ng-repeat='(round, round_name) in tournamentRounds' st-sort="getters.round_score_{{round}}" class="round-{{round}}-scores")
+						|{{round_name}} &nbsp
+						ng-pluralize(count='{{Math.pow(2,round)}}' when="{'one': '({} point)', 'other': '({} points)'}")
+				th(st-sort="total_score") Total Score
+				th(st-sort="achievements" class="achievements_col") achievements
 		tbody
 			tr(ng-repeat='row in displayedCollection')
 				td {{row.rank}}
-				td {{row.name}}
-				td {{row.score}}
+				td
+					if !opened
+						a(href="/bracket-angular/{{row.name}}") {{row.name}}
+					else
+						| {{row.name}}
+				td(ng-repeat='(round, round_name) in tournamentRounds')
+					|{{row.score["Round Score"][round_name]}}
 				td {{row.achievements}}

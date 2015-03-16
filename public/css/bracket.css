@@ -1,6 +1,6 @@
 .round{
     float:left;
-    width:100px;
+    width:120px;
 }
 .firstTeam, .secondTeam{
     border-bottom:1px solid #ccc;
@@ -15,8 +15,11 @@
 }
 .team{
     position:absolute;
-    bottom: 4px;
-    left: 8px;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    font-size: 12px;
+    display: inline-block;
 }
 
 .team-selectable{
@@ -80,6 +83,14 @@
     font-size: 400%;
 }
 
+.your-score{
+    background-color: mediumturquoise;
+    position: absolute;
+    float: left;
+    left: 200px;
+    font-size: 400%;
+}
+
 .team-names {
     background: gray;
     text-align: center;
@@ -112,3 +123,50 @@
 
 .pad { padding: 25px; }
 
+
+.official-team{
+    position:absolute;
+    bottom: 17px;
+    left: 0px;
+}
+
+.official-incorrect-team{
+    background-color: #FFEF45;
+    color: #827D46;
+}
+
+.correct-team{
+    background-color: #86E359;
+    color: #1E3B10;
+}
+
+.incorrect-team, .incorrect-team > *{
+    background-color: #FB5F63;
+    color: #5B0004;
+    text-decoration: line-through;
+}
+
+.team-chosen{
+    background-color: #c4d8e2;
+    color: #0057A8;
+}
+
+.team-not-chosen{
+    background-color: #f8f8ff;
+    color: lightgray;
+}
+
+.team-name{
+
+    float: left;
+}
+.team-score {
+    display: inline-block;
+    float: right;
+}
+
+.team-seed {
+    display: inline-block;
+    padding-right: 10px;
+    float: left;
+}

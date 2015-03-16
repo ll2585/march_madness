@@ -90,6 +90,6 @@ function send_mail(){
 }
 //******************************************************
 var setUpServer = require('./setupServer.js');
-setUpServer();
+setUpServer.insertSettingsIntoMongo();
 app.listen(port);
 console.log("Listening on port " + port);

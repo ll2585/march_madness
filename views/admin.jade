@@ -29,20 +29,82 @@ html
 		script(src='/js/ui-bootstrap-tpls-0.12.1.min.js')
 		script(src='/js/smart-table/smart-table.js')
 	body(ng-app="adminApp" ng-controller="AdminController")
-		|{{hi}}
-		button(ng-click="toggleBrackets(false)" ng-show="brackets_opened") Close Brackets
-		button(ng-click="toggleBrackets(true)" ng-show="!brackets_opened") Open Brackets
-		br
-		select(ng-model='region')
-			option(value='mid_west') Mid-west
-			option(value='west') West
-			option(value='south') South
-			option(value='east') East
-			option(value='championship') Championship
-		div(ng-repeat="(level, i) in levels(region) track by $index")
+		div.container
+			|{{hi}}
+			button(ng-click="toggleBrackets(false)" ng-show="brackets_opened") Close Brackets
+			button(ng-click="toggleBrackets(true)" ng-show="!brackets_opened") Open Brackets
+			br
+			select(ng-model='region')
+				option(value='mid_west') Mid-west
+				option(value='west') West
+				option(value='south') South
+				option(value='east') East
+				option(value='championship') Championship
+			div(ng-repeat="(level, i) in levels(region) track by $index")
+				hr
+				div(ng-if="level==0") CHAMPION
+					div(class="champion-name") {{getChampion(region)}}
+				div(ng-if="level != 0") {{matchupName(region, level)}}
+					div(ng-repeat="(matchup, j) in getMatchups(level) track by $index")
+						div(class="matchup row")
+							div(class="first-team-box col-xs-5")
+								input(ng-model="createSelectionGetterSetter(region, level, matchup, 1)", ng-model-options="{getterSetter: true}", name="finals-1-proj-score", class="projected-score" type="number")
+								br
+								|{{getTeamName(region, level, matchup, 1)}}
+							div(class="second-team-box col-xs-5")
+								input(ng-model="createSelectionGetterSetter(region, level, matchup, 2)", ng-model-options="{getterSetter: true}", name="finals-2-proj-score", class="projected-score" type="number")
+								br
+								|{{getTeamName(region, level, matchup, 2)}}
+			#saved-alert
+			button(ng-click="saveOfficialBracket()") Save Official Brackets
 			hr
-			div(ng-if="level==0") CHAMPION
-				div(class="champion-name")
-			div(ng-if="level != 0") {{matchupName(region, level)}}
-				div(ng-repeat="(matchup, j) in getMatchups(level) track by $index")
-					|{{getTeamName(region, level, matchup, 1)}} v. {{getTeamName(region, level, matchup, 2)}}
+			div.moneyBoard
+				div.row
+					div.col-xs-3 Category
+					div.col-xs-1 Multiple?
+					div.col-xs-2 Select Player
+					div.col-xs-1 Score
+					div.col-xs-1 Final?
+					div.col-xs-4 Info
+				div(ng-repeat="(i, category) in moneyBoard track by $index" class="row" ng-class="{'final-category': moneyBoard[i]['final']}")
+					div.col-xs-3 {{moneyBoard[i]['category']}}
+					div.col-xs-1
+						input(type="checkbox" ng-model="moneyBoard[i]['multiple']", ng-click="toggleMultiple(i)")
+					div.col-xs-2
+						|[Currently: {{moneyBoard[i]['player']}}]
+						div.select-one-leader(ng-if="!moneyBoard[i]['multiple']")
+							select(ng-model="moneyBoard[i]['player'][0]")
+								option(ng-repeat="id in users" value='{{id.username}}') {{id.username}}
+						div.select-multiple-leaders(ng-if="moneyBoard[i]['multiple']")
+							label(ng-repeat="id in users")
+								input(value='{{id.username}}', type="checkbox", ng-checked="getMultipleLeaderSelection(i).indexOf(id.username) > -1", ng-click="toggleSelection(id.username, i)")
+								|{{id.username}}
+					div.col-xs-1
+						input(ng-model="moneyBoard[i]['score']", type="number", ng-disabled="moneyBoard[i]['final']" class="form-control")
+					div.col-xs-1
+						input(type="checkbox" ng-model="moneyBoard[i]['final']")
+					div.col-xs-4
+						input(ng-model="moneyBoard[i]['info']", ng-disabled="moneyBoard[i]['final']")
+			#saved-moneyboard-alert
+			button(ng-click="saveMoneyboard()") Save Moneyboard
+			hr
+			div.achievements
+				div.select-user-achievement
+					select(ng-model="selectedUserForAchievements")
+						option(ng-repeat="id in users" value='{{id.username}}') {{id.username}}
+				|SELECTED {{selectedUserForAchievements}}'s ACHIEVEMENTS:
+				br
+				|{{achievementsByUser[selectedUserForAchievements]}}
+				div.row
+					div.col-xs-11 Achievement?
+					div.col-xs-1 Owned?
+				div(ng-repeat="(i, achievement) in achievements track by $index" class="row achievement-row achievement-row-{{i%2}}")
+					div.col-xs-11 {{achievement}}
+					div.col-xs-1
+						input(type="checkbox" ng-model="achievementsByUser[selectedUserForAchievements][i]['owned']")
+			#saved-achievements-alert
+			button(ng-click="saveAchievements()") Save Moneyboard
+
+
+link(rel='stylesheet', href='/css/admin.css')
+script(src='/js/checklist-model/checklist-model.js')

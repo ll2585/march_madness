@@ -1,4 +1,4 @@
-angular.module('MainPageCtrl', ['bm.bsTour']).controller('MainPageController', ['$rootScope', '$scope', 'userInfoFactory', '$window', function($rootScope, $scope, userInfoFactory, $window) {
+angular.module('MainPageCtrl', ['bm.bsTour']).controller('MainPageController', ['$rootScope', '$scope', 'userInfoFactory', '$window', '$q', '$http', function($rootScope, $scope, userInfoFactory, $window, $q, $http) {
 
 	$scope.tagline = 'To the moon and back!';
 
@@ -21,7 +21,37 @@ angular.module('MainPageCtrl', ['bm.bsTour']).controller('MainPageController', [
         }
     };
 
+    $scope.getScoreboard = function(username) {
+        var deferred = $q.defer();
+        $http({
+            url: '/scoreboard.json', method: "GET", params: {username: username}
+        }).success(function(data){
+            deferred.resolve(data);
+        }).error(function(){
+            deferred.reject("No official bracket yet.")
+
+        });
+
+        return deferred.promise;
+    };
+    $scope.Math = window.Math;
+    $scope.tournamentRounds = ["Round of 64","Round of 32","Round of 16","Elite Eight","Final Four","National Championship Game"]
     $scope.getFlags();
+    $scope.getScoreboard($window.sessionStorage.user).then(function(data){
+
+        $scope.scoreboard = [];
+        console.log(data);
+        var sorted_keys = Object.keys(data).sort(function(a,b){return data[b]-data[a]})
+        for(var i = 0; i < sorted_keys.length; i++){
+            var name = sorted_keys[i]
+            var score = data[name]
+            $scope.scoreboard.push({rank: i+1, name: name, score: score, achievements: 0})
+        }
+
+
+        //copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
+        $scope.displayedCollection = [].concat($scope.scoreboard);
+    });
 
 
 	$scope.awesomeThings = [
@@ -39,14 +69,7 @@ angular.module('MainPageCtrl', ['bm.bsTour']).controller('MainPageController', [
 		$scope.startJoyRide = true;
 
 	}
-	$scope.rowCollection = [
-		{rank: 1, name: 'Laurent', score: 53, achievements: 4},
-		{rank: 2, name: 'Blandine', score: 75, achievements: 5},
-		{rank: 3, name: 'Francoise', score: 85, achievements: 6}
-	];
 
-	//copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
-	$scope.displayedCollection = [].concat($scope.rowCollection);
 	function generateAlternateConfig(){
 		//This is to show that it can have dynamic configs which can change . The joyride would not need to be initialized again.
 		$scope.config[2].text = "I can have dynamic text that can change in between joyrides"
@@ -57,35 +80,131 @@ angular.module('MainPageCtrl', ['bm.bsTour']).controller('MainPageController', [
 		{
 			type: "title",
 			heading: "Welcome to the NG-Joyride demo",
-			text: '<div class="row"><div id="title-text" class="col-md-12"><span class="main-text">Welcome to <strong>Ng Joyride Demo</strong></span><br><span>( This demo will walk you through the features of Ng-Joyride. )</span><br/><br/><span class="small"><em>This can have custom html too !!!</em></span></div></div>',
+			text: 'Press next to learn how to use this site, or skip if you think you already know.',
 			curtainClass: "randomClass"
 
 		},
 		{
 			type: "element",
-			selector: "#home",
+			selector: "#brackets-opened-tag",
 			heading: "Title can have <em>HTML</em>",
-			text: "You are in the <em>home page.</em>",
+			text: "This label indicates whether the bracket is open (you can make picks) or closed.",
 			placement: "bottom",
 			scroll: true
 		},
 		{
 			type: "element",
-			selector: "#leader-board",
+			selector: ".Bracket",
 			heading: "Step 1",
-			text: "I can come over any element.Even the background is customizable per step",
-			placement: "bottom",
+			text: "If it is opened, you can click this button here to go to the bracket and make picks (don't do this now)",
+			placement: "right",
 			curtainClass: "blueColour",
 			scroll: true
 		},
 		{
 			type: "element",
-			selector: "#impBtn",
+			selector: "#leader-board",
 			heading: "Step 2",
-			text: "I can change placement",
+			text: "If it is closed, your scores will appear here.",
 			placement: "right",
 			scroll: true
-		}
+		},
+        {
+            type: "element",
+            selector: ".round-0-scores",
+            heading: "Step 2",
+            text: "This column indicates the points per correct pick for this round, and the point breakdown.",
+            placement: "bottom",
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: ".achievements_col",
+            heading: "Step 2",
+            text: "Tie breakers are any achievements.",
+            placement: "bottom",
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: ".Achievements",
+            heading: "Step 2",
+            text: "You can click here to see the achievements you have earned and can get.",
+            placement: "right",
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: "#impBtn",
+            heading: "Step 2",
+            text: "This table shows the current winning leaders for MONEY.",
+            placement: "right",
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: "#impBtn",
+            heading: "Step 2",
+            text: "These are the categories for winning money.",
+            placement: "right",
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: "#impBtn",
+            heading: "Step 2",
+            text: "These are the current leaders.  Blue is final, red is temporary.",
+            placement: "right",
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: "#impBtn",
+            heading: "Step 2",
+            text: "And this is how many points they have.",
+            placement: "right",
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: "#impBtn",
+            heading: "Step 2",
+            text: "This is your number of points in this category.",
+            placement: "right",
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: "#impBtn",
+            heading: "Step 2",
+            text: "This button brings you to the box, which is one of the winning categories.",
+            placement: "right",
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: "#impBtn",
+            heading: "Step 2",
+            text: "And this button brings you to the minigame.",
+            placement: "right",
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: "#impBtn",
+            heading: "Step 2",
+            text: "You can click this button to show a quick summary of all the sections.",
+            placement: "right",
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: "#impBtn",
+            heading: "Step 2",
+            text: "The end! Have fun.",
+            placement: "right",
+            scroll: true
+        }
 	];
 
 	$scope.onFinish = function () {

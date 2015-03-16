@@ -30,6 +30,8 @@ tournament['east'] = east_bracket;
 tournament['west'] = west_bracket;
 tournament['south'] = south_bracket;
 tournament['championship'] = championship_bracket;
+tournament['championship']['tree'][2]['score'] = null;
+tournament['championship']['tree'][3]['score'] = null;
 module.exports = function() {
 	return tournament;
 };

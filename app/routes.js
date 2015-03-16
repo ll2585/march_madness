@@ -6,24 +6,42 @@ var secret = require('./secret.js');
 var Q = require('Q');
 var api = require('./api.js');
 var ServerSettings     = require('./models/ServerSettings.js');
-var settings = {'bracketOpened': false, 'officialBracket': null}; //get settings first - cache settings so we dont connect to db all the time
+var setUpServer = require('../setupServer.js');
+var settings = {'bracketOpened': false, 'officialBracket': null, 'scores': null, 'moneyBoard': null, 'achievements': null, 'achievementsByUser': null}; //get settings first - cache settings so we dont connect to db all the time
 console.log("!@$@%");
 var settings_loaded = false;
+var initial_settings = setUpServer.initialSettings()
 for(var s in settings){
-	ServerSettings.findOne({setting: s}, function (err, result) {
-		if (err) {
-			console.log(err);
-			return res.status(401).send("No finding.");
-		}
-		if (result == undefined) {
-			console.log("NO NAME")
-			return res.status(401).send("No setting with that name.");
-		}
-		settings[s] = result.getVal();
-		settings_loaded = true;
-		console.log("DSBSDBBS")
-		console.log(settings_loaded);
-	})
+    console.log("LOOKING FOR " + s)
+    storeAsSetting(s)
+}
+
+
+
+function storeAsSetting(s){
+    ServerSettings.findOne({setting: s}, function (err, result) {
+        if (err) {
+            console.log(err);
+        }
+        if (result == undefined) {
+            console.log("NO NAME for " + s)
+
+            for(var i = 0; i < initial_settings.length; i++){
+                if(initial_settings[i]["setting"] == s){
+                    settings[s] = initial_settings[i]["val"];
+                }
+            }
+        }else{
+            console.log("YESS FOUND YOU YOU")
+            console.log(result)
+            console.log(s)
+            console.log(settings)
+            console.log(settings[s])
+            settings[s] = result.getVal();
+            settings_loaded = true;
+        }
+
+    })
 }
 
 module.exports = function(app) {
@@ -34,7 +52,6 @@ module.exports = function(app) {
 	function isLuke(req, res, next) {
 
 		// do any checks you want to in here
-		console.log(req.session);
 		// CHECK THE USER STORED IN SESSION FOR A CUSTOM VARIABLE
 		// you can do this however you want with whatever variables you set up
 		if (req.session.token !== undefined) {
@@ -100,6 +117,7 @@ module.exports = function(app) {
 		return res.json({'result': settings[setting]});
 	});
 
+
 	app.get('/admin/getAllSettings', isLuke, function (req, res) {
 		return res.json(settings);
 	});
@@ -143,13 +161,16 @@ module.exports = function(app) {
 							return res.sendStatus(500);
 						}
 
-						console.log('First user created as an Admin');
+						console.log('First user created as an Admin - username: ' + user.username);
 						return res.sendStatus(200);
 					});
 				}
 				else {
+                    console.log("TWOHUNDRED")
 					return res.sendStatus(200);
 				}
+
+                //add to scoreboard here
 			});
 		});
 	});
@@ -157,6 +178,7 @@ module.exports = function(app) {
 		if (req.user) {
 
 			delete req.user;
+            console.log("BYEBYE")
 			return res.sendStatus(200);
 		}
 		else {
@@ -201,7 +223,36 @@ module.exports = function(app) {
 
 		});
 	});
+    app.get('/getUsers.json', function (req, res) {
+        User.find({}, function(err, users) {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(401);
+            }
+            var users_arr = [];
 
+            users.forEach(function(user) {
+                users_arr.push({'name': user.name, 'username': user.username});
+            });
+
+            return res.json(users_arr);
+        });
+    });
+    app.get('/admin/getUserData.json', isLuke, function (req, res) {
+        User.find({}, function(err, users) {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(401);
+            }
+            var user_map = {};
+
+            users.forEach(function(user) {
+                user_map[user._id] = user;
+            });
+
+            return res.json(user_map);
+        });
+    });
 	app.get('/getFlags', function (req, res) {
 		console.log("LOS FLAGOS");
 		var username = req.query.username;
@@ -259,6 +310,10 @@ module.exports = function(app) {
 				return res.sendStatus(404);
 			}
 			else {
+                if (user == null) {
+                    console.log(err);
+                    return res.sendStatus(404);
+                }
 				var bracket = user.bracket;
 				if (Object.keys(bracket).length == 0) {
 					return res.status(404).send("No bracket found");
@@ -269,6 +324,50 @@ module.exports = function(app) {
 			}
 		});
 	});
+
+    app.get('/officialbracket.json', function (req, res) {
+        var username = req.query.username;
+        console.log(username);
+        if(settings['bracketOpened']){
+            return res.sendStatus(404);
+        }
+        User.findOne({username: username}, function (err, user) {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(404);
+            }
+            else {
+                var bracket = settings['officialBracket'];
+                if (Object.keys(bracket).length == 0) {
+                    return res.status(404).send("No bracket found");
+                } else {
+                    return res.json(bracket);
+                }
+
+            }
+        });
+    });
+
+    app.get('/scoreboard.json', function (req, res) {
+        var username = req.query.username;
+        console.log(username);
+        User.findOne({username: username}, function (err, user) {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(404);
+            }
+            else {
+                var scoreboard = settings['scores'];
+                if (Object.keys(scoreboard).length == 0) {
+                    return res.status(404).send("No bracket found");
+                } else {
+
+                    return res.json(scoreboard);
+                }
+
+            }
+        });
+    });
 
 	app.post('/setFlags', function (req, res) {
 
@@ -383,12 +482,36 @@ module.exports = function(app) {
 			curUser: "Luke"
 		});
 	});
+    app.get('/partials/bracket-angular/:name', function (req, res, next) {
+        console.log(req.params)
+        console.log(req.params.name);
+        console.log("IS THERE A FUCKING NAME2");
+        var setting = "bracketOpened";
+        console.log("WTF BRACKETS OEPNED" + settings[setting])
+        if(settings[setting]){
+            //brackets opened send to your page
+            res.render('partials/bracket-angular', {opened: settings[setting]});
+
+        }else{
+            res.render('partials/bracket-angular', {opened: settings[setting], userToGet: "'" + req.params.name + "'"});
+        }
+
+
+    });
 	app.get('/partials/bracket-angular', function (req, res, next) {
-		console.log(settings);
+        console.log(req.params.name);
+        console.log("IS THERE A FUCKING NAME");
 		var setting = "bracketOpened";
 		res.render('.' + req.path, {opened: settings[setting]});
 
 	});
+
+    app.get('/partials/home', function (req, res, next) {
+        var setting = "bracketOpened";
+        res.render('.' + req.path, {opened: settings[setting]});
+
+    });
+
 	app.get('/partials/*', function (req, res, next) {
 		console.log("WE RENDERING" + req.path);
 		res.render('.' + req.path);
