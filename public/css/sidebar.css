@@ -1,7 +1,9 @@
 body {
     padding-top: 51px;
 }
-
+.nav-tabs{
+    border-bottom:none !important;
+}
 .collapsing-width {
     position: relative;
     overflow: hidden;

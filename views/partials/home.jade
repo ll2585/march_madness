@@ -1,29 +1,60 @@
 .hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()')
 div.container
-	div#brackets-opened-tag THE BRACKET
-		if opened
-			| &nbspIS OPENED
-		else
-			| &nbspIS CLOSED
-	table.table.table-striped(st-table='displayedCollection', id='leader-board' st-safe-src="scoreboard" )
+	div.page-header#brackets-opened-tag
+		h1 THE BRACKET
+			span(ng-show="brackets_opened") &nbspIS OPENED
+			br(ng-show="brackets_opened")
+			small(ng-show="brackets_opened") Go make your picks!
+			span(ng-show="!brackets_opened") &nbspIS CLOSED
+	table.table.table-striped.table-bordered( id='money-board')
+		caption(class="text-center")
+			|THE MONEYBOARD
+			br
+			|See who is in the lead to win money
+			br
+			|Blue is current leader, red is final leader
+
+		thead
+			tr
+				th Category
+				th Amount
+				th Player[s]
+				th Value
+				th Info
+		tbody
+			tr(ng-repeat='row in moneyBoard' ng-class="{'final-moneyboard-row': row.final, 'moneyboard-row': !row.final}")
+				td {{row.category}}
+				td {{row.amount}}
+				td {{makeNice(row.player)}}
+				td {{getValue(row)}}
+				td {{row.info}}
+	table.table.table-striped.table-bordered(st-table='displayedCollection', id='leader-board' st-safe-src="scoreboard" )
+		caption(class="text-center") THE SCOREBOARD
+			br
+			|See who is in the lead
 		thead
 			tr
 				th(st-sort="rank") Rank
 				th(st-sort="name") Name
 				div(class='round-scores')
 					th(ng-repeat='(round, round_name) in tournamentRounds' st-sort="getters.round_score_{{round}}" class="round-{{round}}-scores")
-						|{{round_name}} &nbsp
+						|{{round_name}}
+						br
 						ng-pluralize(count='{{Math.pow(2,round)}}' when="{'one': '({} point)', 'other': '({} points)'}")
 				th(st-sort="total_score") Total Score
-				th(st-sort="achievements" class="achievements_col") achievements
+				th(st-sort="achievements" class="achievements_col") Total Achievements
 		tbody
 			tr(ng-repeat='row in displayedCollection')
 				td {{row.rank}}
 				td
-					if !opened
-						a(href="/bracket-angular/{{row.name}}") {{row.name}}
-					else
-						| {{row.name}}
-				td(ng-repeat='(round, round_name) in tournamentRounds')
+					a(href="/bracket-angular/{{row.name}}" ng-if="!brackets_opened") {{row.name}}
+					span(ng-if="brackets_opened") {{row.name}}
+				td(ng-repeat='(round, round_name) in tournamentRounds' ng-if="!brackets_opened" )
 					|{{row.score["Round Score"][round_name]}}
-				td {{row.achievements}}
+				td(colspan=8, ng-if="brackets_opened" )
+					|Will appear once brackets are opened
+				td(ng-if="!brackets_opened") {{row.achievements}}
+
+
+
+link(rel='stylesheet', href='/css/home.css')

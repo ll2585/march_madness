@@ -89,7 +89,8 @@ html
 					div.col-xs-2 Select Player
 					div.col-xs-1 Score
 					div.col-xs-1 Final?
-					div.col-xs-4 Info
+					div.col-xs-3 Info
+					div.col-xs-1 Amount
 				div(ng-repeat="(i, category) in moneyBoard track by $index" class="row" ng-class="{'final-category': moneyBoard[i]['final']}")
 					div.col-xs-3 {{moneyBoard[i]['category']}}
 					div.col-xs-1
@@ -107,8 +108,10 @@ html
 						input(ng-model="moneyBoard[i]['score']", type="number", ng-disabled="moneyBoard[i]['final']" class="form-control")
 					div.col-xs-1
 						input(type="checkbox" ng-model="moneyBoard[i]['final']")
-					div.col-xs-4
+					div.col-xs-3
 						input(ng-model="moneyBoard[i]['info']", ng-disabled="moneyBoard[i]['final']")
+					div.col-xs-1
+						input(ng-model="moneyBoard[i]['amount']")
 			#saved-moneyboard-alert
 			button(ng-click="saveMoneyboard()") Save Moneyboard
 			hr

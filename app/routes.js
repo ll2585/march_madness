@@ -311,7 +311,31 @@ module.exports = function(app) {
 	app.get('/bracket_joyride.json', function (req, res) {
 		return res.json({"1": "HI!"});
 	});
+    app.get('/achievements.json', function (req, res) {
+        var username = req.query.username;
+        console.log(username);
+        User.findOne({username: username}, function (err, user) {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(404);
+            }
+            else {
+                if (user == null) {
+                    console.log(err);
+                    return res.sendStatus(404);
+                }
+                //found user i guess...
+                //probablty dont even need to do this
+                var achievements = settings['achievements'];
+                var usersAchievements = null;
+                if(settings['achievementsByUser'] != null && username in settings['achievementsByUser']){
+                    usersAchievements = settings['achievementsByUser'];
+                }
+                return res.json({'achievements': achievements, 'userAchievements': usersAchievements});
 
+            }
+        });
+    });
 	app.get('/savedBracket.json', function (req, res) {
 		var username = req.query.username;
 		console.log(username);
@@ -381,7 +405,33 @@ module.exports = function(app) {
         });
     });
 
+    app.get('/moneyboard.json', function (req, res) {
+        var username = req.query.username;
+        console.log(username);
+        console.log("SOMEONE WANTS A MONEYBOARD");
+        User.findOne({username: username}, function (err, user) {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(404);
+            }
+            else {
+                var moneyboard = settings['moneyBoard'];
+                if (Object.keys(moneyboard).length == 0) {
+                    return res.status(404).send("No bracket found");
+                } else {
+
+                    return res.json(moneyboard);
+                }
+
+            }
+        });
+    });
+
 	app.get('/boxes_scoreboard.json', function (req, res) {
+        if(settings['bracketOpened']){
+            console.log("ITS STILL OPEN")
+            return res.status(406).send("Not Acceptable - Brackets Still Opened. Please refresh.");
+        }
 		var username = req.query.username;
 		console.log(username);
 		console.log("SOMEONE WANTS A BOXBOARD");

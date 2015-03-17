@@ -36,7 +36,8 @@
 		center-me(id="winning-team-label", my-parent='winning-cols', loaded = 'loaded', vertical='false', padding='8') Winning Team
 		draw-line(ng-repeat="i in [0,1,2,3,4,5]" from="winning-team-row-{{$index}}" to="losing-team-col-{{$index}}", loaded = 'loaded') {{6-$index}}
 		hr
-		table(class="your_scores table table-condensed table-striped table-bordered", ng-show="!brackets_opened") Your Scores
+		caption(ng-show="!brackets_opened") Your Scores
+		table(class="your_scores table table-condensed table-striped table-bordered", ng-show="!brackets_opened")
 			thead
 				tr
 					th Round
@@ -52,7 +53,7 @@
 						br
 						|{{game.losing_score}}
 		hr
-		div.box-scoreboard(ng-show="!brackets_opened") ALL SCORES
+		div.box-scoreboard(ng-show="!brackets_opened" ) ALL SCORES
 			div.row
 				div.col-xs-3 Round
 				div.col-xs-3 Winning Team

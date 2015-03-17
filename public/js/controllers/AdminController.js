@@ -198,7 +198,6 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
                     user_info[$scope.moneyBoard[i]['category']] = 0;
                 }
                 user_info["First Place"] = {value: $scope.scoreboard[username]["Total Score"]}
-                user_info["Most Guesses"] = {value: $scope.scoreboard[username]["Total Picks"]}
                 user_info["Closest To 50 Points"] = {value: 1000-Math.abs(50-$scope.scoreboard[username]["Total Score"])}
 
 
@@ -319,7 +318,7 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
                     if(official['championship']['tree'][2]['team']['name'] !=  users['championship']['tree'][2]['team']['name']&&
                         official['championship']['tree'][3]['team']['name'] !=  users['championship']['tree'][3]['team']['name']){
                         for(var i = 4; i < 8; i++){
-                            if(official['championship']['tree'][i]['team']['name'] !=  users['championship']['tree'][i]['team']['name']){
+                            if(official['championship']['tree'][i]['team']['name'] ==  users['championship']['tree'][i]['team']['name']){
                                 giveAchievement("I'm on the bleachers");
                             }
                         }

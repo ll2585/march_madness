@@ -1,0 +1,37 @@
+.hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()')
+.jumbotron.text-center
+	input(type="hidden" ng-init="setUsername(" + userToGet + ")")
+	h1 THE ACHIEVEMENTS
+	h2 THE BRACKET {{username}}
+		span(ng-show="brackets_opened") &nbspIS OPENED
+		span(ng-show="!brackets_opened") &nbspIS CLOSED
+	div.container
+		div.row.achievement-header
+			div.col-xs-12 Regular Achievements
+
+
+		//
+			regularAchievements has the most achievements, don't ask how I know this.
+		div.row(ng-repeat="(i, regAchievement) in regularAchievements")
+			div.col-xs-12(ng-class="{'owned-achievement': ownAchievement(regAchievement)}")
+				achievement-image(initial-path="regularAchievements/{{i}}", owned="{{ownAchievement(regAchievement)}}")
+				achievement-text(achievement-name="{{regAchievement}}", achievement-desc="{{getDescription(i, 'reg')}}")
+		div.row.achievement-header
+			div.col-xs-12 The Box Achievements
+		div.row(ng-repeat="(i, boxAchievement) in boxAchievements")
+			div.col-xs-12(ng-class="{'owned-achievement': ownAchievement(boxAchievement)}")
+				achievement-image(initial-path="boxAchievements/{{i}}", owned="{{ownAchievement(boxAchievement)}}" ng-if="boxAchievement !== undefined")
+				achievement-text(achievement-name="{{boxAchievement}}", achievement-desc="{{getDescription(i, 'box')}}" ng-if="boxAchievement !== undefined")
+		div.row.achievement-header
+			div.col-xs-12 Resistance Achievements
+		div.row(ng-repeat="(i, resAchievement) in resistanceAchievements")
+			div.col-xs-12(ng-class="{'owned-achievement': ownAchievement(resAchievement)}")
+				achievement-image(class="resistance-img" initial-path="resistanceAchievements/{{i}}", owned="{{ownAchievement(resAchievement)}}" ng-if="resAchievement !== undefined")
+				achievement-text(class="resistance-txt" achievement-name="{{resAchievement}}", achievement-desc="{{getDescription(i, 'res')}}")
+		div.row.achievement-header
+			div.col-xs-12 Taylor Swift Achievements
+		div.row(ng-repeat="(i, tsAchievement) in tsAchievements")
+			div.col-xs-12(ng-class="{'owned-achievement': ownAchievement(tsAchievement)}")
+				achievement-image(initial-path="tsAchievements/{{i}}", owned="{{ownAchievement(tsAchievement)}}" ng-if="tsAchievement !== undefined")
+				achievement-text(achievement-name="{{tsAchievement}}", achievement-desc="{{getDescription(i, 'ts')}}")
+link(rel='stylesheet', href='/css/achievements.css')

@@ -9,7 +9,7 @@ for(var region in initial_bracket){
     }
 }
 var money_categories = ["First Place", "Second Place", "Third Place","Sixth Place","Second to Last",
-    "Most Guesses", "Winner after Day 1", "Winner after Day 2", "Most Correct Upsets in Round 1",
+    "Most Guesses in MiniGame", "Winner after Day 1", "Winner after Day 2", "Most Correct Upsets in Round 1",
 "Most Points in Squares", "Worst Pick", "Most Heartbreaking", "First to be Eliminated", "Most Correct Blue Teams",
     "Most Correct Red Teams", "Most Resistance Achievements", "Most Achievements", "Most Taylor Swift Achievements", "Closest To 50 Points"];
 var money_category_dict = [];
@@ -21,6 +21,7 @@ for(var i = 0; i < money_categories.length; i++){
     temp['final'] = false;
     temp['multiple'] = false;
     temp['info'] = null;
+    temp['amount'] = null;
     money_category_dict.push(temp);
 }
 var achievements = ["Completed Bracket", "I Say I Like Dogs", "But I Really Like Cats", "Random Picker", "Good Guesser", "Insider Trader", "Minigame Champion", "My Best Friend",

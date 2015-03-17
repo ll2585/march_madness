@@ -1,9 +1,13 @@
-angular.module('MainPageCtrl', ['bm.bsTour']).controller('MainPageController', ['$rootScope', '$scope', 'userInfoFactory', '$window', '$q', '$http', function($rootScope, $scope, userInfoFactory, $window, $q, $http) {
-
-	$scope.tagline = 'To the moon and back!';
+angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope', '$scope', 'userInfoFactory', '$window', '$q', '$http', function($rootScope, $scope, userInfoFactory, $window, $q, $http) {
 
     $rootScope.$on('start-tutorial', function(event, obj){
 		$scope.start();
+    });
+
+    $http.get('/is_bracket_opened.json').success(function(data){
+        $scope.brackets_opened = data['result']
+    }).error(function(data){
+        console.log(data);
     });
 
     $scope.getFlags = function(){
@@ -15,7 +19,6 @@ angular.module('MainPageCtrl', ['bm.bsTour']).controller('MainPageController', [
 				if(!$scope.skipped_main_page){
 					$scope.startJoyRide = true;
 				}
-				console.log($scope.skipped_main_page);
                 $window.sessionStorage.data = data.data;
             });
         }
@@ -40,7 +43,6 @@ angular.module('MainPageCtrl', ['bm.bsTour']).controller('MainPageController', [
     $scope.getScoreboard($window.sessionStorage.user).then(function(data){
 
         $scope.scoreboard = [];
-        console.log(data);
         var sorted_keys = Object.keys(data).sort(function(a,b){return data[b]-data[a]})
         for(var i = 0; i < sorted_keys.length; i++){
             var name = sorted_keys[i]
@@ -53,26 +55,49 @@ angular.module('MainPageCtrl', ['bm.bsTour']).controller('MainPageController', [
         $scope.displayedCollection = [].concat($scope.scoreboard);
     });
 
+    $scope.getMoneyboard = function(username) {
+        var deferred = $q.defer();
+        $http({
+            url: '/moneyboard.json', method: "GET", params: {username: username}
+        }).success(function(data){
+            deferred.resolve(data);
+        }).error(function(){
+            deferred.reject("No official bracket yet.")
 
-	$scope.awesomeThings = [
-		'HTML5 Boilerplate',
-		'AngularJS',
-		'Karma'
-	];
-	var count = 0;
+        });
+
+        return deferred.promise;
+    };
+    $scope.getMoneyboard($window.sessionStorage.user).then(function(data){
+
+        $scope.moneyBoard = data;
+        console.log($scope.moneyBoard)
+    });
+
+    $scope.makeNice = function(playerArr){
+        var players = ''
+        if(playerArr.length == 0){
+            players = 'None';
+        }else{
+            players= playerArr.join('<br>')
+        }
+        return players;
+    }
+    $scope.getValue = function(row){
+        var hide_vals = [
+            "Closest To 50 Points", "First to be Eliminated", "Winner after Day 1", "Winner after Day 2"
+        ]
+        var category = row.category
+        if(hide_vals.indexOf(category) > -1){
+            return ''
+        }
+        return row.value;
+    }
+
+
 	$scope.startJoyRide = false;
 	$scope.start = function () {
-		if(count > 0){
-			generateAlternateConfig();
-		}
-		count++;
 		$scope.startJoyRide = true;
-
-	}
-
-	function generateAlternateConfig(){
-		//This is to show that it can have dynamic configs which can change . The joyride would not need to be initialized again.
-		$scope.config[2].text = "I can have dynamic text that can change in between joyrides"
 	}
 
 	$scope.config = [
@@ -212,9 +237,6 @@ angular.module('MainPageCtrl', ['bm.bsTour']).controller('MainPageController', [
 		$scope.skipped_main_page = true;
 		$rootScope.$broadcast('CLOSE_MODAL');
 
-
 	};
-
-
 
 }]);
