@@ -163,26 +163,29 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                     "National Championship Game": 0
                 };
                 var users = bracket;
-                for(var region in official){
-                    for(var team_id in official[region]['tree']){
-                        var node = official[region]['tree'][team_id];
-                        if(node.team !== null){
-                            if(node.team.name == users[region]['tree'][team_id]['team']['name']){
-                                var regionName = $scope.getRegionNameForTeamID(region, team_id);
-                                if(regionName != null){ //so ignore championship first round and first row of regions
-                                    totalPicks += 1;
-                                    var pointsForThisPick = $scope.calculateScore(region, team_id);
-                                    totalScore += pointsForThisPick;
+				console.log(bracket)
+				if(bracket !== undefined){
+					for(var region in official){
+						for(var team_id in official[region]['tree']){
+							var node = official[region]['tree'][team_id];
+							if(node.team !== null){
+								if(node.team.name == users[region]['tree'][team_id]['team']['name']){
+									var regionName = $scope.getRegionNameForTeamID(region, team_id);
+									if(regionName != null){ //so ignore championship first round and first row of regions
+										totalPicks += 1;
+										var pointsForThisPick = $scope.calculateScore(region, team_id);
+										totalScore += pointsForThisPick;
 
-                                    roundScore[regionName] += pointsForThisPick;
-                                    roundPicks[regionName] +=1;
-                                }
+										roundScore[regionName] += pointsForThisPick;
+										roundPicks[regionName] +=1;
+									}
 
-                            }
-                        }
+								}
+							}
 
-                    }
-                }
+						}
+					}
+				};
                 var score = {
                     "Total Score": totalScore,
                     "Total Picks": totalPicks,
