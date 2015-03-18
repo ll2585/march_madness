@@ -3,8 +3,7 @@ var User     = require('./models/User.js');
 var jwt        = require("jsonwebtoken");
 var expressJwt = require('express-jwt');
 var secret = require('./secret.js');
-var Q = require('Q');
-var api = require('./api.js');
+var Q = require('q');
 var ServerSettings     = require('./models/ServerSettings.js');
 var setUpServer = require('../setupServer.js');
 var settings = {'bracketOpened': false, 'officialBracket': null, 'scores': null, 'moneyBoard': null, 'achievements': null, 'achievementsByUser': null,
@@ -46,9 +45,7 @@ function storeAsSetting(s){
 }
 
 module.exports = function(app) {
-	app.use('/api', expressJwt({
-		secret: secret()
-	}).unless({path: ['/api/auth', '/api/things', '/api/auth/signup']}));
+
 
 	function isLuke(req, res, next) {
 
@@ -136,50 +133,63 @@ module.exports = function(app) {
 	app.post('/register', function (req, res) {
 		var username = req.body.username || '';
 		var email = req.body.email || '';
-		var name = req.body.name || '';
 
-		if (username == '' || email == '' || name == '') {
+		if (username == '' || email == '') {
 			return res.sendStatus(400);
 		}
-
-		var user = new User();
-		user.username = username;
-		user.email = email;
-		user.name = name;
-		console.log("REGISTERING");
-		console.log(username);
-		console.log(name);
-		user.save(function (err) {
-			if (err) {
-				console.log(err);
-				return res.sendStatus(500);
+		var user_exists = false;
+		User.findOne({username: username}, function (err, user) {
+			user_exists = err || user == undefined
+			if(!user_exists){
+				return res.status(409).send("User exists already.");
 			}
-
-			User.count(function (err, counter) {
-				if (err) {
-					console.log(err);
-					return res.sendStatus(500);
+			User.findOne({email: email}, function (err, user) {
+				user_exists = err || user == undefined
+				if(!user_exists){
+					return res.status(409).send("Email exists already.");
 				}
 
-				if (counter == 1) {
-					User.update({username: user.username}, {is_admin: true}, function (err, nbRow) {
+				var user = new User();
+				user.username = username;
+				user.email = email;
+				console.log("REGISTERING");
+				console.log(username);
+				user.save(function (err) {
+					if (err) {
+						console.log(err);
+						return res.sendStatus(500);
+					}
+
+					User.count(function (err, counter) {
 						if (err) {
 							console.log(err);
 							return res.sendStatus(500);
 						}
 
-						console.log('First user created as an Admin - username: ' + user.username);
-						return res.sendStatus(200);
-					});
-				}
-				else {
-                    console.log("TWOHUNDRED")
-					return res.sendStatus(200);
-				}
+						if (counter == 1) {
+							User.update({username: user.username}, {is_admin: true}, function (err, nbRow) {
+								if (err) {
+									console.log(err);
+									return res.sendStatus(500);
+								}
 
-                //add to scoreboard here
+								console.log('First user created as an Admin - username: ' + user.username);
+								return res.sendStatus(200);
+							});
+						}
+						else {
+							console.log("TWOHUNDRED")
+							return res.sendStatus(200);
+						}
+
+						//add to scoreboard here
+					});
+				});
 			});
+
 		});
+
+
 	});
 	app.post('/logout', function (req, res) {
 		if (req.user) {
@@ -216,15 +226,11 @@ module.exports = function(app) {
 					return res.status(401).send("Incorrect password.");
 				}
 				req.user = user;
-				console.log("SET REQ USER")
-				console.log(req.user);
-				console.log(req.session);
 
 
 				var token = jwt.sign({id: user._id}, secret());
 				req.session['token'] = token;
-				console.log("ADDED THE TOKEN!??!")
-				console.log(req.session);
+
 				return res.json({token: token, user: user});
 			});
 
@@ -239,7 +245,7 @@ module.exports = function(app) {
             var users_arr = [];
 
             users.forEach(function(user) {
-                users_arr.push({'name': user.name, 'username': user.username});
+                users_arr.push({'name': user.username});
             });
 
             return res.json(users_arr);
@@ -266,8 +272,6 @@ module.exports = function(app) {
 		var token = req.query.token;
 		var decoded = jwt.verify(token, secret());
 		User.findOne({username: username}, function (err, user) {
-			console.log(user);
-			console.log(user.flags);
 			if (err) {
 				console.log(err);
 				return res.sendStatus(401);
@@ -284,8 +288,7 @@ module.exports = function(app) {
 		var bracket = req.body.bracket;
 		var decoded = jwt.verify(token, secret());
 		User.findOne({username: username}, function (err, user) {
-			console.log(user);
-			console.log(user.flags);
+
 			if (err) {
 				console.log(err);
 				return res.sendStatus(401);
@@ -295,7 +298,6 @@ module.exports = function(app) {
 					console.log("ITS CLOSED")
 					return res.status(406).send("Not Acceptable - Brackets Closed. Please refresh.");
 				}
-				console.log(bracket['mid_west']['tree']);
 				var partial_update = {$set: {bracket: bracket}};
 				User.findOneAndUpdate({username: username}, partial_update, function (err) {
 					if (err) {
@@ -313,7 +315,6 @@ module.exports = function(app) {
 	});
     app.get('/achievements.json', function (req, res) {
         var username = req.query.username;
-        console.log(username);
         User.findOne({username: username}, function (err, user) {
             if (err) {
                 console.log(err);
@@ -338,7 +339,6 @@ module.exports = function(app) {
     });
 	app.get('/savedBracket.json', function (req, res) {
 		var username = req.query.username;
-		console.log(username);
 		User.findOne({username: username}, function (err, user) {
 			if (err) {
 				console.log(err);
@@ -362,7 +362,6 @@ module.exports = function(app) {
 
     app.get('/officialbracket.json', function (req, res) {
         var username = req.query.username;
-        console.log(username);
         if(settings['bracketOpened']){
             return res.sendStatus(404);
         }
@@ -385,8 +384,6 @@ module.exports = function(app) {
 
     app.get('/scoreboard.json', function (req, res) {
         var username = req.query.username;
-        console.log(username);
-		console.log("SOMEONE WANTS A SCOREBOARD");
         User.findOne({username: username}, function (err, user) {
             if (err) {
                 console.log(err);
@@ -407,8 +404,6 @@ module.exports = function(app) {
 
     app.get('/moneyboard.json', function (req, res) {
         var username = req.query.username;
-        console.log(username);
-        console.log("SOMEONE WANTS A MONEYBOARD");
         User.findOne({username: username}, function (err, user) {
             if (err) {
                 console.log(err);
@@ -433,8 +428,6 @@ module.exports = function(app) {
             return res.status(406).send("Not Acceptable - Brackets Still Opened. Please refresh.");
         }
 		var username = req.query.username;
-		console.log(username);
-		console.log("SOMEONE WANTS A BOXBOARD");
 		User.findOne({username: username}, function (err, user) {
 			if (err) {
 				console.log(err);
@@ -460,10 +453,7 @@ module.exports = function(app) {
 		var flag = req.body.flag;
 		var val = req.body.val;
 		var decoded = jwt.verify(token, secret());
-		console.log("SETTING FLAGS " + flag + " TO " + val);
 		User.findOne({username: username}, function (err, user) {
-			console.log(user);
-			console.log(user.flags);
 			if (err) {
 				console.log(err);
 				return res.sendStatus(401);
@@ -473,7 +463,6 @@ module.exports = function(app) {
 				var new_set = {}
 				new_set[new_flag] = val;
 				var updated_flag = {$set: new_set};
-				console.log(updated_flag);
 				User.findOneAndUpdate({username: username}, updated_flag, function (err) {
 					if (err) {
 						console.log(err);
@@ -543,7 +532,6 @@ module.exports = function(app) {
 		return{
 			winning_numbers: winning_numbers, losing_numbers: losing_numbers, users: players
 		}
-		console.log(username + " WANTS BOXES LOLOLOL")
 	}
 	app.get('/boxes.json', function (req, res, next) {
 		if(settings['bracketOpened']){
@@ -594,8 +582,6 @@ module.exports = function(app) {
         }else{
             res.render('partials/bracket-angular', {opened: settings[setting], userToGet: "'" + req.params.name + "'"});
         }
-
-
     });
 	app.get('/partials/bracket-angular', function (req, res, next) {
         console.log(req.params.name);
@@ -603,7 +589,20 @@ module.exports = function(app) {
 		var setting = "bracketOpened";
 		console.log("WTF BRACKETS OEPNED" + settings[setting])
 		res.render('.' + req.path, {opened: settings[setting]});
+	});
+	app.get('/partials/achievements/:name', function (req, res, next) {
+		console.log(req.params)
+		console.log(req.params.name);
+		console.log("IS THERE A FUCKING NAME2");
+		var setting = "bracketOpened";
+		console.log("WTF BRACKETS OEPNED" + settings[setting])
+		if(settings[setting]){
+			//brackets opened send to your page
+			res.render('partials/achievements', {opened: settings[setting]});
 
+		}else{
+			res.render('partials/achievements', {opened: settings[setting], userToGet: "'" + req.params.name + "'"});
+		}
 	});
 
     app.get('/partials/home', function (req, res, next) {

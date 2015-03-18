@@ -9,16 +9,6 @@ angular.module('bracketRoutes', []).config(['$routeProvider', '$locationProvider
             access: { requiredAuthentication: true }
 		})
 
-		.when('/bracket', {
-			templateUrl: 'partials/bracket',
-			controller: 'BracketController'
-		})
-
-		.when('/box', {
-			templateUrl: 'partials/box',
-			controller: 'BoxController'	
-		})
-
 		.when('/box-angular', {
 			templateUrl: 'partials/box-angular',
 			controller: 'BoxControllerAngular',
