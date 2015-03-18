@@ -1,6 +1,6 @@
 var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
-var Q = require('Q')
+var Q = require('q')
 var Settings = new Schema({
 	setting: { type: String, required: true, unique: true },
 	type: { type: String, required: true },
