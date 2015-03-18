@@ -22,6 +22,7 @@ html
 		link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css')
 		link(rel='stylesheet', href="/css/octicons/octicons.css")
 		link(rel='stylesheet', href="/css/custom/style.css")
+		//link(rel='stylesheet', href="http://i.icomoon.io/public/temp/be4dbfc1ac/UntitledProject/style.css")
 
 		script(src='/js/bracket.js')
 		script(src='/js/nonangular/sidebar.js')
@@ -58,19 +59,19 @@ html
 				div.container
 					div.navbar-header(style="padding-top: 10px;")
 						a(href="/")
-							span(class="glyphicon glyphicon-home")
-							| {{name}} - Welcome
+							span(class="glyphicon glyphicon-home navbar-img")
+							span(class="nav-link") {{name}} - Welcome
 							span(ng-if="!isLoggedIn") ! Please login!
 							span(ng-if="isLoggedIn") &nbsp{{user}}!
 					div#navbar.navbar-collapse.collapse(ng-if="isLoggedIn")
 						ul.nav.navbar-nav.navbar-right(style="padding-top: 10px;")
 							li(ng-show="brackets_opened")
-								span(class="glyphicon glyphicon-question-sign", ng-click="startTutorial()" )
+								span(class="glyphicon glyphicon-question-sign navbar-img", ng-click="startTutorial()" )
 									a(href='') Restart Tutorial
 									|&nbsp
 									|&nbsp
 							li
-								span(class="glyphicon glyphicon-log-out" )
+								span(class="glyphicon glyphicon-log-out navbar-img" )
 									a(href="/" ng-click='logOut()') Logout
 
 			// Sidebar

@@ -91,7 +91,6 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
 				return result;
 			}
 		}
-		console.log($scope.scoreboard)
 
 		$scope.scoreboard.sort(sort_by({name: "score", reverse: true},{name: "achievements", reverse: true}))
         $scope.getBracketStandings = function(){
@@ -128,6 +127,9 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
                 }
 
 				$scope.getBoxStandings = function(){
+					if(!($scope.username in $scope.box_scoreboard)){
+						return $sce.trustAsHtml( "No Box Wins Yet!" );
+					}
 					var your_box = $scope.box_scoreboard[$scope.username];
 					var stats = "Total Box Wins: " + your_box.length;
 					var stat_arr = {"total_points": 0}
@@ -156,7 +158,6 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
                 $scope.totalAchievementsOwned = 0;
                 $scope.res_owned = 0;
                 $scope.ts_owned = 0;
-                console.log(data);
                 if(data['userAchievements'] != null && $scope.username in data['userAchievements']) {
                     $scope.myAchievements = data['userAchievements'][$scope.username]
 
@@ -180,7 +181,6 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
                             }
                         }
                     }
-                    console.log($scope.myAchievements);
                 }
 
 
@@ -304,7 +304,6 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
                 }, function (newval) {
                     if (newval) {
                         element.css("display", "block");
-                        console.log("SWTCIHED");
                     }else{
                         element.css("display", "none");
                     }

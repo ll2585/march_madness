@@ -16,7 +16,6 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 					$scope.scoreboard.push({rank: i + 1, name: name})
 				}
 
-                console.log($scope.scoreboard);
 
 				//copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
 				$scope.displayedCollection = [].concat($scope.scoreboard);
@@ -60,7 +59,6 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 						return result;
 					}
 				}
-				console.log($scope.scoreboard)
 
 				$scope.scoreboard.sort(sort_by({name: "score", reverse: true},{name: "achievements", reverse: true}))
 				var last_score = -1;
@@ -133,7 +131,6 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
         return deferred.promise;
     };
     $scope.getMoneyboard($window.sessionStorage.user).then(function(data){
-		console.log(data);
         $scope.moneyBoard = data;
 
 

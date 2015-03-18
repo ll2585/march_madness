@@ -86,3 +86,10 @@ ul.sidebar > li{
 ul.sidebar{
   padding: 2px;
 }
+
+.navbar-img > a{
+    padding-left: 4px;
+}
+.nav-link{
+    padding-left: 4px;
+}

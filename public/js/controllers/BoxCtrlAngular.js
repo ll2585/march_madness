@@ -16,7 +16,6 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
                 if(found_first_instance){
                     break;
                 }
-				console.log("FOUND FIRST?" +  $scope.myName)
                 for(var j = 0; j < $scope.players[i].length; j++){
                     if($scope.players[i][j] == $scope.myName){
                         $scope.first_coords = [i,j];
@@ -52,7 +51,30 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 							$scope.box_scoreboard_by_round.push(temp);
 						}
 					}
+
+
+
 				});
+
+				$scope.flavorText = function(){
+					if($scope.box_scoreboard == undefined || !($scope.myName in $scope.box_scoreboard)){
+						return "The tournament has started! Good luck!"; //luke didnt put in a score yet or you hvaent won
+					}
+					var your_wins = $scope.box_scoreboard[$scope.myName].length;
+					if(your_wins == 0){
+						return "The tournament has started! Good luck!";
+					}else if(your_wins < 5){
+						return "The tournament has started! Congrats on your first boxes!";
+					}else if(your_wins < 10){
+						return "So many correct boxes!!";
+					}else if(your_wins < 20){
+						return "You are one lucky person!!!";
+					}else if(your_wins < 40){
+						return "Imagine if we were doing boxes for money!!!!";
+					}else{
+						return "I have no words for how lucky you are.";
+					}
+				}
 			}
 		}).error(function(){
 			console.log("No data");
@@ -64,9 +86,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
     $scope.myName = $window.sessionStorage.user;
 	$scope.brackets_opened = false;
 	$http.get('/is_bracket_opened.json').success(function(data){
-		console.log("IS B OP")
 		$scope.brackets_opened = data['result']
-		console.log(data);
 	}).error(function(data){
 		console.log(data);
 	});
@@ -74,8 +94,6 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 	$scope.getFlags = function(){
 		if(!$window.sessionStorage.userFlags){
 			userInfoFactory.getFlags($window.sessionStorage.token, $window.sessionStorage.user).then(function(data) {
-				console.log("GOT FLAGS")
-				console.log(data);
 				$scope.doneWithTutorial = data.data.skipped_boxes_page;
 				if(!$scope.doneWithTutorial){
 					$scope.start();

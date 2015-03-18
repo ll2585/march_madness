@@ -106,6 +106,7 @@
 .glyphicon-tag, .icon-dog, .icon-cat{
     float: right;
     padding-right: 3px;
+    font-size: 120%;
 }
 
 .see-another-bracket{

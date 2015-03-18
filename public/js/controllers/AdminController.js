@@ -998,11 +998,17 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                                 if (users_moneyboard[category]['value'] > curItem['score']) { // new leader
                                     curItem['score'] = users_moneyboard[category]['value'];
                                     curItem['player'] = [username];
-                                    curItem['info'] = users_moneyboard[category]['info'];
+									if(users_moneyboard[category]['info'] != null){
+										curItem['info'] = users_moneyboard[category]['info'];
+									}
+
                                     curItem['multiple'] = false;
                                 } else if (users_moneyboard[category]['value'] == curItem['score']) { //tied
                                     if (curItem['player'].indexOf(username) < 0) {
-                                        curItem['info'] += '<br>' + users_moneyboard[category]['info'];
+										if(curItem['info'] != null){
+											curItem['info'] += '<br>' + users_moneyboard[category]['info'];
+										}
+
                                         curItem['player'].push(username);//if youre not in it already
                                     }
 

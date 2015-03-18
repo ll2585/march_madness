@@ -2,8 +2,12 @@
 .jumbotron.text-center
 	input(type="hidden" ng-init="setUsername(" + userToGet + ")")
 	h1 THE BRACKET
-		span(ng-show="brackets_opened") &nbspIS OPENED
-		span(ng-show="!brackets_opened") &nbspIS CLOSED
+	span(ng-show="brackets_opened")
+		h3(ng-if="pickCountTotal()['Completed Picks']!=63") Your bracket is incomplete! Finish making your picks before Thursday, March 19, 2015 at noon!
+		h3(ng-if="pickCountTotal()['Completed Picks']==63 && (data['championship']['tree'][2]['score'] == null || data['championship']['tree'][3]['score'] == null)") Your bracket is complete but remember to put in a final score! Finish making your picks before Thursday, March 19, 2015 at noon!
+		h3(ng-if="pickCountTotal()['Completed Picks']==63 && (data['championship']['tree'][2]['score'] != null && data['championship']['tree'][3]['score'] != null)") Your bracket is complete! The tournament will start on Thursday, March 19, 2015 at noon! Good luck!
+	span(ng-show="!brackets_opened")
+		h3 {{flavorText()}}
 	div.rightStuff
 		div.pickCounter(ng-show="brackets_opened && (skipped_bracket_page || showPickCounter)") Picks: {{pickCountTotal()['Completed Picks']}}/{{pickCountTotal()['Total Picks']}}
 		div.your-score(ng-show="!brackets_opened") {{username}}'s Score: {{myScore["Total Score"]}}

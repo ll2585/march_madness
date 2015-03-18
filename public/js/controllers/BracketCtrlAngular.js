@@ -30,7 +30,6 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 				url: '/getUsers.json', method: "GET"
 			}).success(function(data){
 				$scope.users = data;
-				console.log($scope.users)
 			}).error(function(){
 
 			});
@@ -531,7 +530,6 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 							if(official_team != null){ return this_team != official_team}
 							for (var j = 4; j < 8; j++) {
 								var that_team = $scope.getTeamName(4, 0, 0, 0, j)
-								console.log(this_team, that_team, $scope.eliminatedTeamInChampionshipByTeam(0,j-4))
 								if(this_team == that_team) {
 									return($scope.eliminatedTeamInChampionshipByTeam(0,j-4));
 								}
@@ -546,6 +544,31 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 							}
 						}
 						return false;
+					}
+
+					$scope.flavorText = function(){
+						var your_score = $scope.myScore['Total Score'];
+						if(your_score == 0){
+							return "The tournament has started! Good luck!";
+						}else if(your_score < 5){
+							return "The tournament has started! Congrats on your first points!";
+						}else if(your_score < 10){
+							return "The tournament has started! Keep going!";
+						}else if(your_score < 15){
+							return "You're doing great, keep going!";
+						}else if(your_score < 25){
+							return "Not bad!";
+						}else if(your_score < 40){
+							return "Good job!";
+						}else if(your_score < 50){
+							return "Great score!";
+						}else if(your_score < 75){
+							return "I'm impressed!";
+						}else if(your_score < 100){
+							return "Wow! You are pretty good at this!";
+						}else{
+							return "Wow!! Have you considered gambling??";
+						}
 					}
 
                 }, function (error) {

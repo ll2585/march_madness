@@ -1,10 +1,9 @@
 .hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()')
 .jumbotron.text-center
 	h1 THE BOX
-	h2 THE BRACKET {{username}}
-		span(ng-show="brackets_opened") &nbspIS OPENED
-		span(ng-show="!brackets_opened") &nbspIS CLOSED
-	h3(ng-show="brackets_opened") This is a demo box.
+	span(ng-show="!brackets_opened")
+		h3 {{flavorText()}}
+	h3(ng-show="brackets_opened") Brackets are not yet closed. This is a demo box.
 	h4(ng-show="brackets_opened") Your real box will be posted when brackets close.
 	br
 	br

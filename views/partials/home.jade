@@ -3,9 +3,10 @@ div.container
 	div.page-header#brackets-opened-tag
 		h1 THE BRACKET
 			span(ng-show="brackets_opened") &nbspIS OPENED
-			br(ng-show="brackets_opened")
-			small(ng-show="brackets_opened") Go make your picks!
 			span(ng-show="!brackets_opened") &nbspIS CLOSED
+			br
+			small(ng-show="brackets_opened") Go make your picks!
+			small(ng-show="!brackets_opened") Good luck!!
 	table.table.table-striped.table-bordered( id='money-board')
 		caption(class="text-center")
 			|THE MONEYBOARD

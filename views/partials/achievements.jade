@@ -8,9 +8,8 @@
 				li(ng-repeat="u in users")
 					a(href="/achievements/{{u.name}}") {{u.name}}
 	h1 {{username}}'s Achievements
-	h2 THE BRACKET
-		span(ng-show="brackets_opened") &nbspIS OPENED
-		span(ng-show="!brackets_opened") &nbspIS CLOSED
+	h3(ng-show="brackets_opened") Brackets are not yet closed. Look at the achievements and anticipate winning them all!
+	h3(ng-show="!brackets_opened") {{flavorText()}}
 
 	div.container#anchortop
 		div.row.achievement-header.reg-achievement-header

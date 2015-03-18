@@ -9,7 +9,6 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
 				url: '/getUsers.json', method: "GET"
 			}).success(function(data){
 				$scope.users = data;
-				console.log($scope.users)
 			}).error(function(){
 
 			});
@@ -77,16 +76,35 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
         $scope.$watch("username", function() {
             achievementFactory.getAchievements($scope.username).then(function (data) {
                 $scope.allAchievements = data['achievements'];
+				var start_box_achievement = 20;
+				var start_resistance_achievement = 34;
+				var start_ts_achievement = 45;
                 if(data['userAchievements'] != null && $scope.username in data['userAchievements']) {
                     $scope.myAchievements = data['userAchievements'][$scope.username]
                     $scope.achievement_dict = {};
                     $scope.totalAchievementsOwned = 0;
+
+					$scope.regular_achievements = 0;
+					$scope.box_achievements = 0;
+					$scope.res_Achievements = 0;
+					$scope.ts_achievements = 0;
+
                     if ($scope.myAchievements != null) {
                         for (var i = 0; i < $scope.myAchievements.length; i++) {
                             $scope.achievement_dict[$scope.myAchievements[i]['achievement']] = i;
                             if ($scope.myAchievements[i]['owned']) {
                                 $scope.totalAchievementsOwned += 1;
+								if(i < start_box_achievement){
+									$scope.regular_achievements += 1;
+								}else if(i < start_resistance_achievement){
+									$scope.box_achievements += 1;
+								}else if(i < start_ts_achievement){
+									$scope.res_Achievements += 1;
+								}else{
+									$scope.ts_achievements += 1;
+								}
                             }
+
                         }
                     }
                 }
@@ -100,9 +118,7 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
                 $scope.boxAchievementsDesc = [];
                 $scope.resistanceAchievementsDesc = [];
                 $scope.tsAchievementsDesc = [];
-                var start_box_achievement = 20;
-                var start_resistance_achievement = 34;
-                var start_ts_achievement = 45;
+
                 for(var i = 0; i < $scope.allAchievements.length; i++){
                     if(i < start_box_achievement){
                         $scope.regularAchievements.push($scope.allAchievements[i])
@@ -120,6 +136,85 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
                 }
 
                 $scope.getFlags();
+
+				$scope.flavorText = function(){
+					if($scope.totalAchievementsOwned == 1){
+
+						return "Congrats on your first achievement!"
+					}
+					var regular_text = '';
+					var box_text = '';
+					var resistance_text = '';
+					var ts_text = '';
+					//weighted by % owned to be POSITIVE!
+					if(0 < $scope.regular_achievements < 5){
+						regular_text = "Great achievements!"
+					}else if($scope.regular_achievements < 10){
+						regular_text = "Your achievements will make anyone jealous!"
+					}else if($scope.regular_achievements < 15){
+						regular_text = "Wow! You're loaded with achievements!"
+					}else{
+						regular_text = "Don't let anyone call you an overachiever, you're just that good!"
+					}
+					if(0 < $scope.box_achievements < 2){
+						box_text = "Nice job getting in the ring!"
+					}else if($scope.box_achievements < 4){
+						box_text = "You are definitely a boxes competitor!"
+					}else if($scope.box_achievements < 8){
+						box_text = "You almost unlocked all the box achievements!"
+					}else{
+						box_text = "You cleared the ring!!"
+					}
+					if(0 <  $scope.res_Achievements < 2){
+						resistance_text = "Mission Success getting that first Resistance Achievement!"
+					}else if($scope.res_Achievements < 4){
+						resistance_text = "I hope you're blue because you've got quite a few Resistance Achievements!"
+					}else if($scope.res_Achievements < 6){
+						resistance_text = "Your Resistance Achievements persuaded me to vote yes!"
+					}else if($scope.res_Achievements < 8){
+						resistance_text = "You almost unlocked all the Resistance achievements!"
+					}else{
+						resistance_text = "Wow. A Resistance Champion. I hope you're always on my team."
+					}
+
+					if(0 < $scope.ts_achievements < 2){
+						ts_text = "I hope you've heard the song related to the achievement you've earned!"
+					}else if($scope.ts_achievements < 4){
+						ts_text = "I'm sure Taylor Swift will appreciate you unlocking her achievements!"
+					}else if($scope.ts_achievements < 6){
+						ts_text = "You've got quite the Taylor Swift collection!"
+					}else if($scope.ts_achievements < 8){
+						ts_text = "You are so close to getting all the Taylor Swift achievements!"
+					}else{
+						ts_text = "WOW! If you aren't already you should be a Taylor Swift fan!"
+					}
+
+					var achieve_percents = [$scope.regular_achievements/20,$scope.box_achievements/14,$scope.res_Achievements/11,$scope.ts_achievements/9]
+					var total = achieve_percents.reduce(function(a, b) {
+						return a + b;
+					});
+					var weights = [];
+
+					var r = Math.random();
+					for(var i = 0; i < achieve_percents.length; i++){
+						weights[i] = achieve_percents[i]/total;
+						if(i != 0){
+							weights[i] += weights[i-1]
+						}
+					}
+
+					var possible_flavor = [regular_text, box_text, resistance_text, ts_text];
+					var weighted_sum = 0;
+					var spec = {0: weights[0], 1: weights[1], 2: weights[2], 3: weights[3]}
+					for (i in spec) {
+						weighted_sum += spec[i];
+						if (r <= weighted_sum) {
+
+							return possible_flavor[i];
+						}
+					}
+
+				}
 
             });
         });
