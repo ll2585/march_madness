@@ -2,6 +2,9 @@
   <configuration default="false" name="bin\www" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="C:/Program Files/nodejs/node" path-to-js-file="server.js" working-dir="$PROJECT_DIR$">
     <envs>
       <env name="DEBUG" value="march_madness" />
+      <env name="NODE_ENV" value="development" />
+      <env name="SENDGRID_USERNAME_LUKE" value="luke_march_madness" />
+      <env name="SENDGRID_PASSWORD_LUKE" value="HVJr1rcT6zAU51Q" />
     </envs>
     <browser url="http://localhost:3000/" />
     <RunnerSettings RunnerId="Basic" />
