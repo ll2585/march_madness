@@ -208,6 +208,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 
                 user_info["Worst Pick"] = {value: 0, info: ''};
                 var users = bracket;
+				if(bracket !== undefined){ return user_info; }
                 var official = $scope.officialBracket;
                 var heartbreaking_count = 0;
                 var round_one_upsets = 0;
@@ -943,6 +944,8 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 				}
                 for(var s in $scope.users){
                     var user =  $scope.users[s];
+					console.log('getting score for ' + user.username)
+					console.log($scope.scoreboard);
                     $scope.scoreboard[user.username] = $scope.determineScore(user.bracket);
                     $scope.user_money_board[user.username] = $scope.calculateMoneyBoard(user.username, user.bracket);
                     $scope.achievementsByUser[user.username] = $scope.calculateUserAchievements( $scope.achievementsByUser[user.username], user.username, user.bracket);
