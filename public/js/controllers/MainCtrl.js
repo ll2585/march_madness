@@ -32,7 +32,6 @@ angular.module('MainCtrl', ['bracketApp']).controller('MainController', ['$rootS
                 AuthenticationService.user = data.user.username;
                 AuthenticationService.userRole = data.user.role;
                 $window.sessionStorage.token = data.token;
-                $window.sessionStorage.name = data.user.name;
                 $window.sessionStorage.user = data.user.username; // to fetch the user details on refresh
                 $window.sessionStorage.userRole = data.user.role; // to fetch the user details on refresh
 				console.log(AuthenticationService);
@@ -72,11 +71,20 @@ angular.module('MainCtrl', ['bracketApp']).controller('MainController', ['$rootS
 		}
 		else {
 			UserService.register(username, email, name).success(function(data) {
+				$scope.alert = {content: '[repl]', type: 'success',
+					container: "#signup-alert",
+					duration: 2};
 				$scope.alert.content = 'Signed up! Check your email for your password.';
 				myAlert = $alert($scope.alert);
 				myAlert.show();
-				$location.path("/login");
+				$location.path("/");
 			}).error(function(status, data) {
+				$scope.alert = {content: '[repl]', type: 'danger',
+					container: "#signup-alert",
+					duration: 2};
+				$scope.alert.content = 'Error! Contact Luke.';
+				myAlert = $alert($scope.alert);
+				myAlert.show();
 				console.log(status);
 				console.log(data);
 			});

@@ -1,6 +1,7 @@
 
 angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope', '$http', '$rootScope', '$window', 'userInfoFactory', function($scope, $http, $rootScope, $window, userInfoFactory) {
 	$scope.winning_team = [1,2,3,4,5,6,7];
+	$scope.Math = window.Math;
 	$scope.init = function(){
 		$http({
 			url: '/boxes.json', method: "GET", params: {username: $window.sessionStorage.user}
@@ -113,7 +114,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
             index: index++,
 			type: "element",
 			selector: ".the-box",
-			heading: "Basics (1)",
+			heading: "Basics (1/10)",
 			text: "This is the box. You can get points for every game, depending on the final score.",
 			placement: "top",
 			scrollPadding: 250,
@@ -123,7 +124,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
             index: index++,
 			type: "element",
 			selector: "#winning-cols",
-			heading: "Basics (2)",
+			heading: "Basics (2/10)",
 			text: "The winning team is here.",
 			placement: "right",
 			curtainClass: "blueColour",
@@ -134,7 +135,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
             index: index++,
 			type: "element",
 			selector: "#losing-table",
-			heading: "Basics (2)",
+			heading: "Basics (3/10)",
 			text: "And the losing team is here.",
 			placement: "right",
 			curtainClass: "blueColour",
@@ -145,7 +146,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
             index: index++,
 			type: "element",
 			selector: ".joyridecustom1",
-			heading: "Basics (2)",
+			heading: "Basics (4/10)",
 			text: "[repl]",
 			placement: "top",
 			curtainClass: "blueColour",
@@ -156,7 +157,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
             index: index++,
 			type: "element",
 			selector: ".joyridecustom2",
-			heading: "Basics (2)",
+			heading: "Basics (5/10)",
 			text: "[repl]",
 			placement: "left",
 			curtainClass: "blueColour",
@@ -168,7 +169,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
             index: index++,
 			type: "element",
 			selector: ".joyridecustom3",
-			heading: "Basics (2)",
+			heading: "Basics (6/10)",
 			text: "then you would win!",
 			placement: "left",
 			curtainClass: "blueColour",
@@ -179,7 +180,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
             index: index++,
 			type: "element",
 			selector: ".joyridecustom1",
-			heading: "Basics (2)",
+			heading: "Basics (7/10)",
 			text: "This is for each game in the first round.",
 			placement: "bottom",
 			curtainClass: "blueColour",
@@ -190,7 +191,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
             index: index++,
 			type: "element",
 			selector: ".joyridecustom4",
-			heading: "Basics (2)",
+			heading: "Basics (8/10)",
 			text: "The next round has a different set of numbers for you, with the winner's number here..",
 			placement: "bottom",
 			curtainClass: "blueColour",
@@ -201,7 +202,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
             index: index++,
             type: "element",
             selector: ".joyridecustom5",
-            heading: "Basics (2)",
+            heading: "Basics (9/10)",
             text: "..and the loser's number here.",
             placement: "bottom",
             curtainClass: "blueColour",
@@ -211,7 +212,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 		{//9
             index: index++,
 			type: "title",
-			heading: "The End",
+			heading: "The End (10/10)",
 			text: 'That is it. Thank you for reading all these tips, have fun!',
 			curtainClass: "championship-bracket"
 		},

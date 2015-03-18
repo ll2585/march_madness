@@ -10,9 +10,9 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
     }, function (newVal, oldVal) {
         $scope.isLoggedIn = AuthenticationService.isAuthenticated;
     });
-    $scope.username = $window.sessionStorage.name
+    $scope.username = $window.sessionStorage.user
     $scope.collapse = true;
-	$scope.isCollapsed = true;
+	$scope.isCollapsed = false;
 	$scope.name = true;
 	$scope.tabs = [
 		{ link : '/bracket-angular', label : 'Bracket', class: 'icon-bracket', alignTo: 'bracket', myColor: "red" },
@@ -21,7 +21,9 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
 	];
 
 
-
+	$scope.toggleCollapse = function(){
+		$scope.isCollapsed = !$scope.isCollapsed
+	}
 	$scope.user = {
 
 		diameter: 200,
@@ -55,29 +57,61 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
         return deferred.promise;
     };
     $scope.getScoreboard($window.sessionStorage.user).then(function(data){
-        $scope.scoreboard = [];
-        var sorted_keys = Object.keys(data).sort(function(a,b){return data[b]-data[a]})
-        for(var i = 0; i < sorted_keys.length; i++){
-            var name = sorted_keys[i]
-            var score = data[name]
-            $scope.scoreboard.push({rank: i+1, name: name, score: score, achievements: 0})
-        }
+		$scope.scoreboard = [];
+		var sb = data;
+		for(var s in sb){
+			$scope.scoreboard.push({name: s, round_score: sb[s]["Round Score"], score: sb[s]["Total Score"], achievements: sb[s]["Achievements"]})
+		}
+		var sort_by = function() {
+			var fields = [].slice.call(arguments),
+				n_fields = fields.length;
+
+			return function(A, B) {
+				var a, b, field, key, primer, reverse, result;
+				for (var i = 0, l = n_fields; i < l; i++) {
+					result = 0;
+					field = fields[i];
+
+					key = typeof field === 'string' ? field : field.name;
+
+					a = A[key];
+					b = B[key];
+
+					if (typeof field.primer !== 'undefined') {
+						a = field.primer(a);
+						b = field.primer(b);
+					}
+
+					reverse = (field.reverse) ? -1 : 1;
+
+					if (a < b) result = reverse * -1;
+					if (a > b) result = reverse * 1;
+					if (result !== 0) break;
+				}
+				return result;
+			}
+		}
+		console.log($scope.scoreboard)
+
+		$scope.scoreboard.sort(sort_by({name: "score", reverse: true},{name: "achievements", reverse: true}))
         $scope.getBracketStandings = function(){
             return "Your Total Score: " + data[$scope.username]['Total Score']
         }
-        console.log(data)
         $scope.getMiniScoreboard = function(i){
-            if(i >= $scope.scoreboard.length) return
+            if(i > $scope.scoreboard.length) return''
             var user = $scope.scoreboard[i-1]
-            return "(" + i + ") " + user.name + ": " + user.score["Total Score"]
+            return "(" + i + ") " + user.name + ": " + user.score
         }
 
-    });
+    }, function(data){
+		console.log("OMG DATA")
+		console.log(data);
+	});
         if(!$scope.brackets_opened){
             $http({
                 url: '/boxes_scoreboard.json', method: "GET", params: {username: $window.sessionStorage.user}
             }).success(function(data){
-                $scope.box_scoreboard=  data;
+                $scope.box_scoreboard =  data;
                 $scope.box_scoreboard_by_round = [];
                 for(var u in $scope.box_scoreboard){
                     for(var i = 0; i < $scope.box_scoreboard[u].length; i++){
@@ -92,14 +126,76 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
                         $scope.box_scoreboard_by_round.push(temp);
                     }
                 }
-                console.log($scope.box_scoreboard_by_round)
+
+				$scope.getBoxStandings = function(){
+					var your_box = $scope.box_scoreboard[$scope.username];
+					var stats = "Total Box Wins: " + your_box.length;
+					var stat_arr = {"total_points": 0}
+					for(var i = 0; i < your_box.length; i++){
+						var round = your_box[i]['round'];
+						if(!(('round_'+  round) in stat_arr)){
+							stat_arr['round_'+round] = {round: round, wins: 0}
+						}
+						stat_arr['round_'+round]['wins'] += 1;
+						stat_arr['total_points'] += Math.pow(2,round-1);
+					}
+					stats += "<br>Total Points: " + stat_arr['total_points'];
+					for(var r in stat_arr){
+						if(r != 'total_points'){
+
+							stats += "<br>Round " + stat_arr[r]['round'] + " Wins: " + stat_arr[r]['wins'];
+						}
+					}
+					return $sce.trustAsHtml(stats);
+				}
             });
+
+			$http({
+				url: '/achievements.json', method: "GET", params: {username: $scope.username}
+			}).success(function(data){
+				$scope.myAchievements = data['userAchievements'][$scope.username]
+				$scope.totalAchievementsOwned = 0;
+				var start_box_achievement = 20;
+				var start_resistance_achievement = 34;
+				var start_ts_achievement = 45;
+				$scope.res_owned = 0;
+				$scope.ts_owned = 0;
+				if($scope.myAchievements != null){
+					for(var i = 0; i < $scope.myAchievements.length; i++){
+						if( $scope.myAchievements[i]['owned']){
+							$scope.totalAchievementsOwned += 1;
+							if(i < start_box_achievement){
+
+							}else if(i < start_resistance_achievement){
+
+							}else if(i < start_ts_achievement){
+								$scope.res_owned += 1;
+							}else{
+								$scope.ts_owned += 1;
+							}
+						}
+					}
+				}
+
+				console.log($scope.myAchievements);
+
+
+
+				$scope.getAchievementStats = function(){
+					var stats = "Total Achievements: " + $scope.totalAchievementsOwned;
+
+					stats += "<br>Resistance Achievements: " + $scope.res_owned;
+					stats += "<br>Taylor Swift Achievements: " + $scope.ts_owned;
+					return $sce.trustAsHtml(stats);
+				}
+			}).error(function(data){
+				console.log(data);
+
+			});
         }
 
     $http.get('/is_bracket_opened.json').success(function(data){
-        console.log("IS B OP")
         $scope.brackets_opened = data['result']
-        console.log(data);
     }).error(function(data){
         console.log(data);
     });
@@ -186,8 +282,7 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
 				var attach = angular.element( document.querySelector( '#' + attrs.alignTo ) );
 				//console.log(element);
 				var new_left = attach[0].offsetLeft;
-				var new_top = attach[0].offsetTop-element[0].offsetParent.offsetTop-element[0].offsetParent.offsetParent.offsetTop ;
-				//console.log(new_top);
+				var new_top = attach[0].offsetTop ;
 				if(col == 'red'){
 					col_hex = "#00ff00"
 				}else if(col == 'blue'){

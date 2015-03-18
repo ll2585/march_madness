@@ -60,56 +60,60 @@ html
 					div.navbar-header
 						a(href="/")
 							span(class="glyphicon glyphicon-home")
-							| {{name}} - Welcome {{user}}!
-					div#navbar.navbar-collapse.collapse
+							| {{name}} - Welcome
+							span(ng-if="!isLoggedIn") ! Please login!
+							span(ng-if="isLoggedIn") &nbsp{{user}}!
+					div#navbar.navbar-collapse.collapse(ng-if="isLoggedIn")
 						ul.nav.navbar-nav.navbar-right
 							li
-								span(class="glyphicon glyphicon-question-sign", ng-click="startTutorial()")
+								span(class="glyphicon glyphicon-question-sign", ng-click="startTutorial()" ng-show="brackets_opened")
 									a(href='') Start Tutorial
 									|&nbsp
 									|&nbsp
 							li
-								span(class="glyphicon glyphicon-log-out" ng-if="isLoggedIn" )
+								span(class="glyphicon glyphicon-log-out" )
 									a(href="/" ng-click='logOut()') Logout
 
 			// Sidebar
 			#sidebar-wrapper.sidebar(ng-controller="SideBarController as sidebar")
 				div#sidebar(ng-if="isLoggedIn")
-					#row
-						div(collapse-width='isCollapsed', class="column column_1 collapse")
-							ul.sidebar
-								li.sidebar-welcome Welcome {{username}}
-								li.sidebar-title#bracket
-									a(href="/bracket-angular") Go to the Bracket
-								li.sidebar-list
-									span(ng-show="!brackets_opened") {{getBracketStandings()}}
-									span(ng-show="brackets_opened") -- Score After Brackets Close --
-								li.sidebar-list
-									span Top 3 Places
-								li.sidebar-list
-									span(ng-show="!brackets_opened") {{getMiniScoreboard(1)}}
-									span(ng-show="brackets_opened") -- When Brackets are Closed --
-								li.sidebar-list
-									span(ng-show="!brackets_opened") {{getMiniScoreboard(2)}}
-									span(ng-show="brackets_opened") -- When Brackets are Closed --
-								li.sidebar-list
-									span(ng-show="!brackets_opened") {{getMiniScoreboard(3)}}
-									span(ng-show="brackets_opened") -- When Brackets are Closed --
-								li.sidebar-title#box
-									a(href="/box-angular") Go to the Box
-								li.sidebar-list
-									span(ng-if="!brackets_opened") {{getBoxStandings()}}
-									span(ng-show="brackets_opened") -- Score After Brackets Close --
-								li.sidebar-title#achievements Achievements
-								li.sidebar-list Total achievements:
-								li.sidebar-list Resistance Achievements:
-								li.sidebar-list TS Achievements:
+					div(collapse-width='isCollapsed', class="column column_1 collapse")
+						ul.sidebar
+							li.sidebar-welcome Welcome {{username}}
+							li.sidebar-title#bracket
+								a(href="/bracket-angular") Go to the Bracket
+							li.sidebar-list
+								span(ng-show="!brackets_opened") {{getBracketStandings()}}
+								span(ng-show="brackets_opened") -- Score After Brackets Close --
+							li.sidebar-list
+								span Top 3 Places
+							li.sidebar-list
+								span(ng-show="!brackets_opened") {{getMiniScoreboard(1)}}
+								span(ng-show="brackets_opened") -- When Brackets are Closed --
+							li.sidebar-list
+								span(ng-show="!brackets_opened") {{getMiniScoreboard(2)}}
+								span(ng-show="brackets_opened") -- When Brackets are Closed --
+							li.sidebar-list
+								span(ng-show="!brackets_opened") {{getMiniScoreboard(3)}}
+								span(ng-show="brackets_opened") -- When Brackets are Closed --
+							li.sidebar-title#box
+								a(href="/box-angular") Go to the Box
+							li.sidebar-list
+								span(ng-if="!brackets_opened" ng-bind-html="getBoxStandings()")
+								span(ng-show="brackets_opened") -- Score After Brackets Close --
+							li.sidebar-title#achievements
+								a(href="/achievements") Go to Achievements
+							li.sidebar-list
+								span(ng-if="!brackets_opened" ng-bind-html="getAchievementStats()")
+								span(ng-show="brackets_opened") -- Score After Brackets Close --
+				div.sidebar-buttons(ng-if="isLoggedIn")
 					ul.nav.nav-tabs.nav-stacked.col-md-2.controls
 						li.ng-scope
-							span.menu-icon.glyphicon.glyphicon-transfer(ng-click='isCollapsed = !isCollapsed')
-						li(class='{{tabClass(tab)}} {{tab.label}}', ng-repeat='tab in tabs')
-							a(href='{{tab.link}}', ng-click='setSelectedTab(tab)', outer-tab, align-to='{{tab.alignTo}}', make-color = '{{tab.myColor}}')
-								span.menu-icon(class="{{tab.class}}")
+							span.menu-icon.glyphicon.glyphicon-transfer(ng-click='toggleCollapse()')
+						li(class='{{tabClass(tab)}}', ng-repeat='tab in tabs')
+							div(class="{{tab.label}}" , outer-tab, align-to='{{tab.alignTo}}', make-color = '{{tab.myColor}}')
+								a(href='{{tab.link}}', ng-click='setSelectedTab(tab)')
+									span.menu-icon(class="{{tab.class}}")
 			div#page-content-wrapper
 				div.page-content.inset
 					div(ng-view='')

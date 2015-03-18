@@ -24,12 +24,22 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
     $scope.showErase = false;
     $scope.showColors = false;
 	$http.get('/is_bracket_opened.json').success(function(data){
-		console.log("IS B OP")
 		$scope.brackets_opened = data['result']
-		console.log(data);
+		if(!$scope.brackets_opened){
+			$http({
+				url: '/getUsers.json', method: "GET"
+			}).success(function(data){
+				$scope.users = data;
+				console.log($scope.users)
+			}).error(function(){
+
+			});
+		}
 	}).error(function(data){
 		console.log(data);
 	});
+
+
 	$scope.loadBrackets = function(){
         $scope.$watch("username", function() {
             bracketFactory.getSavedBracket($scope.username).then(function (data) {
@@ -125,10 +135,11 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                     return $scope.getTeamMascot(4, 0, 0, 0, 1);
                 };
                 $scope.moveTop = function (regionID, round, matchup, team_num, forced, team_id_given) {
-					if(!$scope.brackets_opened){
+					if(!$scope.brackets_opened && !forced){
 						return;
 					}
                     if (forced === undefined) {
+
                         var iAmforced = false;
                     } else {
                         var iAmforced = true;
@@ -176,13 +187,15 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                     var top_node_has_my_name = $scope.getTeamName(regionID, 0, 0, 0, top_node_id) == $scope.getTeamName(regionID, 0, 0, 0, team_id);
                     return (i_have_name && no_top_selected) || (i_have_name && top_node_has_my_name);
                 }
-                $scope.choseToLose = function (regionID, round, matchup, team_num) {
+                $scope.choseToLose = function (regionID, round, matchup, team_num, team_id_given) {
                     var region = $scope.region_dict[regionID];
-                    var team_id = $scope.getTeamID(regionID, round, matchup, team_num);
+
+					var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
                     var cur_team = $scope.data[region]['tree'][team_id];
                     var i_have_name = $scope.getTeamName(regionID, 0, 0, 0, team_id) != null;
                     var top_node_id = cur_team['top'];
                     var top_node;
+
                     if (top_node_id == null && regionID != 4) {
                         top_node = $scope.data['championship']['tree'][$scope.championship_map[region]]
                     } else if (top_node_id != null) {
@@ -193,7 +206,6 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 
                     var top_node_has_name = $scope.getTeamName(regionID, 0, 0, 0, top_node_id) != null;
                     var top_node_does_not_have_my_name = $scope.getTeamName(regionID, 0, 0, 0, top_node_id) != $scope.getTeamName(regionID, 0, 0, 0, team_id);
-
                     return (i_have_name && top_node_does_not_have_my_name && top_node_has_name);
                 }
 
@@ -215,7 +227,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                 };
 
                 $scope.clearBracket = function () {
-					if(!$scope.brackets_opened){
+					if(!$scope.brackets_opened && !forced){
 						return;
 					}
                     for (var k = 0; k < 4; k++) {
@@ -234,7 +246,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                 };
 
                 $scope.randomizePicks = function (forced) {
-					if(!$scope.brackets_opened){
+					if(!$scope.brackets_opened && !forced){
 						return;
 					}
                     if (forced === undefined) {
@@ -349,6 +361,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                         var region = $scope.region_dict[regionID];
                         var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
 
+
                         if ($scope.officialBracket[region]['tree'][team_id]['team'] == null) {
                             return null;
                         }
@@ -363,6 +376,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                         return ($scope.officialBracket[region]['tree'][team_id]['team']['seed']);
                     };
                     $scope.getOfficialChampion = function (regionID) {
+
                         return $scope.getOfficialTeamName(regionID, 0, 0, 0, 1);
                     };
                     $scope.getOfficialChampionColor = function () {
@@ -380,20 +394,19 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                         var node = $scope.officialBracket[region]['tree'][team_id];
                         var myChoice = $scope.getTeamName(regionID, 0, 0, 0, team_id);
                         var result = officialName == myChoice;
-                        return (myChoice == officialName) && (officialName != null)
+						return (myChoice == officialName) && (officialName != null)
                     };
                     $scope.incorrectTeam = function (regionID, round, matchup, team_num, team_id_given) {
                         if (regionID != 4 && round == 0) return false;
-                        var officialName = $scope.getOfficialTeamName(regionID, round, matchup, team_num);
-                        var myChoice = $scope.getTeamName(regionID, round, matchup, team_num);
 
                         var region = $scope.region_dict[regionID];
                         var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+						var officialName = $scope.getOfficialTeamName(regionID, round, matchup, team_num, team_id);
+						var myChoice = $scope.getTeamName(regionID, round, matchup, team_num, team_id);
                         var result = officialName != myChoice;
                         var myChosenTeamName = $scope.data[region]['tree'][team_id]['team']['name'];
                         var is_eliminated = $scope.getTeamEliminated(regionID, team_id, myChosenTeamName);
                         if (is_eliminated) {
-
                             return true;
                         }
                         return result && officialName != null
@@ -407,19 +420,33 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                     };
                     $scope.teamChosen = function (regionID, round, matchup, team_num, team_id_given) {
                         var region = $scope.region_dict[regionID];
-                        var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+						if(region == 'championship'){
+							return !$scope.eliminatedTeamInChampionshipByTeam(round, team_id_given)
+						}
+						var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
+
                         var node = $scope.officialBracket[region]['tree'][team_id];
+
                         var myChosenTeamName = $scope.data[region]['tree'][team_id]['team']['name'];
 
-                        if (round == 0) {
+                        if (round == 0 && region!= 'championship') {
                             return myChosenTeamName == node.team.name
                         }
+
                         var topNode = $scope.getOfficialTeamName(regionID, 0, 0, 0, node.top);
                         var officialName = $scope.getOfficialTeamName(regionID, 0, 0, 0, team_id);
                         var officialLeftName = $scope.getOfficialTeamName(regionID, 0, 0, 0, node.left);
 
                         var officialRightName = $scope.getOfficialTeamName(regionID, 0, 0, 0, node.right);
-                        return ((officialLeftName == myChosenTeamName || officialRightName == myChosenTeamName) || (!$scope.getTeamEliminated(regionID, node.left, myChosenTeamName) || !$scope.getTeamEliminated(regionID, node.right, myChosenTeamName))) && (officialName == null)
+						var team_not_eliminated = false;
+						if(region !== 'championship'){
+							team_not_eliminated = (!$scope.getTeamEliminated(regionID, node.left, myChosenTeamName) || !$scope.getTeamEliminated(regionID, node.right, myChosenTeamName))
+						}else{
+							team_not_eliminated = !$scope.eliminatedTeamInChampionshipByTeam(round, team_id_given)
+
+						}
+
+                        return ((officialLeftName == myChosenTeamName || officialRightName == myChosenTeamName) || team_not_eliminated) && (officialName == null)
                     };
 
                     $scope.getTeamEliminated = function (regionID, team_id, myChosenTeamName) {
@@ -441,6 +468,85 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 
                         return $scope.getTeamEliminated(regionID, node.left, myChosenTeamName) && $scope.getTeamEliminated(regionID, node.right, myChosenTeamName);
                     };
+
+					$scope.eliminatedTeamInChampionship  = function(round){
+						if($scope.brackets_opened){ return false;}
+						if(round == 0){
+							//check champs of rounds
+							for(var i = 0; i < 4; i++){
+								var champ_chosen= $scope.getTeamName(i, 0, 0, 0, 1)
+								if($scope.getTeamEliminated(i, 1, champ_chosen)){
+									return true;
+								}
+							}
+						}else if(round == 1){
+							//check if eliminated below
+							for(var i =2; i < 4; i++) {
+								var this_team = $scope.getTeamName(4, 0, 0, 0, i)
+
+								for (var j = 4; j < 8; j++) {
+									var that_team = $scope.getTeamName(4, 0, 0, 0, j)
+
+									if(this_team == that_team &&$scope.eliminatedTeamInChampionshipByTeam(0,j-4)) {
+										return true;
+									}
+								}
+							}
+						}else if(round ==2 ){
+							//check if eliminated below
+							var this_team = $scope.getTeamName(4, 0, 0, 0, 1);
+							for(var i = 2 ; i < 4; i++) {
+								var that_team = $scope.getTeamName(4, 0, 0, 0, i)
+								if(this_team == that_team &&$scope.eliminatedTeamInChampionshipByTeam(1,i-2)) {
+									return true;
+								}
+							}
+						}
+						//0-> 4 to 8, 1-> 2 to 4; so it is 2^(2-round) to 2^(3-round)
+						return false;
+					}
+
+					$scope.eliminatedTeamInChampionshipByTeam  = function(round, seed){
+						if($scope.brackets_opened){ return false;}
+						//0->4 1->6 2->5 3->7
+						//seeds are 4,5,6,7, regions are 0,2,1,3
+
+						if(round == 0){
+							var real_seed = seed+4;
+							var index_map = {
+								4: 0,
+								5: 2,
+								6: 1,
+								7: 3
+							}
+							//check champs of rounds
+								var champ_chosen= $scope.getTeamName(index_map[real_seed], 0, 0, 0, 1)
+								return $scope.getTeamEliminated(index_map[real_seed], 1, champ_chosen)
+
+
+						}else if(round == 1){
+							//check if eliminated below or eliminated here
+							var this_team = $scope.getTeamName(4, 0, 0, 0, seed+2)
+							var official_team = $scope.getOfficialTeamName(4,0,0,0,seed+2)
+							if(official_team != null){ return this_team != official_team}
+							for (var j = 4; j < 8; j++) {
+								var that_team = $scope.getTeamName(4, 0, 0, 0, j)
+								console.log(this_team, that_team, $scope.eliminatedTeamInChampionshipByTeam(0,j-4))
+								if(this_team == that_team) {
+									return($scope.eliminatedTeamInChampionshipByTeam(0,j-4));
+								}
+							}
+						}else if(round ==2 ){
+							var this_team = $scope.getTeamName(4, 0, 0, 0, 1)
+							for (var j = 2; j < 4; j++) {
+								var that_team = $scope.getTeamName(4, 0, 0, 0, j)
+								if(this_team == that_team) {
+									return($scope.eliminatedTeamInChampionshipByTeam(1,j-2));
+								}
+							}
+						}
+						return false;
+					}
 
                 }, function (error) {
                     console.log(error);
@@ -714,7 +820,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 
 	];
     $scope.demoFunction = function(){
-        $scope.moveTop(0,4,0,1, true)
+        $scope.moveTop(0,0,0,1, true)
     };
     $scope.demoFunction2 = function(){
         $scope.randomizePicks(true);

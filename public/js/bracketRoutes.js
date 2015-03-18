@@ -37,6 +37,14 @@ angular.module('bracketRoutes', []).config(['$routeProvider', '$locationProvider
             controller: 'BracketControllerAngular',
             access: { requiredAuthentication: true }
         })
+		.when('/achievements/:name', {
+
+			templateUrl: function(name) {
+				return 'partials/achievements/' + name.name;
+			},
+			controller: 'AchievementsController',
+			access: { requiredAuthentication: true }
+		})
         .when('/achievements', {
             templateUrl: 'partials/achievements',
             controller: 'AchievementsController',

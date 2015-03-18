@@ -1,4 +1,4 @@
-angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope', '$scope', 'userInfoFactory', '$window', '$q', '$http', function($rootScope, $scope, userInfoFactory, $window, $q, $http) {
+angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope', '$scope', 'userInfoFactory', '$window', '$q', '$http', '$sce', function($rootScope, $scope, userInfoFactory, $window, $q, $http, $sce) {
 
     $rootScope.$on('start-tutorial', function(event, obj){
 		$scope.start();
@@ -6,6 +6,80 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 
     $http.get('/is_bracket_opened.json').success(function(data){
         $scope.brackets_opened = data['result']
+		if($scope.brackets_opened){
+			$http({
+				url: '/getUsers.json', method: "GET"
+			}).success(function(data){
+				$scope.scoreboard = [];
+				for (var i = 0; i < data.length; i++) {
+					var name = data[i]['name']
+					$scope.scoreboard.push({rank: i + 1, name: name})
+				}
+
+				//copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
+				$scope.displayedCollection = [].concat($scope.scoreboard);
+			}).error(function(){
+
+			});
+		}else {
+			$scope.getScoreboard($window.sessionStorage.user).then(function (data) {
+
+				$scope.scoreboard = [];
+				var sb = data;
+				for(var s in sb){
+					$scope.scoreboard.push({name: s, round_score: sb[s]["Round Score"], score: sb[s]["Total Score"], achievements: sb[s]["Achievements"]})
+				}
+				var sort_by = function() {
+					var fields = [].slice.call(arguments),
+						n_fields = fields.length;
+
+					return function(A, B) {
+						var a, b, field, key, primer, reverse, result;
+						for (var i = 0, l = n_fields; i < l; i++) {
+							result = 0;
+							field = fields[i];
+
+							key = typeof field === 'string' ? field : field.name;
+
+							a = A[key];
+							b = B[key];
+
+							if (typeof field.primer !== 'undefined') {
+								a = field.primer(a);
+								b = field.primer(b);
+							}
+
+							reverse = (field.reverse) ? -1 : 1;
+
+							if (a < b) result = reverse * -1;
+							if (a > b) result = reverse * 1;
+							if (result !== 0) break;
+						}
+						return result;
+					}
+				}
+				console.log($scope.scoreboard)
+
+				$scope.scoreboard.sort(sort_by({name: "score", reverse: true},{name: "achievements", reverse: true}))
+				var last_score = -1;
+				var last_rank = -1;
+				var last_achievements = -1;
+				for (var i = 0; i < $scope.scoreboard.length; i++) {
+					var score = $scope.scoreboard[i]['score']
+					var achievements = $scope.scoreboard[i]['achievements']
+					var rank = last_score == score && achievements == last_achievements ? last_rank : i + 1;
+					last_score = score;
+					last_achievements = achievements;
+					last_rank = rank;
+					$scope.scoreboard[i]['rank'] = rank;
+				}
+
+
+				//copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
+				$scope.displayedCollection = [].concat($scope.scoreboard);
+
+			});
+		}
     }).error(function(data){
         console.log(data);
     });
@@ -31,8 +105,8 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
         }).success(function(data){
             deferred.resolve(data);
         }).error(function(){
-            deferred.reject("No official bracket yet.")
 
+            deferred.reject("No official bracket yet.")
         });
 
         return deferred.promise;
@@ -40,20 +114,8 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
     $scope.Math = window.Math;
     $scope.tournamentRounds = ["Round of 64","Round of 32","Round of 16","Elite Eight","Final Four","National Championship Game"]
     $scope.getFlags();
-    $scope.getScoreboard($window.sessionStorage.user).then(function(data){
-
-        $scope.scoreboard = [];
-        var sorted_keys = Object.keys(data).sort(function(a,b){return data[b]-data[a]})
-        for(var i = 0; i < sorted_keys.length; i++){
-            var name = sorted_keys[i]
-            var score = data[name]
-            $scope.scoreboard.push({rank: i+1, name: name, score: score, achievements: 0})
-        }
 
 
-        //copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
-        $scope.displayedCollection = [].concat($scope.scoreboard);
-    });
 
     $scope.getMoneyboard = function(username) {
         var deferred = $q.defer();
@@ -69,9 +131,10 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
         return deferred.promise;
     };
     $scope.getMoneyboard($window.sessionStorage.user).then(function(data){
-
+		console.log(data);
         $scope.moneyBoard = data;
-        console.log($scope.moneyBoard)
+
+
     });
 
     $scope.makeNice = function(playerArr){
@@ -81,7 +144,7 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
         }else{
             players= playerArr.join('<br>')
         }
-        return players;
+        return $sce.trustAsHtml(players);
     }
     $scope.getValue = function(row){
         var hide_vals = [
@@ -91,7 +154,7 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
         if(hide_vals.indexOf(category) > -1){
             return ''
         }
-        return row.value;
+        return row.score;
     }
 
 
@@ -101,43 +164,78 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 	}
 
 	$scope.config = [
-
 		{
 			type: "title",
-			heading: "Welcome to the NG-Joyride demo",
-			text: 'Press next to learn how to use this site, or skip if you think you already know.',
-			curtainClass: "randomClass"
-
+			heading: "Welcome to March Madness Madness 2015!",
+			text: 'Press next to learn how to use this site, or skip if you think you already know. Literally all you have to do is fill in your bracket and submit it.'
 		},
 		{
 			type: "element",
 			selector: "#brackets-opened-tag",
-			heading: "Title can have <em>HTML</em>",
+			heading: "Basics (1/13)",
 			text: "This label indicates whether the bracket is open (you can make picks) or closed.",
 			placement: "bottom",
+			scrollPadding: 250,
 			scroll: true
 		},
 		{
 			type: "element",
 			selector: ".Bracket",
-			heading: "Step 1",
+			heading: "Basics (2/13)",
 			text: "If it is opened, you can click this button here to go to the bracket and make picks (don't do this now)",
 			placement: "right",
 			curtainClass: "blueColour",
+			scrollPadding: 250,
+			scroll: true
+		},
+		{
+			type: "element",
+			selector: "#money-board",
+			heading: "Who Wins? (3/13)",
+			text: "This table shows who can win money, and how much they can win.",
+			placement: "top",
+			scrollPadding: 250,
+			scroll: true
+		},
+		{
+			type: "element",
+			selector: "#money-category",
+			heading: "Who Wins? (4/13)",
+			text: "These are the categories for winning money.",
+			placement: "top",
+			scrollPadding: 250,
+			scroll: true
+		},
+		{
+			type: "element",
+			selector: "#player-category",
+			heading: "Who Wins? (5/13)",
+			text: "These are the current leaders.  Blue is temporary, red is final.",
+			placement: "right",
+			scrollPadding: 250,
+			scroll: true
+		},
+		{
+			type: "element",
+			selector: ".first-place",
+			heading: "Who Wins? (6/13)",
+			text: "The player who wins the entire bracket will win the most money.",
+			placement: "right",
+			scrollPadding: 250,
 			scroll: true
 		},
 		{
 			type: "element",
 			selector: "#leader-board",
-			heading: "Step 2",
-			text: "If it is closed, your scores will appear here.",
-			placement: "right",
+			heading: "Scores (7/13)",
+			text: "This scoreboard shows who is winning in the bracket.",
+			placement: "top",
 			scroll: true
 		},
         {
             type: "element",
             selector: ".round-0-scores",
-            heading: "Step 2",
+            heading: "Scores (8/13)",
             text: "This column indicates the points per correct pick for this round, and the point breakdown.",
             placement: "bottom",
             scroll: true
@@ -145,90 +243,42 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
         {
             type: "element",
             selector: ".achievements_col",
-            heading: "Step 2",
+            heading: "Scores (9/13)",
             text: "Tie breakers are any achievements.",
             placement: "bottom",
             scroll: true
         },
+		{
+			type: "element",
+			selector: ".Achievements",
+			heading: "Achievements (10/13)",
+			text: "You can click here to see the achievements you have earned and can get (also a money category).",
+			placement: "right",
+			scrollPadding: 250,
+			scroll: true
+		},
         {
             type: "element",
-            selector: ".Achievements",
-            heading: "Step 2",
-            text: "You can click here to see the achievements you have earned and can get.",
+            selector: ".Box",
+            heading: "The Box (11/13)",
+            text: "This button brings you to the box, which is can give you many achievements and involves no further action by you.",
             placement: "right",
+			scrollPadding: 250,
             scroll: true
         },
         {
             type: "element",
-            selector: "#impBtn",
-            heading: "Step 2",
-            text: "This table shows the current winning leaders for MONEY.",
-            placement: "right",
-            scroll: true
-        },
-        {
-            type: "element",
-            selector: "#impBtn",
-            heading: "Step 2",
-            text: "These are the categories for winning money.",
-            placement: "right",
-            scroll: true
-        },
-        {
-            type: "element",
-            selector: "#impBtn",
-            heading: "Step 2",
-            text: "These are the current leaders.  Blue is final, red is temporary.",
-            placement: "right",
-            scroll: true
-        },
-        {
-            type: "element",
-            selector: "#impBtn",
-            heading: "Step 2",
-            text: "And this is how many points they have.",
-            placement: "right",
-            scroll: true
-        },
-        {
-            type: "element",
-            selector: "#impBtn",
-            heading: "Step 2",
-            text: "This is your number of points in this category.",
-            placement: "right",
-            scroll: true
-        },
-        {
-            type: "element",
-            selector: "#impBtn",
-            heading: "Step 2",
-            text: "This button brings you to the box, which is one of the winning categories.",
-            placement: "right",
-            scroll: true
-        },
-        {
-            type: "element",
-            selector: "#impBtn",
-            heading: "Step 2",
-            text: "And this button brings you to the minigame.",
-            placement: "right",
-            scroll: true
-        },
-        {
-            type: "element",
-            selector: "#impBtn",
-            heading: "Step 2",
+            selector: ".glyphicon-transfer",
+            heading: "Summary (12/13)",
             text: "You can click this button to show a quick summary of all the sections.",
             placement: "right",
+			scrollPadding: 250,
             scroll: true
         },
         {
-            type: "element",
-            selector: "#impBtn",
-            heading: "Step 2",
-            text: "The end! Have fun.",
-            placement: "right",
-            scroll: true
+			type: "title",
+            heading: "End! (13/13)",
+            text: "The end! Have fun."
         }
 	];
 
@@ -238,5 +288,7 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 		$rootScope.$broadcast('CLOSE_MODAL');
 
 	};
+
+
 
 }]);

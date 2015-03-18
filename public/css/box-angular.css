@@ -99,14 +99,29 @@ body{
     padding-top: 3px;
     padding-bottom: 3px;
     border: 1px solid #ddd;
-}
 
+}
+#losing-table{
+    background-color: #eee;
+}
 #losing-rows > .empty-cell> .mytable > .losing-cols > .number-cell{
     padding-left: 1px;
     padding-right: 1px;
     padding-top: 3px;
     padding-bottom: 3px;
     border: 1px solid #ddd;
+}
+
+.left-cell{
+    width:12%
+}
+
+.right-cell{
+    width:88%;
+}
+
+.player-cell{
+    width: 10%;
 }
 
 .scoreboard-row-0{

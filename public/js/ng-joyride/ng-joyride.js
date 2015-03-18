@@ -540,7 +540,7 @@
                             if(newval){
 
                                 if(newval.type == 'element'){
-
+									console.log(newval)
                                     steps[newval.index].reloadConfig(newval, newval.index === (options.config.length-1));
                                 }
                             }

@@ -35,25 +35,29 @@
 }
 
 .region-1 > *, .region-3 > *{
-    background-color:black;
     float:right;
 }
+
+.region-3 > .round-0, .region-1 > .round-0{
+    border-right: 1px solid;
+}
+
 .championship-bracket{
     height:200px;
-    background-color:gold;
     clear: both;
 }
 .buffer{
     height:100px;
-    background-color:palevioletred;
+    border-left: 1px solid;
+    border-right: 1px solid;
     clear: both;
 }
-
 .region-0 > *, .region-2 > *{
-    background-color:greenyellow;
     float:left;
 }
-
+.region-0 > .round-0, .region-2 > .round-0{
+    border-left: 1px solid;
+}
 .region-2{
     clear: both;
 }
@@ -67,8 +71,16 @@
     border-right: 1px solid #ccc;
     border-top: 1px solid #ccc;
 }
+
 .region{
     position:relative;
+}
+
+.final-score{
+    width: 50%;
+    margin: 0 auto;
+    left: 50%
+    text-align: center;
 }
 
 .chosen-champion{
@@ -76,25 +88,36 @@
 }
 
 .pickCounter{
-    background-color: palevioletred;
-    position: absolute;
+    border: 1px solid;
     float: right;
     right: 200px;
-    font-size: 400%;
+    font-size: 200%;
 }
-
+.rightStuff{
+    position:absolute;
+    float: right;
+    right: 100px;
+}
 .your-score{
-    background-color: mediumturquoise;
-    position: absolute;
-    float: left;
-    left: 200px;
-    font-size: 400%;
+    font-size: 200%;
+    border: 1px solid;
 }
 
-.team-names {
-    background: gray;
-    text-align: center;
+.glyphicon-tag, .icon-dog, .icon-cat{
+    float: right;
+    padding-right: 3px;
 }
+
+.see-another-bracket{
+    border: 1px solid;
+}
+
+.see-another-bracket > ul > li{
+    text-align: left;
+    list-style-type: none;
+    display: block;
+}
+
 .rainbow {
     background-image: -webkit-gradient( linear, left top, right top, color-stop(0, #ff0000), color-stop(0.6, #22f), color-stop(0.8, #2f2));
     color:transparent;
@@ -103,8 +126,16 @@
 .finals-team {
     background: ivory;
     display: inline-block;
-    margin:0 7.5px;
     text-align: left;
+}
+.finals-team-1 {
+    right: 50%;
+}
+.finals-team-2 {
+    left: 50%;
+}
+.finals-team-name{
+    text-align: center;
 }
 /* Fix for Bootstrap 3 with Angular UI Bootstrap */
 
@@ -144,6 +175,13 @@
     background-color: #FB5F63;
     color: #5B0004;
     text-decoration: line-through;
+}
+
+.incorrect-team-championship, .incorrect-team-championship > *{
+    background-color: #FB5F63;
+    color: #5B0004;
+    text-decoration: line-through;
+    border-top:none;
 }
 
 .team-chosen{

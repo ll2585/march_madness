@@ -1,13 +1,18 @@
-.hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()')
+.hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()' ng-show="brackets_opened")
 .jumbotron.text-center
 	input(type="hidden" ng-init="setUsername(" + userToGet + ")")
-	h1 THE BRACKET {{username}} {{brackets_opened}}
+	h1 THE BRACKET
 		span(ng-show="brackets_opened") &nbspIS OPENED
 		span(ng-show="!brackets_opened") &nbspIS CLOSED
-	div.pickCounter(ng-show="skipped_bracket_page || showPickCounter") {{pickCountTotal()['Completed Picks']}}/{{pickCountTotal()['Total Picks']}}
-		progressbar(max='63', value='pickCountTotal()["Completed Picks"]')
-			span(style='color:black; white-space:nowrap;') {{pickCountTotal()['Completed Picks']}} / {{pickCountTotal()['Total Picks']}}
-	div.your-score(ng-show="!brackets_opened") YOUR SCORE: {{myScore["Total Score"]}}
+	div.rightStuff
+		div.pickCounter(ng-show="brackets_opened && (skipped_bracket_page || showPickCounter)") Picks: {{pickCountTotal()['Completed Picks']}}/{{pickCountTotal()['Total Picks']}}
+		div.your-score(ng-show="!brackets_opened") {{username}}'s Score: {{myScore["Total Score"]}}
+		div.see-another-bracket(ng-show="!brackets_opened") See another player's bracket!
+			ul
+				li(ng-repeat="u in users")
+					a(href="/bracket-angular/{{u.name}}") {{u.name}}
+
+
 	.btn-group(role='group')
 		button.btn.btn-default(type='button', id="shuffle-button" ng-click="randomizePicks()" ng-show = "skipped_bracket_page || showShuffle" , ng-disabled = "!brackets_opened")
 			span.glyphicon.glyphicon-random
@@ -29,36 +34,65 @@
 	div.container
 		button(type="submit" class="btn btn-primary save-button", ng-if="changedBracket()", ng-click="saveChanges()" ng-show = "brackets_opened") Save changes
 		div(class="final-score", ng-show="getTeamName(4, 1, 0, 1) != null && getTeamName(4, 1, 0, 2) != null")
-			div(class="team-names")
-				div(class="finals-1-team finals-team") {{getTeamName(4, 1, 0, 1)}}
-				div(class="finals-2-team finals-team") {{getTeamName(4, 1, 0, 2)}}
-			div(class="projected-score")
+			div(class="finals-team-1 finals-team")
+				div(class="finals-1-team finals-team-name") {{getTeamName(4, 1, 0, 1)}}
 				input(ng-model="data['championship']['tree'][2]['score']", name="finals-1-proj-score", class="projected-score", ng-disabled="!brackets_opened")
+			div(class="finals-team-2 finals-team")
+				div(class="finals-2-team finals-team-name") {{getTeamName(4, 1, 0, 2)}}
 				input(ng-model="data['championship']['tree'][3]['score']", name="finals-2-proj-score", class="projected-score", ng-disabled="!brackets_opened")
 		div(class="championship-bracket")
+			div.row( ng-if="eliminatedTeamInChampionship(2)")
+				div.col-xs-2.spacer &nbsp
+				div.col-xs-8.final-four#champion(ng-class="{'official-incorrect-team': (getOfficialChampion(4) !== getChampion(4)) && getOfficialChampion(4) != null,'official-championship-spacer':getOfficialChampion(4) == null }")
+					span(ng-if="toggleColors && getOfficialChampionColor() !== '' && getOfficialChampion(4) !== null", class="glyphicon glyphicon-tag", ng-style="{'color': getOfficialChampionColor()}")
+					span(ng-if="toggleMascots && getOfficialChampionMascot() !== '' && getOfficialChampion(4) !== null", class="icon-{{getOfficialChampionMascot()}}")
+					span(class="team-seed") {{getOfficialTeamSeed(4, 2, 1, 1)}}
+					span(class="champion-bracket-name") {{getOfficialChampion(4)}}
+				div.col-xs-2.spacer
 			div.row
-				div.col-xs-2.spacer spacer
-				div.col-xs-8.final-four#champion(ng-class="{'chosen-champion': getChampion(4) != null}")
+				div.col-xs-2.spacer &nbsp
+				div.col-xs-8.final-four#champion(ng-class="{'chosen-champion': getChampion(4) != null, 'incorrect-team-championship': !brackets_opened &&eliminatedTeamInChampionshipByTeam(2, 0),}")
 					span(ng-if="toggleColors && getChampionColor() !== '' && getChampion(4) !== null", class="glyphicon glyphicon-tag", ng-style="{'color': getChampionColor()}")
-					span(ng-if="toggleMascots && getChampionMascot() !== '' && getChampion(4) !== null", class="icon-{{getChampionMascot()}}", ng-style="{'color': getChampionMascot()}")
-					| {{getChampion(4)}}
-				div.col-xs-2.spacer spacer
-			div.row(id="finals-match")
-				div.col-xs-1.spacer spacer
+					span(ng-if="toggleMascots && getChampionMascot() !== '' && getChampion(4) !== null", class="icon-{{getChampionMascot()}}")
+					span(class="team-seed") {{getTeamSeed(4, 2, 1, 1)}}
+					span(class="champion-bracket-name") {{getChampion(4)}}
+				div.col-xs-2.spacer
+			div.row(ng-if="eliminatedTeamInChampionship(1)")
+				div.col-xs-1.spacer &nbsp
 				div(ng-repeat="i in [1,2]")
-					div.col-xs-3.final-four(id="finals-{{i}}", ng-class="{'team-selectable': brackets_opened && canClick(4,1,0,i), 'team-chosen-to-lose': brackets_opened &&  choseToLose(4,1,0,i), 'correct-team': !brackets_opened && getOfficialTeamName(4, 1, 0, i) == getTeam(4, 1, 0, i) && getOfficialTeamName(4, 1, 0, i) != null, 'incorrect-team': !brackets_opened && getOfficialTeamName(4, 1, 0, i) !== getTeamName(4, 1, 0, i) && getOfficialTeamName(4, 1, 0, i) != null, 'team-chosen': !brackets_opened && !choseToLose(4, 1, 0, i) && (getOfficialTeamName(4, 1, 0, i) == null), 'team-not-chosen': !brackets_opened && choseToLose(4, 1, 0, i) && (getOfficialTeamName(4, 1, 0, i) == null )}", ng-click="moveTop(4,1,0,i)")
+					div.col-xs-3.final-four(id="finals-{{i}}", ng-class="{'official-incorrect-team': (getOfficialTeamName(4, 1, 0, i) !== getTeamName(4, 1, 0, i)) && getOfficialTeamName(4, 1, 0, i) != null}")
+						span(ng-if="toggleColors && getOfficialTeamColor(4, 1, 0, i) !== '' && getOfficialTeam(4, 1, 0, i) !== null", class="glyphicon glyphicon-tag", ng-style="{'color': getOfficialTeamColor(4, 1, 0, i)}")
+						span(ng-if="toggleMascots && getOfficialTeamMascot(4, 1, 0, i) !== '' && getOfficialTeam(4, 1, 0, i) !== null", class="icon-{{getOfficialTeamMascot(4, 1, 0, i)}}")
+						span(class="team-seed") {{getOfficialTeamSeed(4, 1, 0, i)}}
+						span(class="champion-bracket-name") {{getOfficialTeamName(4, 1, 0, i)}}
+					div.col-xs-4.spacer(ng-if="i==1")
+				div.col-xs-1.spacer
+			div.row(id="finals-match")
+				div.col-xs-1.spacer &nbsp
+				div(ng-repeat="(seed, i) in [1,2]")
+					div.col-xs-3.final-four(id="finals-{{i}}", ng-class="{'correct-team': !brackets_opened &&  correctTeam(4, 1, 0, i), 'team-selectable': brackets_opened && canClick(4,1,0,i), 'team-chosen-to-lose': brackets_opened &&  choseToLose(4,1,0,i), 'incorrect-team-championship': !brackets_opened &&eliminatedTeamInChampionshipByTeam(1, seed), 'team-chosen': !brackets_opened && teamChosen(4, 1,0,0,seed) && getOfficialTeamName(4,0,(i+1)%2, round(i/2)) == null, 'team-not-chosen': !brackets_opened &&!eliminatedTeamInChampionshipByTeam(0, seed)&& choseToLose(4, 1, 0, i) && (getOfficialTeamName(4, 1, 0, i) == null )}", ng-click="moveTop(4,1,0,i)")
 						span(ng-if="toggleColors && getTeamColor(4, 1, 0, i) !== '' && getTeam(4, 1, 0, i) !== null", class="glyphicon glyphicon-tag", ng-style="{'color': getTeamColor(4, 1, 0, i)}")
 						span(ng-if="toggleMascots && getTeamMascot(4, 1, 0, i) !== '' && getTeam(4, 1, 0, i) !== null", class="icon-{{getTeamMascot(4, 1, 0, i)}}")
-						|{{getTeamName(4, 1, 0, i)}}
-					div.col-xs-4.spacer(ng-if="i==1") spacer
-				div.col-xs-1.spacer spacer
-
+						span(class="team-seed") {{getTeamSeed(4, 1, 0, i)}}
+						span(class="champion-bracket-name") {{getTeamName(4, 1, 0, i)}}
+					div.col-xs-4.spacer(ng-if="i==1")
+				div.col-xs-1.spacer
+			div.row(ng-if="eliminatedTeamInChampionship(0)")
+				div(ng-repeat="(seed,i) in [1,3,2,4]")
+					div.col-xs-2.final-four(id="region-{{i}}-winner", ng-class="{'official-incorrect-team': (getOfficialTeamName(4,0,(i+1)%2, round(i/2)) !== getTeamName(4,0,(i+1)%2, round(i/2))) && getOfficialTeamName(4,0,(i+1)%2, round(i/2)) != null}")
+						span(ng-if="getOfficialTeamName(4,0,(i+1)%2, round(i/2)) != getTeamName(4,0,(i+1)%2, round(i/2)) && toggleColors && getOfficialTeamColor(4,0,(i+1)%2, round(i/2)) !== '' && getOfficialTeam(4,0,(i+1)%2, round(i/2)) !== null", class="glyphicon glyphicon-tag", ng-style="{'color': getOfficialTeamColor(4, 0, (i+1)%2, round(i/2))}")
+						span(ng-if="getOfficialTeamName(4,0,(i+1)%2, round(i/2)) != getTeamName(4,0,(i+1)%2, round(i/2)) && toggleMascots && getOfficialTeamMascot(4,0,(i+1)%2, round(i/2)) !== '' && getOfficialTeam(4,0,(i+1)%2, round(i/2)) !== null", class="icon-{{getOfficialTeamMascot(4,0,(i+1)%2, round(i/2))}}")
+						span(class="team-seed", ng-if="getOfficialTeamName(4,0,(i+1)%2, round(i/2)) != getTeamName(4,0,(i+1)%2, round(i/2)) ") {{getOfficialTeamSeed(4,0,(i+1)%2, round(i/2))}}
+						span(class="champion-bracket-name", ng-if="getOfficialTeamName(4,0,(i+1)%2, round(i/2)) != getTeamName(4,0,(i+1)%2, round(i/2))  ") {{getOfficialTeamName(4,0,(i+1)%2, round(i/2))}}
+					div.col-xs-1.spacer(ng-if="i<3") &nbsp
+					div.col-xs-2.spacer(ng-if="i==3") &nbsp
 			div.row
-				div(ng-repeat="(region,i) in [1,3,2,4]")
-					div.col-xs-2.final-four(id="region-{{i}}-winner", ng-class="{'team-selectable': brackets_opened &&canClick(4,0,(i+1)%2,round(i/2)), 'team-chosen-to-lose':  brackets_opened &&choseToLose(4,0,(i+1)%2, round(i/2)),'correct-team': !brackets_opened &&getOfficialTeamName(4,0,(i+1)%2, round(i/2)) == getTeam(4,0,(i+1)%2, round(i/2)) && getOfficialTeamName(4,0,(i+1)%2, round(i/2)) != null, 'incorrect-team': !brackets_opened &&getOfficialTeamName(4,0,(i+1)%2, round(i/2)) !== getTeamName(4,0,(i+1)%2, round(i/2)) && getOfficialTeamName(4,0,(i+1)%2, round(i/2)) != null, 'team-chosen': !brackets_opened &&!choseToLose(4,0,(i+1)%2, round(i/2)) && (getOfficialTeamName(4,0,(i+1)%2, round(i/2)) == null), 'team-not-chosen': !brackets_opened &&choseToLose(4,0,(i+1)%2, round(i/2)) && (getOfficialTeamName(4,0,(i+1)%2, round(i/2)) == null )}", ng-click="moveTop(4,0,(i+1)%2,round(i/2))")
+				div(ng-repeat="(seed,i) in [1,3,2,4]")
+					div.col-xs-2.final-four(id="region-{{i}}-winner", ng-class="{'correct-team': !brackets_opened &&  correctTeam(4,0,(i+1)%2, round(i/2)), 'team-selectable': brackets_opened &&canClick(4,0,(i+1)%2,round(i/2)), 'team-chosen-to-lose':  brackets_opened &&choseToLose(4,0,(i+1)%2, round(i/2)), 'incorrect-team-championship': !brackets_opened &&eliminatedTeamInChampionshipByTeam(0, seed), 'team-chosen': !brackets_opened && teamChosen(4, 0,0,0,seed) && getOfficialTeamName(4,0,(i+1)%2, round(i/2)) == null, 'team-not-chosen': !brackets_opened &&!eliminatedTeamInChampionshipByTeam(0, seed)&& choseToLose(4,0,(i+1)%2, round(i/2)) && (getOfficialTeamName(4,0,(i+1)%2, round(i/2)) == null )}", ng-click="moveTop(4,0,(i+1)%2,round(i/2))")
 						span(ng-if="toggleColors && getTeamColor(4,0,(i+1)%2, round(i/2)) !== '' && getTeam(4,0,(i+1)%2, round(i/2)) !== null", class="glyphicon glyphicon-tag", ng-style="{'color': getTeamColor(4, 0, (i+1)%2, round(i/2))}")
 						span(ng-if="toggleMascots && getTeamMascot(4,0,(i+1)%2, round(i/2)) !== '' && getTeam(4,0,(i+1)%2, round(i/2)) !== null", class="icon-{{getTeamMascot(4,0,(i+1)%2, round(i/2))}}")
-						|{{getTeamName(4,0,(i+1)%2, round(i/2))}} {{(i+1)%2}} {{round(i/2)}}
+						span(class="team-seed") {{getTeamSeed(4,0,(i+1)%2, round(i/2))}}
+						span(class="champion-bracket-name") {{getTeamName(4,0,(i+1)%2, round(i/2))}}
 					div.col-xs-1.spacer(ng-if="i<3")
 					div.col-xs-2.spacer(ng-if="i==3")
 		div.teams
@@ -72,28 +106,28 @@
 								div(ng-show="!brackets_opened", class = "team official-team official-incorrect-team",ng-class="{} "  ng-if="i != 0 && (getOfficialTeamName(region, round, matchup, 1) !== getTeamName(region, round, matchup, 1)) && getOfficialTeamName(region, round, matchup, 1) != null")
 									span(ng-if="toggleColors && getOfficialTeamColor(region, round, matchup, 1) !== '' && getOfficialTeam(region, round, matchup, 1) !== null ", class="glyphicon glyphicon-tag", ng-style="{'color': getOfficialTeamColor(region, round, matchup, 1)}")
 									span(ng-if="toggleMascots && getOfficialTeamMascot(region, round, matchup, 1) !== '' && getOfficialTeam(region, round, matchup, 1) !== null", class="icon-{{getOfficialTeamMascot(region, round, matchup, 1)}}")
-									div(class="team-seed") {{getOfficialTeamSeed(region, round, matchup, 1)}}
-									div(class="team-name") {{getOfficialTeamName(region, round, matchup, 1)}}
-									div(class="team-score") {{getScore(region, round, matchup, 1)}}
-								div(class = "team", ng-class="{'team-selectable': brackets_opened && canClick(region, round, matchup, 1), 'team-chosen-to-lose':  brackets_opened && choseToLose(region, round, matchup, 1), 'region-{{k}}-champ-in-region-round': brackets_opened && getTeamName(region, round, matchup, 1)==getTeamName(k, 0, 0, 0,1) && (4-round)==1 ,'correct-team':!brackets_opened &&  correctTeam(region, round, matchup, 1) , 'incorrect-team': !brackets_opened &&incorrectTeam(region, round, matchup, 1), 'team-chosen':!brackets_opened && teamChosen(region, round, matchup, 1), 'team-not-chosen':!brackets_opened && choseToLose(region, round, matchup, 1) && (getOfficialTeamName(region, round, matchup, 1) == null || round == 0)}")
+									span(class="team-seed") {{getOfficialTeamSeed(region, round, matchup, 1)}}
+									span(class="team-name") {{getOfficialTeamName(region, round, matchup, 1)}}
+									span(class="team-score") {{getScore(region, round, matchup, 1)}}
+								div(class = "team", ng-class="{'team-selectable': brackets_opened && canClick(region, round, matchup, 1), 'team-chosen-to-lose':  brackets_opened && choseToLose(region, round, matchup, 1), 'region-{{k}}-champ-in-region-round': brackets_opened && getTeamName(region, round, matchup, 1)==getTeamName(k, 0, 0, 0,1) && (4-round)==1 ,'correct-team':!brackets_opened &&  correctTeam(region, round, matchup, 1) , 'incorrect-team': !brackets_opened &&incorrectTeam(region, round, matchup, 1), 'team-chosen':!brackets_opened && teamChosen(region, round, matchup, 1), 'team-not-chosen':!brackets_opened && choseToLose(region, round, matchup, 1) && (getOfficialTeamName(region, round, matchup, 1) == null || round == 0)&&!incorrectTeam(region, round, matchup, 1)}")
 									span(ng-if="toggleColors && getTeamColor(region, round, matchup, 1) !== '' && getTeam(region, round, matchup, 1) !== null ", class="glyphicon glyphicon-tag", ng-style="{'color': getTeamColor(region, round, matchup, 1)}")
 									span(ng-if="toggleMascots && getTeamMascot(region, round, matchup, 1) !== '' && getTeam(region, round, matchup, 1) !== null", class="icon-{{getTeamMascot(region, round, matchup, 1)}}")
-									div(class="team-seed") {{getTeamSeed(region, round, matchup, 1)}}
-									div(class="team-name") {{getTeamName(region, round, matchup, 1)}}
-									div(ng-show="!brackets_opened",class="team-score" ng-if="correctTeam(region, round, matchup, 1) || round == 0") {{getScore(region, round, matchup, 1)}}
+									span(class="team-seed") {{getTeamSeed(region, round, matchup, 1)}}
+									span(class="team-name") {{getTeamName(region, round, matchup, 1)}}
+									span(ng-show="!brackets_opened",class="team-score" ng-if="correctTeam(region, round, matchup, 1) || round == 0") {{getScore(region, round, matchup, 1)}}
 							div(class="firstSpacer", ng-class="{'firstSpacer-right': (region%2==1), 'firstSpacer-left': (region%2==0)}", style = "height: {{getNewHeight(round)}}px;")
 							div(class="secondTeam", ng-class="{'secondTeam-right': (region%2==1), 'secondTeam-left': (region%2==0)}", style='height: {{getNewHeight(round)}}px;', ng-click="moveTop(region, round, matchup, 2)")
 								div(ng-show="!brackets_opened",class = "team official-team official-incorrect-team", ng-class="{} " ng-if="i != 0 && (getOfficialTeamName(region, round, matchup, 2) !== getTeamName(region, round, matchup, 2)) && getOfficialTeamName(region, round, matchup, 2) != null")
 									span(ng-if="toggleColors && getOfficialTeamColor(region, round, matchup, 2) !== '' && getOfficialTeam(region, round, matchup, 2) !== null ", class="glyphicon glyphicon-tag", ng-style="{'color': getOfficialTeamColor(region, round, matchup, 2)}")
 									span(ng-if="toggleMascots && getOfficialTeamMascot(region, round, matchup, 2) !== '' && getOfficialTeam(region, round, matchup, 2) !== null", class="icon-{{getOfficialTeamMascot(region, round, matchup, 2)}}")
-									div(class="team-seed") {{getOfficialTeamSeed(region, round, matchup, 2)}}
-									div(class="team-name") {{getOfficialTeamName(region, round, matchup, 2)}}
-										div(class="team-score") {{getScore(region, round, matchup, 2)}}
+									span(class="team-seed") {{getOfficialTeamSeed(region, round, matchup, 2)}}
+									span(class="team-name") {{getOfficialTeamName(region, round, matchup, 2)}}
+									span(class="team-score") {{getScore(region, round, matchup, 2)}}
 								div(class = "team", ng-class="{'team-selectable': brackets_opened && canClick(region, round, matchup, 2), 'team-chosen-to-lose':  brackets_opened && choseToLose(region, round, matchup, 2), 'region-{{k}}-champ-in-region-round':brackets_opened &&  getTeamName(region, round, matchup, 2)==getTeamName(k, 0, 0, 0,1)&& (4-round)==1 ,'correct-team': !brackets_opened &&correctTeam(region, round, matchup, 2) , 'incorrect-team': !brackets_opened &&incorrectTeam(region, round, matchup, 2) , 'team-chosen': !brackets_opened && teamChosen(region, round, matchup, 2), 'team-not-chosen': !brackets_opened && choseToLose(region, round, matchup, 2) && (getOfficialTeamName(region, round, matchup, 2) == null || round == 0)&&!incorrectTeam(region, round, matchup, 2)}")
 									span(ng-if="toggleColors  && getTeamColor(region, round, matchup, 2) !== '' && getTeam(region, round, matchup, 2) !== null ", class="glyphicon glyphicon-tag", ng-style="{'color': getTeamColor(region, round, matchup, 2)}")
 									span(ng-if="toggleMascots && getTeamMascot(region, round, matchup, 2) !== '' && getTeam(region, round, matchup, 2) !== null", class="icon-{{getTeamMascot(region, round, matchup, 2)}}")
-									div(class="team-seed") {{getTeamSeed(region, round, matchup, 2)}}
-									div(class="team-name") {{getTeamName(region, round, matchup, 2)}}
-									div(ng-show="!brackets_opened", class="team-score" ng-if="correctTeam(region, round, matchup, 1) || round == 0") {{getScore(region, round, matchup, 2)}}
+									span(class="team-seed") {{getTeamSeed(region, round, matchup, 2)}}
+									span(class="team-name") {{getTeamName(region, round, matchup, 2)}}
+									span(ng-show="!brackets_opened", class="team-score" ng-if="correctTeam(region, round, matchup, 1) || round == 0") {{getScore(region, round, matchup, 2)}}
 							div(class="secondSpacer", style = "height: {{getNewHeight(round)}}px;")
 link(rel='stylesheet', href='/css/bracket.css')

@@ -11,7 +11,7 @@ angular.module('NavBarCtrl',  ['bracketApp']).controller('NavBarController', ['$
 		$scope.isLoggedIn = AuthenticationService.isAuthenticated;
 	});
     $scope.name = "MARCH MADNESS MADNESS 2015"
-    $scope.user = $window.sessionStorage.name
+    $scope.user = $window.sessionStorage.user
 
 
     $scope.logOut = function logout() {
