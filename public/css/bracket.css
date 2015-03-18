@@ -178,6 +178,21 @@
     text-decoration: line-through;
 }
 
+.no-team-chosen{
+    background-color: #FB5F63;
+    color: #5B0004;
+}
+
+.no-team-chosen:after{
+    content: "None";
+
+}
+
+.no-team-chosen-wrong-pick{
+    text-decoration: line-through;
+}
+
+
 .incorrect-team-championship, .incorrect-team-championship > *{
     background-color: #FB5F63;
     color: #5B0004;

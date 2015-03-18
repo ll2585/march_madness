@@ -409,6 +409,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 						var officialName = $scope.getOfficialTeamName(regionID, round, matchup, team_num, team_id);
 						var myChoice = $scope.getTeamName(regionID, round, matchup, team_num, team_id);
                         var result = officialName != myChoice;
+						if($scope.data[region]['tree'][team_id]['team']==null) return true;
                         var myChosenTeamName = $scope.data[region]['tree'][team_id]['team']['name'];
                         var is_eliminated = $scope.getTeamEliminated(regionID, team_id, myChosenTeamName);
                         if (is_eliminated) {
