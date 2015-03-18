@@ -633,7 +633,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                     giveAchievement("Good Guesser");
                 }
                 if(correct_picks >= 50){
-                    giveAchievement("Insider Trader");
+                    giveAchievement("Inside Trader");
                 }
                 if(billionaire_picks == 12){
                     giveAchievement("Possible Billionaire");

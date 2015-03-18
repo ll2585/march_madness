@@ -24,7 +24,7 @@ for(var i = 0; i < money_categories.length; i++){
     temp['amount'] = null;
     money_category_dict.push(temp);
 }
-var achievements = ["Completed Bracket", "I Say I Like Dogs", "But I Really Like Cats", "Random Picker", "Good Guesser", "Insider Trader", "Minigame Champion", "My Best Friend",
+var achievements = ["Completed Bracket", "I Say I Like Dogs", "But I Really Like Cats", "Random Picker", "Good Guesser", "Inside Trader", "Minigame Champion", "My Best Friend",
     "Jackpot", "Numbers Whiz", "Possible Billionaire", "Two for Two", "25% Chance", "Frontrunner", "1 and Done", "Tough Luck", "18-1", "Payback", "Blackout", "A New Hope",
 	"Knocked Out",	"Left Hook",	"Right Jab",	"Left Cross",	"Uppercut",	"Liver Shot",	"One Hit KO",	"Long Count",	"Journeyman", "Gatekeeper",	 "Contender",	"One-two Combo",	"Outpoint",  "Below the Belt",
 	"Merlin", "Mordred", "Assassin", "Reverser", "Hunter", "Percival", "Lancelot", "Oberon", "Morgana", "Lady of the Lake", "Excalibur", "I'm feeling 22",
