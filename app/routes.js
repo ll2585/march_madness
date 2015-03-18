@@ -143,12 +143,12 @@ module.exports = function(app) {
 		var user_exists = false;
 		User.findOne({username: username}, function (err, user) {
 			user_exists = err || user == undefined
-			if(user_exists){
+			if(!user_exists){
 				return res.status(409).send("User exists already.");
 			}
 			User.findOne({email: email}, function (err, user) {
 				user_exists = err || user == undefined
-				if(user_exists){
+				if(!user_exists){
 					return res.status(409).send("Email exists already.");
 				}
 
