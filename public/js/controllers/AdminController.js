@@ -208,7 +208,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 
                 user_info["Worst Pick"] = {value: 0, info: ''};
                 var users = bracket;
-				if(bracket !== undefined){ return user_info; }
+				if(bracket === undefined){ return user_info; }
                 var official = $scope.officialBracket;
                 var heartbreaking_count = 0;
                 var round_one_upsets = 0;
