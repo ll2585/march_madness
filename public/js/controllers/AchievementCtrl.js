@@ -1,4 +1,4 @@
-angular.module('AchievementCtrl', []).controller('AchievementsController', ['$scope', '$rootScope', '$http', 'ModalService', 'achievementFactory','$window', 'userInfoFactory', function($scope, $rootScope, $http, ModalService, achievementFactory, $window, userInfoFactory) {
+angular.module('AchievementCtrl', []).controller('AchievementsController', ['$scope', '$rootScope', '$http', 'achievementFactory','$window', 'userInfoFactory', function($scope, $rootScope, $http, achievementFactory, $window, userInfoFactory) {
     $scope.setUsername = function(n){
         $scope.username = n == undefined ? $window.sessionStorage.user :  n;
     };

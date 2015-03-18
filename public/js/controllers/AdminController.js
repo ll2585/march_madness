@@ -1,4 +1,4 @@
-angular.module('AdminController',  ["checklist-model"]).controller('AdminController', ['$scope',  '$window','$rootScope', '$http', '$alert', function($scope, $window, $rootScope, $http, $alert) {
+angular.module('AdminController',  []).controller('AdminController', ['$scope',  '$window','$rootScope', '$http', '$alert', function($scope, $window, $rootScope, $http, $alert) {
 	$scope.Math = window.Math;
     $scope.hi = "HI LUKE YOU ARE THE BEST"
 
