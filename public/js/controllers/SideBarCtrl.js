@@ -153,31 +153,37 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
 			$http({
 				url: '/achievements.json', method: "GET", params: {username: $scope.username}
 			}).success(function(data){
-				$scope.myAchievements = data['userAchievements'][$scope.username]
-				$scope.totalAchievementsOwned = 0;
-				var start_box_achievement = 20;
-				var start_resistance_achievement = 34;
-				var start_ts_achievement = 45;
-				$scope.res_owned = 0;
-				$scope.ts_owned = 0;
-				if($scope.myAchievements != null){
-					for(var i = 0; i < $scope.myAchievements.length; i++){
-						if( $scope.myAchievements[i]['owned']){
-							$scope.totalAchievementsOwned += 1;
-							if(i < start_box_achievement){
+                $scope.totalAchievementsOwned = 0;
+                $scope.res_owned = 0;
+                $scope.ts_owned = 0;
+                console.log(data);
+                if(data['userAchievements'] != null && $scope.username in data['userAchievements']) {
+                    $scope.myAchievements = data['userAchievements'][$scope.username]
 
-							}else if(i < start_resistance_achievement){
+                    var start_box_achievement = 20;
+                    var start_resistance_achievement = 34;
+                    var start_ts_achievement = 45;
 
-							}else if(i < start_ts_achievement){
-								$scope.res_owned += 1;
-							}else{
-								$scope.ts_owned += 1;
-							}
-						}
-					}
-				}
+                    if ($scope.myAchievements != null) {
+                        for (var i = 0; i < $scope.myAchievements.length; i++) {
+                            if ($scope.myAchievements[i]['owned']) {
+                                $scope.totalAchievementsOwned += 1;
+                                if (i < start_box_achievement) {
 
-				console.log($scope.myAchievements);
+                                } else if (i < start_resistance_achievement) {
+
+                                } else if (i < start_ts_achievement) {
+                                    $scope.res_owned += 1;
+                                } else {
+                                    $scope.ts_owned += 1;
+                                }
+                            }
+                        }
+                    }
+                    console.log($scope.myAchievements);
+                }
+
+
 
 
 

@@ -12,7 +12,7 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 			}).success(function(data){
 				$scope.scoreboard = [];
 				for (var i = 0; i < data.length; i++) {
-					var name = data[i]['username']
+					var name = data[i]['name']
 					$scope.scoreboard.push({rank: i + 1, name: name})
 				}
 

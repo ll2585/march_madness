@@ -77,17 +77,19 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
         $scope.$watch("username", function() {
             achievementFactory.getAchievements($scope.username).then(function (data) {
                 $scope.allAchievements = data['achievements'];
-                $scope.myAchievements = data['userAchievements'][$scope.username]
-				$scope.achievement_dict = {};
-				$scope.totalAchievementsOwned = 0;
-				if($scope.myAchievements != null){
-					for(var i = 0; i < $scope.myAchievements.length; i++){
-						$scope.achievement_dict[$scope.myAchievements[i]['achievement']] = i;
-						if( $scope.myAchievements[i]['owned']){
-							$scope.totalAchievementsOwned += 1;
-						}
-					}
-				}
+                if(data['userAchievements'] != null && $scope.username in data['userAchievements']) {
+                    $scope.myAchievements = data['userAchievements'][$scope.username]
+                    $scope.achievement_dict = {};
+                    $scope.totalAchievementsOwned = 0;
+                    if ($scope.myAchievements != null) {
+                        for (var i = 0; i < $scope.myAchievements.length; i++) {
+                            $scope.achievement_dict[$scope.myAchievements[i]['achievement']] = i;
+                            if ($scope.myAchievements[i]['owned']) {
+                                $scope.totalAchievementsOwned += 1;
+                            }
+                        }
+                    }
+                }
 
                 $scope.regularAchievements = [];
                 $scope.boxAchievements = [];
@@ -116,6 +118,7 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
                         $scope.tsAchievementsDesc.push($scope.achievementDescriptions[i])
                     }
                 }
+
                 $scope.getFlags();
 
             });

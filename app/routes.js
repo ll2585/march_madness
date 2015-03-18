@@ -337,6 +337,8 @@ module.exports = function(app) {
             }
         });
     });
+
+
 	app.get('/savedBracket.json', function (req, res) {
 		var username = req.query.username;
 		User.findOne({username: username}, function (err, user) {
@@ -401,6 +403,8 @@ module.exports = function(app) {
             }
         });
     });
+
+
 
     app.get('/moneyboard.json', function (req, res) {
         var username = req.query.username;
