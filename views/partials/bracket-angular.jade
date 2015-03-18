@@ -8,13 +8,16 @@
 		h3(ng-if="pickCountTotal()['Completed Picks']==63 && (data['championship']['tree'][2]['score'] != null && data['championship']['tree'][3]['score'] != null)") Your bracket is complete! The tournament will start on Thursday, March 19, 2015 at noon! Good luck!
 	span(ng-show="!brackets_opened")
 		h3 {{flavorText()}}
+	div(class="btn-group" dropdown ng-show="!brackets_opened")
+		div.your-score(ng-show="!brackets_opened") {{username}}'s Score: {{myScore["Total Score"]}}
+		button(type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle) See another player's bracket?
+		ul(class="dropdown-menu" role="menu")
+			li(ng-repeat="u in users")
+				a(href="/bracket-angular/{{u.name}}", ng-class="{'active-player': u.name==username}") {{u.name}}
+					span(ng-if='u.name==username') - ACTIVE
 	div.rightStuff
 		div.pickCounter(ng-show="brackets_opened && (skipped_bracket_page || showPickCounter)") Picks: {{pickCountTotal()['Completed Picks']}}/{{pickCountTotal()['Total Picks']}}
-		div.your-score(ng-show="!brackets_opened") {{username}}'s Score: {{myScore["Total Score"]}}
-		div.see-another-bracket(ng-show="!brackets_opened") See another player's bracket!
-			ul
-				li(ng-repeat="u in users")
-					a(href="/bracket-angular/{{u.name}}") {{u.name}}
+
 
 
 	.btn-group(role='group')

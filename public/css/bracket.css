@@ -171,6 +171,13 @@
     background-color: #86E359;
     color: #1E3B10;
 }
+.active-player, .active-player:hover{
+    font-weight: bold !important;
+    background-color: #73C2FB;
+    color: #191970;
+    padding-right: 5px;
+}
+
 
 .incorrect-team, .incorrect-team > *{
     background-color: #FB5F63;
@@ -194,7 +201,7 @@
 
 
 .incorrect-team-championship, .incorrect-team-championship > *{
-    background-color: #FB5F63;
+    background-color: #FB5F63 !important;
     color: #5B0004;
     text-decoration: line-through;
     border-top:none;

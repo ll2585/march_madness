@@ -24,7 +24,12 @@
      border: 1px solid;
  }
 
-
+.active-player, .active-player:hover{
+    font-weight: bold !important;
+    background-color: #73C2FB;
+    color: #191970;
+    padding-right: 5px;
+}
 .see-another-achievement{
     border: 1px solid;
 }

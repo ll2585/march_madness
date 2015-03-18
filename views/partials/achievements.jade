@@ -1,15 +1,18 @@
 .hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()')
 .jumbotron.text-center
 	input(type="hidden" ng-init="setUsername(" + userToGet + ")")
-	div.rightStuff
-		div.your-achievements(ng-show="!brackets_opened") Total Achievements: {{totalAchievementsOwned}}
-		div.see-another-achievement(ng-show="!brackets_opened") See another player's achievements!
-			ul
-				li(ng-repeat="u in users")
-					a(href="/achievements/{{u.name}}") {{u.name}}
+
 	h1 {{username}}'s Achievements
 	h3(ng-show="brackets_opened") Brackets are not yet closed. Look at the achievements and anticipate winning them all!
 	h3(ng-show="!brackets_opened") {{flavorText()}}
+	div(class="btn-group" dropdown ng-show="!brackets_opened")
+		div.your-achievements(ng-show="!brackets_opened") Total Achievements: {{totalAchievementsOwned}}
+		button(type="button" class="btn btn-primary dropdown-toggle see-another-achievement" dropdown-toggle) See another player's achievements?
+		ul(class="dropdown-menu" role="menu")
+			li(ng-repeat="u in users")
+				a(href="/achievements/{{u.name}}", ng-class="{'active-player': u.name==username}") {{u.name}}
+					span(ng-if='u.name==username') - ACTIVE
+
 
 	div.container#anchortop
 		div.row.achievement-header.reg-achievement-header
