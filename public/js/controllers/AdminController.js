@@ -295,6 +295,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                 function giveAchievement(achievement){
                     achievements[achievement_dict[achievement]]['owned'] = true;
                 }
+				if(bracket === undefined){ return achievements; }
 
                 var completed_picks = 0;
 
