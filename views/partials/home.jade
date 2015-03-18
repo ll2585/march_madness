@@ -25,7 +25,7 @@ div.container
 			tr(ng-repeat='row in moneyBoard' ng-class="{'final-moneyboard-row': row.final, 'moneyboard-row': !row.final, 'first-place': row.category == 'First Place'}")
 				td {{row.category}}
 				td {{row.amount}}
-				td(ng-if="brackets_opened" colspan=3) Will appear once brackets are opened
+				td(ng-if="brackets_opened" colspan=3) Will appear once brackets are closed
 				td(ng-if="!brackets_opened" ng-bind-html="makeNice(row.player)")
 				td(ng-if="!brackets_opened") {{getValue(row)}}
 				td(ng-if="!brackets_opened" ng-bind-html="row.info")
@@ -55,7 +55,7 @@ div.container
 				td(ng-if="!brackets_opened") {{row.score}}
 				td(ng-if="!brackets_opened") {{row.achievements}}
 				td(colspan=8, ng-if="brackets_opened" )
-					|Will appear once brackets are opened
+					|Will appear once brackets are closed
 
 
 

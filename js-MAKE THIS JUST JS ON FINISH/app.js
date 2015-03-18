@@ -1,1 +1,0 @@
-angular.module('sampleApp', ['ngRoute', 'bracketRoutes', 'MainCtrl', 'BracketCtrl', 'BracketService', 'BoxCtrl', 'BoxService', 'MiniGameCtrl', 'MiniGameService']);

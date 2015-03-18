@@ -6,3 +6,8 @@
     color: red;
     font-weight: bolder;
 }
+
+
+#brackets-opened-tag{
+  padding: 10px;
+}

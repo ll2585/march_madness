@@ -211,7 +211,7 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 			selector: "#player-category",
 			heading: "Who Wins? (5/13)",
 			text: "These are the current leaders.  Blue is temporary, red is final.",
-			placement: "right",
+			placement: "top",
 			scrollPadding: 250,
 			scroll: true
 		},
@@ -220,7 +220,7 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 			selector: ".first-place",
 			heading: "Who Wins? (6/13)",
 			text: "The player who wins the entire bracket will win the most money.",
-			placement: "right",
+			placement: "top",
 			scrollPadding: 250,
 			scroll: true
 		},

@@ -201,13 +201,14 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
     });
 
 }])
-    .directive('collapseWidth', ['$transition', function ($transition, $timeout) {
+    .directive('collapseWidth', ['$transition', 'collapseService', function ($transition, collapseService) {
 
         return {
             link: function (scope, element, attrs) {
 
                 var initialAnimSkip = true;
                 var currentTransition;
+                collapseService.setCollapse(attrs.collapseWidth);
 
                 function doTransition(change) {
                     var newTransition = $transition(element, change);
@@ -232,36 +233,39 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
                         expandDone();
                     } else {
                         element.removeClass('collapse custom-collapsed').addClass('collapsing-width');
-                        doTransition({ width: element[0].scrollWidth + 'px' }).then(expandDone);
+                        doTransition({ width: element[0].scrollWidth + 'px', padding: '10px 15px' }).then(expandDone);
                     }
                 }
 
                 function expandDone() {
                     element.removeClass('collapsing-width');
                     element.addClass('collapse in');
-                    element.css({width: 'auto'});
+                    element.css({width: 'auto', padding: '10px 15px'});
+                    collapseService.doneExpanding();
                 }
 
                 function collapse() {
                     if (initialAnimSkip) {
                         initialAnimSkip = false;
                         collapseDone();
-                        element.css({width: 0});
+                        element.css({width: 0, padding: 0});
                     } else {
                         // CSS transitions don't work with height: auto, so we have to manually change the height to a specific value
-                        element.css({ width: element[0].scrollWidth + 'px' });
+                        element.css({ width: element[0].scrollWidth + 'px', padding: '10px 15px' });
                         //trigger reflow so a browser realizes that height was updated from auto to a specific value
                         var x = element[0].offsetHeight;
 
                         element.removeClass('collapse in').addClass('collapsing-width');
 
-                        doTransition({ width: 0 }).then(collapseDone);
+                        doTransition({ width: 0, padding: '10px 15px'}).then(collapseDone);
                     }
                 }
 
                 function collapseDone() {
+                    element.css({padding: 0})
                     element.removeClass('collapsing-width');
                     element.addClass('collapse custom-collapsed');
+                    collapseService.doneCollapsing();
                 }
 
                 scope.$watch(attrs.collapseWidth, function (shouldCollapse) {
@@ -274,7 +278,7 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
             }
         };
     }])
-	.directive('outerTab', function() {
+	.directive('outerTab', ['collapseService', function(collapseService) {
 
 		return {
 			link: function (scope, element, attrs) {
@@ -283,19 +287,39 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
 				//console.log(element);
 				var new_left = attach[0].offsetLeft;
 				var new_top = attach[0].offsetTop ;
-				if(col == 'red'){
-					col_hex = "#00ff00"
-				}else if(col == 'blue'){
-					col_hex = '#0000ff'
-				}else{
-					col_hex = '#ff0000'
-				}
 				element.css("position", "absolute");
 				element.css("left", 0);
 				element.css("top", new_top);
-				element.css("content", "RED");
 				element.css("font-size", "large");
+
+
+                scope.$watch(function(){
+                    return collapseService.isCollapsed();
+                }, function (newval) {
+                    if (newval) {
+                        element.css("display", "block");
+                        console.log("SWTCIHED");
+                    }else{
+                        element.css("display", "none");
+                    }
+                });
 
 			}
 		}
-	});
+	}]).factory('collapseService', function(){
+        var collapseService = {}
+        this.collapsed = false;
+        collapseService.setCollapse = function(bool){
+            this.collapsed = bool;
+        }
+        collapseService.isCollapsed = function(){
+            return this.collapsed;
+        }
+        collapseService.doneCollapsing = function(){
+            this.collapsed = true;
+        }
+        collapseService.doneExpanding = function(){
+            this.collapsed = false;
+        }
+        return collapseService;
+    });

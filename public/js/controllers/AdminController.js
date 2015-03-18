@@ -189,8 +189,6 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
                     "Round Score": roundScore,
                     "Round Picks": roundPicks
                 };
-
-
                 return score;
             }
             $scope.calculateMoneyBoard = function(username, bracket){
@@ -200,8 +198,8 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
                     user_info[$scope.moneyBoard[i]['category']] = 0;
                 }
                 user_info["First Place"] = {value: $scope.scoreboard[username]["Total Score"]}
-                user_info["Closest To 50 Points"] = {value: 1000-Math.abs(50-$scope.scoreboard[username]["Total Score"]), info:"Has " + $scope.scoreboard[username]["Total Score"] + "" +
-				" points for a difference of " + Math.abs(50-$scope.scoreboard[username]["Total Score"])};
+                user_info["Closest To 50 Points"] = {value: 1000-Math.abs(50-$scope.scoreboard[username]["Total Score"])}
+
 
                 user_info["Worst Pick"] = {value: 0, info: ''};
                 var users = bracket;
@@ -357,7 +355,7 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
                                    if(official[region]['tree'][i]['team']['name'] == users[region]['tree'][1]['team']['name']) {
                                        var possible_hope = true;
                                        for(var j = 4; j < 8; j++){
-                                           if(j != i && official[region]['tree'][j]['team'] != null){
+                                           if(j != i){
                                                possible_hope = possible_hope && (official[region]['tree'][j]['team']['name'] !=  users[region]['tree'][j]['team']['name'])
                                            }
                                        }
@@ -698,14 +696,13 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
 						}else{
 							round_wins[win.round] += 1;
 						}
-						console.log(round_wins)
-						if(round_wins[win.round] >= 2){
+						if(round_wins[win.round] > 2){
 							giveAchievement("One-two Combo");
 						}
-						if(round_wins[win.round] >= 4){
+						if(round_wins[win.round] > 4){
 							giveAchievement("Outpoint");
 						}
-						if(round_wins[win.round] >= 8){
+						if(round_wins[win.round] > 8){
 							giveAchievement("Below the Belt");
 						}
 						giveAchievement(round_achievements[win.round]);
@@ -928,50 +925,13 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
 				});
 			}
             $scope.recalculateScores = function(){
-				function calculateBoxScore(boxes){
-					var score = 0;
-					if(boxes == null || boxes == undefined){
-						return 0;
-					}
-					for(var i = 0; i < boxes.length; i++){
-						score += Math.pow(2,boxes[i]['round']-1)
-					}
-					return score;
-				}
                 for(var s in $scope.users){
                     var user =  $scope.users[s];
                     $scope.scoreboard[user.username] = $scope.determineScore(user.bracket);
                     $scope.user_money_board[user.username] = $scope.calculateMoneyBoard(user.username, user.bracket);
                     $scope.achievementsByUser[user.username] = $scope.calculateUserAchievements( $scope.achievementsByUser[user.username], user.username, user.bracket);
-
                     console.log(user.username + " has a score of " + $scope.scoreboard[user.username]['Total Score'])
-					var achievements = 0;
-					var resistance_achievements = 0;
-					var ts_achievements = 0;
-					var start_box_achievement = 20;
-					var start_resistance_achievement = 34;
-					var start_ts_achievement = 45;
-					for(var i = 0; i < $scope.achievementsByUser[user.username].length; i++){
-						if($scope.achievementsByUser[user.username][i]['owned']){
-							achievements += 1;
-						}
-						if(i >=start_resistance_achievement && i < start_ts_achievement){
-							if($scope.achievementsByUser[user.username][i]['owned']){
-								resistance_achievements += 1;
-							}
 
-						}else if(i >= start_ts_achievement){
-							if($scope.achievementsByUser[user.username][i]['owned']){
-								ts_achievements += 1;
-							}
-						}
-					}
-					console.log(user.username + " has achieveements of " +achievements)
-					$scope.scoreboard[user.username]['Achievements'] = achievements
-					$scope.user_money_board[user.username]["Most Achievements"] = {'info':'','value':achievements};
-					$scope.user_money_board[user.username]["Most Resistance Achievements"] = {'info':'','value':resistance_achievements};
-					$scope.user_money_board[user.username]["Most Taylor Swift Achievements"] = {'info':'','value':ts_achievements};
-					$scope.user_money_board[user.username]["Most Points in Squares"] = {'info':'','value':calculateBoxScore($scope.boxWinningsByUser[user.username])};
 
                 }
                 $scope.recalculateMoneyBoard();
@@ -994,7 +954,6 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
                                 var user = $scope.users[s];
                                 var username = user.username;
                                 var users_moneyboard = $scope.user_money_board[username];
-
                                 if (users_moneyboard[category]['value'] > curItem['score']) { // new leader
                                     curItem['score'] = users_moneyboard[category]['value'];
                                     curItem['player'] = [username];
@@ -1002,7 +961,7 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
                                     curItem['multiple'] = false;
                                 } else if (users_moneyboard[category]['value'] == curItem['score']) { //tied
                                     if (curItem['player'].indexOf(username) < 0) {
-                                        curItem['info'] += '<br>' + users_moneyboard[category]['info'];
+                                        curItem['info'] += '\n' + users_moneyboard[category]['info'];
                                         curItem['player'].push(username);//if youre not in it already
                                     }
 
@@ -1084,9 +1043,6 @@ angular.module('AdminController',  ["checklist-model"]).controller('AdminControl
                         container: "#saved-alert",
                         duration:1,
                         show: true});
-
-					$scope.saveAchievements();
-					$scope.saveMoneyboard();
                 }).error(function(data){
                     console.log("No data");
 

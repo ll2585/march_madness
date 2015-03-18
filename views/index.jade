@@ -53,20 +53,19 @@ html
 
 		base(href="/")
 	body(ng-app="bracketApp")
-
 		div#page-wrapper.active
 			nav(class="navbar navbar-default navbar-fixed-top" ng-controller="NavBarController as sidebar")
 				div.container
-					div.navbar-header
+					div.navbar-header(style="padding-top: 10px;")
 						a(href="/")
 							span(class="glyphicon glyphicon-home")
 							| {{name}} - Welcome
 							span(ng-if="!isLoggedIn") ! Please login!
 							span(ng-if="isLoggedIn") &nbsp{{user}}!
 					div#navbar.navbar-collapse.collapse(ng-if="isLoggedIn")
-						ul.nav.navbar-nav.navbar-right
-							li
-								span(class="glyphicon glyphicon-question-sign", ng-click="startTutorial()" ng-show="brackets_opened")
+						ul.nav.navbar-nav.navbar-right(style="padding-top: 10px;")
+							li(ng-show="brackets_opened")
+								span(class="glyphicon glyphicon-question-sign", ng-click="startTutorial()" )
 									a(href='') Start Tutorial
 									|&nbsp
 									|&nbsp
@@ -79,9 +78,10 @@ html
 				div#sidebar(ng-if="isLoggedIn")
 					div(collapse-width='isCollapsed', class="column column_1 collapse")
 						ul.sidebar
-							li.sidebar-welcome Welcome {{username}}
 							li.sidebar-title#bracket
-								a(href="/bracket-angular") Go to the Bracket
+								a(href="/bracket-angular")
+									span(class="icon-bracket" style="font-size:large;")
+									span &nbspGo to the Bracket
 							li.sidebar-list
 								span(ng-show="!brackets_opened") {{getBracketStandings()}}
 								span(ng-show="brackets_opened") -- Score After Brackets Close --
@@ -97,12 +97,16 @@ html
 								span(ng-show="!brackets_opened") {{getMiniScoreboard(3)}}
 								span(ng-show="brackets_opened") -- When Brackets are Closed --
 							li.sidebar-title#box
-								a(href="/box-angular") Go to the Box
+								a(href="/box-angular")
+									span(class="icon-boxes" style="font-size:large;")
+									span &nbspGo to the Box
 							li.sidebar-list
 								span(ng-if="!brackets_opened" ng-bind-html="getBoxStandings()")
 								span(ng-show="brackets_opened") -- Score After Brackets Close --
 							li.sidebar-title#achievements
-								a(href="/achievements") Go to Achievements
+								a(href="/achievements")
+									span(class="fa fa-trophy" style="font-size:large;")
+									span &nbspGo to Achievements
 							li.sidebar-list
 								span(ng-if="!brackets_opened" ng-bind-html="getAchievementStats()")
 								span(ng-show="brackets_opened") -- Score After Brackets Close --

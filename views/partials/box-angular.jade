@@ -5,15 +5,13 @@
 		span(ng-show="brackets_opened") &nbspIS OPENED
 		span(ng-show="!brackets_opened") &nbspIS CLOSED
 	h3(ng-show="brackets_opened") This is a demo box.
-	h4(ng-show="brackets_opened") Your real box will be posted when brackets close.
-	br
 	br
 	div.container(ng-init="init")
 		.the-box
 			.mytable
 				.myrow
-					.big-spacer-cell.left-cell &nbsp
-					.empty-cell.right-cell#winning-cols
+					.big-spacer-cell big spacer
+					.empty-cell#winning-cols
 						.mytable
 							div(ng-repeat="(index1, row) in winning_team", class="winning-rows myrow")
 								div(id="winning-team-row-{{index1}}" class="number-cell")
@@ -21,7 +19,7 @@
 								div(ng-repeat="(index2, cell) in row" ng-if="index2 > 0" class="number-cell winning-numbers")
 									span(ng-class="{'joyridecustom1': index2 == first_coords[1] && index1==5, 'joyridecustom4': index2 == first_coords[1] && index1==4}") {{cell}}
 				.myrow#losing-rows
-					.empty-cell.left-cell
+					.empty-cell
 						.mytable#losing-table
 							div(class="losing-cols myrow")
 								div(ng-repeat="(index1, cell) in losing_team" id="losing-team-col-{{index1}}", class="number-cell losing-numbers")
@@ -29,7 +27,7 @@
 							div(ng-repeat="i in [1,2,3,4,5,6,7,8,9]", class="losing-cols myrow")
 								div(ng-repeat="(index1, cell) in losing_team", class="number-cell losing-numbers")
 									span(ng-class="{'joyridecustom2': i == first_coords[0] && index1==5, 'joyridecustom5': i == first_coords[0] && index1==4}") {{cell[i]}}
-					.empty-cell.right-cell
+					.empty-cell
 						.mytable
 							div(ng-repeat="i in [0,1,2,3,4,5,6,7,8,9]", class="losing-cols myrow")
 								div(ng-repeat="p in players[i] track by $index", ng-class="{'you': {{p == myName}}}", class="number-cell player-cell")
@@ -38,14 +36,13 @@
 		center-me(id="winning-team-label", my-parent='winning-cols', loaded = 'loaded', vertical='false', padding='8') Winning Team
 		draw-line(ng-repeat="i in [0,1,2,3,4,5]" from="winning-team-row-{{$index}}" to="losing-team-col-{{$index}}", loaded = 'loaded') {{6-$index}}
 		hr
-		span(ng-show="!brackets_opened") Your Scores
+		caption(ng-show="!brackets_opened") Your Scores
 		table(class="your_scores table table-condensed table-striped table-bordered", ng-show="!brackets_opened")
 			thead
 				tr
 					th Round
 					th Winning Team
 					th Losing Team
-					th Points
 			tbody
 				tr(ng-repeat="game in box_scoreboard[myName]")
 					td {{game.round}}
@@ -55,24 +52,21 @@
 					td {{game.losing_team}}
 						br
 						|{{game.losing_score}}
-					td {{Math.pow(2, game.round-1)}}
 		hr
 		div.box-scoreboard(ng-show="!brackets_opened" ) ALL SCORES
 			div.row
-				div.col-xs-1 Round
+				div.col-xs-3 Round
 				div.col-xs-3 Winning Team
 				div.col-xs-3 Losing Team
-				div.col-xs-4 Player
-				div.col-xs-1 Points
+				div.col-xs-3 Player
 			div.row(ng-repeat="(i, game) in box_scoreboard_by_round", class="scoreboard-row-{{i%2}}", ng-class="{'your-win': game.player == myName}")
-				div.col-xs-1 {{game.round}}
+				div.col-xs-3 {{game.round}}
 				div.col-xs-3 {{game.winning_team}}
 					br
 					|{{game.winning_score}}
 				div.col-xs-3 {{game.losing_team}}
 					br
 					|{{game.losing_score}}
-				div.col-xs-4 {{game.player}}
-				div.col-xs-1 {{Math.pow(2, game.round-1)}}
+				div.col-xs-3 {{game.player}}
 
 link(rel='stylesheet', href='/css/box-angular.css')

@@ -3,17 +3,9 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
         $scope.username = n == undefined ? $window.sessionStorage.user :  n;
     };
     $http.get('/is_bracket_opened.json').success(function(data){
+        console.log("IS B OP")
         $scope.brackets_opened = data['result']
-		if(!$scope.brackets_opened){
-			$http({
-				url: '/getUsers.json', method: "GET"
-			}).success(function(data){
-				$scope.users = data;
-				console.log($scope.users)
-			}).error(function(){
-
-			});
-		}
+        console.log(data);
     }).error(function(data){
         console.log(data);
     });
@@ -77,18 +69,7 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
         $scope.$watch("username", function() {
             achievementFactory.getAchievements($scope.username).then(function (data) {
                 $scope.allAchievements = data['achievements'];
-                $scope.myAchievements = data['userAchievements'][$scope.username]
-				$scope.achievement_dict = {};
-				$scope.totalAchievementsOwned = 0;
-				if($scope.myAchievements != null){
-					for(var i = 0; i < $scope.myAchievements.length; i++){
-						$scope.achievement_dict[$scope.myAchievements[i]['achievement']] = i;
-						if( $scope.myAchievements[i]['owned']){
-							$scope.totalAchievementsOwned += 1;
-						}
-					}
-				}
-
+                $scope.myAchievements = data['userAchievements']
                 $scope.regularAchievements = [];
                 $scope.boxAchievements = [];
                 $scope.resistanceAchievements = [];
@@ -116,6 +97,8 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
                         $scope.tsAchievementsDesc.push($scope.achievementDescriptions[i])
                     }
                 }
+                console.log("ACHIEVVEMTN DATA")
+                console.log(data);
                 $scope.getFlags();
 
             });
@@ -149,16 +132,15 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
             return false;
         }
         if($scope.myAchievements == null){
+            console.log("!")
             return false;
         }
-		var achievement_index = $scope.achievement_dict[achievementName]
-
-        return $scope.myAchievements[achievement_index]['owned'];
+        return true;
     }
     $scope.onFinish = function () {
         $scope.skipped_achievement_page = true;
         userInfoFactory.sendFlags($window.sessionStorage.token, $window.sessionStorage.user, 'skipped_achievement_page', true);
-		$scope.merlin_unlocked = false;
+
     };
 
     $rootScope.$on('start-tutorial', function(event, obj){
@@ -175,72 +157,23 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
     $scope.config = [
 
         {//0
+            index: 0,
             type: "title",
             heading: "THE ACHIEVEMENTS",
-            text: '<div class="row"><div id="title-text" class="col-md-12"><span class="main-text">Welcome to the <strong> Achievement Page</strong></span><br><span>Please click "Next" to learn about achievements, or click "Skip" if you already know.</span></div></div>',
+            text: '<div class="row"><div id="title-text" class="col-md-12"><span class="main-text">Welcome to <strong>THE BRACKET</strong></span><br><span>Please click "Next" to learn how to make picks, or click "Skip" if you already know.</span></div></div>',
             curtainClass: "championship-bracket"
         },
         {
+            index: 1,
             type: "element",
-            selector: ".container",
+            selector: ".teams",
             heading: "Basics (1)",
-            text: "Here are the achievements.",
+            text: "These are the teams in the tournament.",
             placement: "top",
             scrollPadding: 250,
             scroll: true
-        },
-		{
-			type: "element",
-			selector: ".reg-achievement-header",
-			heading: "Basics (2)",
-			text: "There are four categories of achievements. Players with the most total achievements, most resistance and most Taylor Swift achievements will win money.",
-			placement: "top",
-			scrollPadding: 250,
-			scroll: true
-		},
-		{
-			type: "element",
-			selector: ".joyride-1",
-			heading: "Basics (3)",
-			text: "If you unlock an achievement...",
-			placement: "top",
-			scrollPadding: 250,
-			scroll: true
-		},
-		{
-			type: "function",
-			fn: 'unlockMerlinJoyride'
-		},
-		{
-			type: "element",
-			selector: ".joyride-1",
-			heading: "Basics (1)",
-			text: "The row will turn blue and the icon will be colored!.",
-			placement: "top",
-			scrollPadding: 250,
-			scroll: true
-		},
-		{
-			type: "function",
-			fn: 'lockMerlinJoyride'
-		},
-		{
-			type: "title",
-			heading: "The End! (7/7)",
-			text: "The end! If you are uncertain about any achievements, please ask Luke.",
-			scroll: true
-		}
+        }
     ];
-
-	$scope.unlockMerlinJoyride = function(){
-		$scope.merlin_unlocked = true;
-	};
-	$scope.lockMerlinJoyride = function(){
-		$scope.merlin_unlocked = false;
-		$window.scrollTo(0,0)
-	};
-
-	$scope.merlin_unlocked = false;
 
 }]).factory('achievementFactory', function($http, $q) {
 
@@ -280,7 +213,9 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
         template: '<div class="achieveImgHolder"><img src="{{img}}" width="64" height="64" border="0"></div>',
         link: function(scope,element,attrs){
             scope.img = "/img/achievements/" + scope.initialPath
+            console.log(scope.owned)
             if(scope.owned == 'false'){
+                console.log("?!?!")
                 scope.img += "_no"
             }
             scope.img += ".png";

@@ -2,9 +2,9 @@ var express = require("express");
 var app = express();
 var port = process.env.OPENSHIFT_NODEJS_PORT || process.env.PORT || 3159;
 //var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
-var mongoose = require('mongoose');
+
 var passport = require('passport');
-var flash    = require('connect-flash');
+
 var path           = require('path');
 var methodOverride = require('method-override');
 
@@ -18,10 +18,18 @@ var configDB = require('./config/db.js');
 var mongoose = require('mongoose');
 var uriUtil = require('mongodb-uri');
 
+if (process.env.NODE_ENV == "production")
+{
+    console.log("PROD")
+    mongoose.connect(uriUtil.formatMongoose(configDB['url'])); //THISLISTENS TO PORT ALREADY LOL DO THIS AFTER AUTH
+}
+else if (process.env.NODE_ENV == "development")
+{
+    console.log("DEV")
+    mongoose.connect(uriUtil.formatMongoose(configDB['local_url'])); //THISLISTENS TO PORT ALREADY LOL DO THIS AFTER AUTH
+}
 
 
-
-mongoose.connect(uriUtil.formatMongoose(configDB['url'])); //THISLISTENS TO PORT ALREADY LOL DO THIS AFTER AUTH
 
 var MongoStore = require('connect-mongo')(session);
 
@@ -60,35 +68,6 @@ app.set('view engine', 'jade');
 require('./app/routes')(app, passport); // load our routes and pass in our app and fully configured passport
 
 
-//***********************MAIL OPTIONS********************
-
-var mandrill = require('mandrill-api/mandrill');
-var mandrill_client = new mandrill.Mandrill('-59uSm4adAh5BPLrjSVqwQ');
-
-function send_mail(){
-    var message = {
-        "from_email":"ll02012@gmail.com",
-        "to":[{"email":"ll02012@gmail.com"}],
-        "subject": "Sending a text email from the Mandrill API",
-        "text": "I'm learning the Mandrill API at Codecademy."
-    };
-    mandrill_client.messages.send({"message": message}, function(result) {
-        console.log(result);
-        /*
-         [{
-         "email": "recipient.email@example.com",
-         "status": "sent",
-         "reject_reason": "hard-bounce",
-         "_id": "abc123abc123abc123abc123abc123"
-         }]
-         */
-    }, function(e) {
-        // Mandrill returns the error as an object with name and message keys
-        console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
-        // A mandrill error occurred: Unknown_Subaccount - No subaccount exists with the id 'customer-123'
-    });
-}
-//******************************************************
 var setUpServer = require('./setupServer.js');
 setUpServer.insertSettingsIntoMongo();
 app.listen(port);

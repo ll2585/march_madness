@@ -13,6 +13,7 @@ body {
     -moz-transition: width 0.35s ease;
     -o-transition: width 0.35s ease;
     transition: width 0.35s ease;
+     padding: 10px 15px;
 }
 .collapse {
     display: block!important;
@@ -21,11 +22,10 @@ body {
     border: none!important;
 }
 .column {
-    background-color:lightgrey;
-    border: solid 5px darkgrey;
-    border-radius: 3px;
-    width:33%;
+    background-color:#AEC6CF;
+    border-radius: 0 20px 20px 0;
     float:left;
+    line-height: 1.5em;
 }
 
 #row{
@@ -52,8 +52,7 @@ body {
 }
 
 .sidebar-title{
-    border-bottom: 2px solid;
-    border-top: 2px solid;
+    padding: 10px 0 5px;
 }
 
 .bracket{

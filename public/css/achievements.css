@@ -2,38 +2,13 @@
     background-color: paleturquoise;
 }
 
-.owned-achievement-merlin{
-    background-color: paleturquoise;
-}
-
 .achievement-header{
     font-size: 20px;
     font-weight: bold;
     padding: 20px;
 
 }
-.rightStuff{
-    position:absolute;
-    float: right;
-    right: 50px;
-    z-index: 2;
-}
 
-.your-achievements{
-     font-size: 200%;
-     border: 1px solid;
- }
-
-
-.see-another-achievement{
-    border: 1px solid;
-}
-
-.see-another-achievement > ul > li{
-    text-align: left;
-    list-style-type: none;
-    display: block;
-}
 .achieveTxtHolder {
     float: left;
     position: relative;
