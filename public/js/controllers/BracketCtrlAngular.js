@@ -225,8 +225,11 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                     });
                 };
 
-                $scope.clearBracket = function () {
+                $scope.clearBracket = function (forced) {
 					if(!$scope.brackets_opened && !forced){
+						return;
+					}
+					if(!forced && !confirm("Are you sure? This will clear your brackets!")){
 						return;
 					}
                     for (var k = 0; k < 4; k++) {
@@ -246,6 +249,9 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 
                 $scope.randomizePicks = function (forced) {
 					if(!$scope.brackets_opened && !forced){
+						return;
+					}
+					if(!forced && !confirm("Are you sure? This will randomize the rest of your bracket!")){
 						return;
 					}
                     if (forced === undefined) {
@@ -853,7 +859,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 
     };
     $scope.demoFunction3 = function(){
-        $scope.clearBracket();
+        $scope.clearBracket(true);
 
     };
     function makeJoyRideChampion(){

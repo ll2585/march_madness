@@ -18,11 +18,11 @@
 
 
 	.btn-group(role='group')
-		button.btn.btn-default(type='button', id="shuffle-button" ng-click="randomizePicks()" ng-show = "skipped_bracket_page || showShuffle" , ng-disabled = "!brackets_opened")
+		button.btn.btn-default(type='button', id="shuffle-button" ng-click="randomizePicks()" ng-show = "skipped_bracket_page || showShuffle" , ng-disabled = "!brackets_opened" tooltip-placement="bottom" tooltip="This will randomly select any empty slots!")
 			span.glyphicon.glyphicon-random
-		button.btn.btn-default(type='button', id="clear-bracket-button" ng-click="clearBracket()" ng-show = "skipped_bracket_page || showErase" , ng-disabled = "!brackets_opened")
+		button.btn.btn-default(type='button', id="clear-bracket-button" ng-click="clearBracket()" ng-show = "skipped_bracket_page || showErase" , ng-disabled = "!brackets_opened" tooltip-placement="bottom" tooltip="This will erase your bracket!")
 			span.glyphicon.glyphicon-erase
-		button.btn.btn-default.dropdown-toggle(type='button', dropdown-toggle , data-toggle='dropdown', id="show-options-dropdown", ng-show = "skipped_bracket_page || showColors" dropdown is-open="status.isopen")
+		button.btn.btn-default.dropdown-toggle(type='button', dropdown-toggle , data-toggle='dropdown', id="show-options-dropdown", ng-show = "skipped_bracket_page || showColors" dropdown is-open="status.isopen" tooltip-placement="bottom" tooltip="See mascots and colors for achievement purposes!")
 			span(class="fa fa-eye")
 			span(class="caret")
 		ul.dropdown-menu(role='menu' ng-click="$event.stopPropagation()")
