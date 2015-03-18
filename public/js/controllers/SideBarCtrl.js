@@ -12,7 +12,7 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
     });
     $scope.username = $window.sessionStorage.user
     $scope.collapse = true;
-	$scope.isCollapsed = false;
+	$scope.isCollapsed = true;
 	$scope.name = true;
 	$scope.tabs = [
 		{ link : '/bracket-angular', label : 'Bracket', class: 'icon-bracket', alignTo: 'bracket', myColor: "red" },
