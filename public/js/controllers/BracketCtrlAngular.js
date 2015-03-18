@@ -1,4 +1,4 @@
-angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketControllerAngular', ['$scope', '$rootScope', '$http', 'ModalService', 'bracketFactory','$window', 'userInfoFactory', function($scope, $rootScope, $http, ModalService, bracketFactory, $window, userInfoFactory) {
+angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketControllerAngular', ['$scope', '$rootScope', '$http', 'bracketFactory','$window', 'userInfoFactory', function($scope, $rootScope, $http, bracketFactory, $window, userInfoFactory) {
 	$scope.base_height = 20;
     $scope.setUsername = function(n){
         $scope.username = n == undefined ? $window.sessionStorage.user :  n;

@@ -1,12 +1,19 @@
 .hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()')
 .jumbotron.text-center
 	input(type="hidden" ng-init="setUsername(" + userToGet + ")")
-	h1 THE ACHIEVEMENTS
-	h2 THE BRACKET {{username}}
+	div.rightStuff
+		div.your-achievements(ng-show="!brackets_opened") Total Achievements: {{totalAchievementsOwned}}
+		div.see-another-achievement(ng-show="!brackets_opened") See another player's achievements!
+			ul
+				li(ng-repeat="u in users")
+					a(href="/achievements/{{u.name}}") {{u.name}}
+	h1 {{username}}'s Achievements
+	h2 THE BRACKET
 		span(ng-show="brackets_opened") &nbspIS OPENED
 		span(ng-show="!brackets_opened") &nbspIS CLOSED
-	div.container
-		div.row.achievement-header
+
+	div.container#anchortop
+		div.row.achievement-header.reg-achievement-header
 			div.col-xs-12 Regular Achievements
 
 
@@ -25,8 +32,10 @@
 		div.row.achievement-header
 			div.col-xs-12 Resistance Achievements
 		div.row(ng-repeat="(i, resAchievement) in resistanceAchievements")
-			div.col-xs-12(ng-class="{'owned-achievement': ownAchievement(resAchievement)}")
-				achievement-image(class="resistance-img" initial-path="resistanceAchievements/{{i}}", owned="{{ownAchievement(resAchievement)}}" ng-if="resAchievement !== undefined")
+			div.col-xs-12(ng-class="{'owned-achievement': ownAchievement(resAchievement), 'joyride-1': resAchievement == 'Merlin', 'owned-achievement-merlin': merlin_unlocked && resAchievement == 'Merlin' }")
+				div(class="achieveImgHolder", ng-show="merlin_unlocked && resAchievement == 'Merlin'")
+					img(width="57" height="88" border="0" class="resistance-img" src="/img/achievements/resistanceAchievements/0.png", ng-show="merlin_unlocked && resAchievement == 'Merlin'")
+				achievement-image(class="resistance-img" initial-path="resistanceAchievements/{{i}}", owned="{{ownAchievement(resAchievement)}}", ng-if="resAchievement !== undefined", ng-hide="merlin_unlocked && resAchievement == 'Merlin'")
 				achievement-text(class="resistance-txt" achievement-name="{{resAchievement}}", achievement-desc="{{getDescription(i, 'res')}}")
 		div.row.achievement-header
 			div.col-xs-12 Taylor Swift Achievements

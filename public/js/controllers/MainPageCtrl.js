@@ -12,9 +12,11 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 			}).success(function(data){
 				$scope.scoreboard = [];
 				for (var i = 0; i < data.length; i++) {
-					var name = data[i]['name']
+					var name = data[i]['username']
 					$scope.scoreboard.push({rank: i + 1, name: name})
 				}
+
+                console.log($scope.scoreboard);
 
 				//copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
 				$scope.displayedCollection = [].concat($scope.scoreboard);
