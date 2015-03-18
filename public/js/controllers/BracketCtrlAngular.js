@@ -432,7 +432,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 						var team_id = team_id_given !== undefined ? team_id_given : $scope.getTeamID(regionID, round, matchup, team_num);
 
                         var node = $scope.officialBracket[region]['tree'][team_id];
-
+						if($scope.data[region]['tree'][team_id]['team'] == null) return false;
                         var myChosenTeamName = $scope.data[region]['tree'][team_id]['team']['name'];
 
                         if (round == 0 && region!= 'championship') {
