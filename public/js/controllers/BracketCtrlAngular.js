@@ -459,6 +459,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
                         var testMe = regionID == 0 && team_id == 22 && myChosenTeamName == "Northern Iowa"
                         var region = $scope.region_dict[regionID];
                         var node = $scope.officialBracket[region]['tree'][team_id];
+						if(myChosenTeamName == null) return true;
                         if (node.left == null) {
                             return node.team.name != myChosenTeamName;
                         }
