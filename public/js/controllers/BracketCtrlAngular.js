@@ -15,8 +15,8 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
         
     };
 	$scope.brackets_opened = false;
-	$scope.toggleColors = true;
-	$scope.toggleMascots = true;
+	$scope.toggleColors = false;
+	$scope.toggleMascots = false;
     $scope.completedPicks = 0;
     $scope.finalsPicked = false;
     $scope.showPickCounter = false;
