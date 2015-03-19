@@ -263,7 +263,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                                     }
                                     if ($scope.rightTeamsInMatchup(region, node, bracket)) {
                                         if (round == 3 && region != 'championship') {
-                                            if (chosen_seed == Math.max(left_seed, right_seed)) {
+                                            if (parseInt(chosen_seed) == Math.max(left_seed, right_seed)) {
                                                 round_one_upsets += 1;
                                             }
                                         }
@@ -284,7 +284,6 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                 user_info["Most Correct Upsets in Round 1"] = {value: round_one_upsets, info: ''};
                 user_info["Most Correct Blue Teams"] = {value: blues_chosen, info: ''};
                 user_info["Most Correct Red Teams"] = {value: reds_chosen, info: ''};
-                console.log(-Math.abs(50-$scope.scoreboard[username]["Total Score"]))
                 return user_info
             }
 
@@ -682,7 +681,6 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 
 
 				//box achievements
-				console.log($scope.boxWinningsByUser)
 				if(!(username in $scope.boxWinningsByUser) && official['championship']['tree'][1]['team'] !== null){
 					giveAchievement("Knocked Out");
 				}
@@ -741,13 +739,10 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                 var users = bracket;
                 var left_node = official[region]['tree'][node.left]
                 var right_node = official[region]['tree'][node.right]
-				console.log([left_node, right_node])
                 if( left_node.team !== null && right_node.team !== null && (users[region]['tree'][node.left]['team'] == null || users[region]['tree'][node.right]['team'] == null)) {
                     return false;
                 }
-				console.log([left_node, right_node, users[region]['tree'][node.left]['team'], users[region]['tree'][node.right]['team']])
-				console.log([left_node.team.name == users[region]['tree'][node.left]['team']['name'], right_node.team.name == users[region]['tree'][node.right]['team']['name'], users[region]['tree'][node.left]['team'], users[region]['tree'][node.right]['team']])
-                return(left_node.team.name == users[region]['tree'][node.left]['team']['name'] && right_node.team.name == users[region]['tree'][node.right]['team']['name'])
+				return(left_node.team.name == users[region]['tree'][node.left]['team']['name'] && right_node.team.name == users[region]['tree'][node.right]['team']['name'])
             }
             $scope.getRegionNameForTeamID = function(region, team_id){
                 var regionMap = {
@@ -962,12 +957,13 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 					}
 					return score;
 				}
+				$scope.achievementCountByUser = {};
                 for(var s in $scope.users){
                     var user =  $scope.users[s];
 					console.log('getting score for ' + user.username)
 					console.log($scope.scoreboard);
                     $scope.scoreboard[user.username] = $scope.determineScore(user.bracket);
-                    $scope.user_money_board[user.username] = $scope.calculateMoneyBoard(user.username, user.bracket);
+					$scope.user_money_board[user.username] = $scope.calculateMoneyBoard(user.username, user.bracket);
                     $scope.achievementsByUser[user.username] = $scope.calculateUserAchievements( $scope.achievementsByUser[user.username], user.username, user.bracket);
 
                     console.log(user.username + " has a score of " + $scope.scoreboard[user.username]['Total Score'])
@@ -1050,10 +1046,45 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                     }
                 }
 
+				var sort_by = function() {
+					var fields = [].slice.call(arguments),
+						n_fields = fields.length;
+
+					return function(A, B) {
+						var a, b, field, key, primer, reverse, result;
+						for (var i = 0, l = n_fields; i < l; i++) {
+							result = 0;
+							field = fields[i];
+
+							key = typeof field === 'string' ? field : field.name;
+
+							a = A[key];
+							b = B[key];
+
+							if (typeof field.primer !== 'undefined') {
+								a = field.primer(a);
+								b = field.primer(b);
+							}
+
+							reverse = (field.reverse) ? -1 : 1;
+
+							if (a < b) result = reverse * -1;
+							if (a > b) result = reverse * 1;
+							if (result !== 0) break;
+						}
+						return result;
+					}
+				}
+
+
+
                 var sortable = [];
-                for (var user in $scope.scoreboard)
-                    sortable.push([user, $scope.scoreboard[user]['Total Score']])
-                sortable.sort(function(a, b) {return b[1] - a[1]})
+                for (var user in $scope.scoreboard){
+					console.log(user);
+					console.log($scope.user_money_board)
+					sortable.push({user: user, score: $scope.scoreboard[user]['Total Score'], achievements: $scope.user_money_board[user]["Most Achievements"]['value']})
+				}
+				sortable.sort(sort_by({name: "score", reverse: true},{name: "achievements", reverse: true}))
                 var sorted_scoredboard = sortable;
 
                 for(var i = 0; i < $scope.moneyBoard.length; i++){
@@ -1063,13 +1094,19 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                         if(category in determine_after_all_users) {
                             var ranking = determine_after_all_users[category];
                             if (ranking <= sorted_scoredboard.length) {
-                                var ranking_score = sorted_scoredboard[ranking - 1][1];
+                                var ranking_score = sorted_scoredboard[ranking - 1]['score'];
+								console.log("The ranking is " + ranking)
+
+								var ranking_achievement = sorted_scoredboard[ranking - 1]['achievements']
+								console.log("the achievement is " + ranking_achievement)
                                 curItem['score'] = ranking_score;
+
+								curItem['info'] = "Tiebreaker: " + ranking_achievement + " Achievements";
                                 var winners = [];
                                 for (var username in $scope.scoreboard) {
                                     var user = $scope.scoreboard[username];
                                     var users_score = user["Total Score"];
-                                    if (users_score == ranking_score) {
+                                    if (users_score == ranking_score && $scope.user_money_board[username]["Most Achievements"]['value'] == ranking_achievement ) {
                                         winners.push(username)
                                     }
                                 }
