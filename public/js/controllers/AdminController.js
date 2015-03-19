@@ -617,13 +617,13 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                 if(completed_picks == 131){
                     giveAchievement("Completed Bracket");
                 }
-                if(dog_count >= 10){
+                if(dog_count >= 6){
                     giveAchievement("I Say I Like Dogs");
                 }
                 if(tough_luck >= 20){
                     giveAchievement("Tough Luck");
                 }
-                if(cat_count >= 15){
+                if(cat_count >= 12){
                     giveAchievement("But I Really Like Cats");
                 }
                 if(correct_picks >= 10){

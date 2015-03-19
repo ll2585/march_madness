@@ -15,10 +15,18 @@
 
 
 	div.container#anchortop
+		div
+			ul(class="achievements-sidebar")
+				li(bs-scrollspy data-target="#reg-achievements")
+					a(ng-click="scrollTo('reg-achievements')") Regular Achievements
+				li(bs-scrollspy data-target="#box-achievements")
+					a(ng-click="scrollTo('box-achievements')") Box Achievements
+				li(bs-scrollspy data-target="#res-achievements")
+					a(ng-click="scrollTo('res-achievements')") Resistance Achievements
+				li(bs-scrollspy data-target="#ts-achievements")
+					a(ng-click="scrollTo('ts-achievements')") Taylor Swift Achievements
 		div.row.achievement-header.reg-achievement-header
-			div.col-xs-12 Regular Achievements
-
-
+			div.col-xs-12(id='reg-achievements') Regular Achievements
 		//
 			regularAchievements has the most achievements, don't ask how I know this.
 		div.row(ng-repeat="(i, regAchievement) in regularAchievements")
@@ -26,13 +34,13 @@
 				achievement-image(initial-path="regularAchievements/{{i}}", owned="{{ownAchievement(regAchievement)}}")
 				achievement-text(achievement-name="{{regAchievement}}", achievement-desc="{{getDescription(i, 'reg')}}")
 		div.row.achievement-header
-			div.col-xs-12 The Box Achievements
+			div.col-xs-12(id='box-achievements') The Box Achievements
 		div.row(ng-repeat="(i, boxAchievement) in boxAchievements")
 			div.col-xs-12(ng-class="{'owned-achievement': ownAchievement(boxAchievement)}")
 				achievement-image(initial-path="boxAchievements/{{i}}", owned="{{ownAchievement(boxAchievement)}}" ng-if="boxAchievement !== undefined")
 				achievement-text(achievement-name="{{boxAchievement}}", achievement-desc="{{getDescription(i, 'box')}}" ng-if="boxAchievement !== undefined")
 		div.row.achievement-header
-			div.col-xs-12 Resistance Achievements
+			div.col-xs-12(id='res-achievements') Resistance Achievements
 		div.row(ng-repeat="(i, resAchievement) in resistanceAchievements")
 			div.col-xs-12(ng-class="{'owned-achievement': ownAchievement(resAchievement), 'joyride-1': resAchievement == 'Merlin', 'owned-achievement-merlin': merlin_unlocked && resAchievement == 'Merlin' }")
 				div(class="achieveImgHolder", ng-show="merlin_unlocked && resAchievement == 'Merlin'")
@@ -40,7 +48,7 @@
 				achievement-image(class="resistance-img" initial-path="resistanceAchievements/{{i}}", owned="{{ownAchievement(resAchievement)}}", ng-if="resAchievement !== undefined", ng-hide="merlin_unlocked && resAchievement == 'Merlin'")
 				achievement-text(class="resistance-txt" achievement-name="{{resAchievement}}", achievement-desc="{{getDescription(i, 'res')}}")
 		div.row.achievement-header
-			div.col-xs-12 Taylor Swift Achievements
+			div.col-xs-12(id='ts-achievements') Taylor Swift Achievements
 		div.row(ng-repeat="(i, tsAchievement) in tsAchievements")
 			div.col-xs-12(ng-class="{'owned-achievement': ownAchievement(tsAchievement)}")
 				achievement-image(initial-path="tsAchievements/{{i}}", owned="{{ownAchievement(tsAchievement)}}" ng-if="tsAchievement !== undefined")

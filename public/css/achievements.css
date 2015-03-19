@@ -78,3 +78,40 @@
 .resistance-txt > .achieveTxtHolder > .achieveTxt{
     height: 88px !important;;
 }
+
+.achievements-sidebar{
+    position: fixed;
+    right: 5%;
+    top: 200px;
+    z-index: 1;
+    list-style: none;
+    width: 250px;
+
+}
+
+.achievements-sidebar > ul >li.active{
+    font-size: larger;
+    background-color: green;
+}
+
+.achievements-sidebar>.active>a {
+    padding-left: 13px;
+    font-weight: 700;
+    color: #b94846;
+    background-color: transparent;
+    border-left: 2px solid #b94846;
+    display:block;
+}
+.achievements-sidebar>li>a:hover{
+    cursor:pointer;
+}
+
+.achievements-sidebar>li>a {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-right: 30px;
+    font-size: 12px;
+    font-weight: 400;
+    text-align: left;
+    display:block;
+}

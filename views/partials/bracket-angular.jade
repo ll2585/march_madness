@@ -106,6 +106,7 @@
 			div(ng-repeat="(region,k) in [0,1,2,3]")
 				div(ng-if="k==2", class="buffer")
 				div(class="region region-{{region}}")
+					div(class="region-label", ng-class="{'region-label-left': region % 2 == 0, 'region-label-right': region % 2 == 1}") {{region_dict[region]}}
 					div(ng-repeat="(round, i) in [0,1,2,3]" class="round round-{{round}}")
 						div(ng-repeat="(matchup,j) in matchupCount(round) track by $index", class="matchup matchup-{{matchup}}", ng-class="{'joyridecustom1': (k == 0 && i == 0 && matchup == 0), 'joyridecustom2': (k == 0 && i == 1 && matchup == 0), 'joyridecustom3': (k == 0 && i == 3 && matchup == 0)}")
 							//starts with 2^i and then goes to 2^(i+1)-1 but in reverse; the 1 in the function is whether it is first team or second team

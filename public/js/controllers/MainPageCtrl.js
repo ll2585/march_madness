@@ -23,7 +23,7 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 
 			});
 		}else {
-			$scope.getScoreboard($window.sessionStorage.user).then(function (data) {
+			$scope.getScoreboard($window.localStorage.user).then(function (data) {
 
 				$scope.scoreboard = [];
 				var sb = data;
@@ -85,15 +85,15 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
     });
 
     $scope.getFlags = function(){
-        if(!$window.sessionStorage.userFlags){
-            userInfoFactory.getFlags($window.sessionStorage.token, $window.sessionStorage.user).then(function(data) {
+        if(!$window.localStorage.userFlags){
+            userInfoFactory.getFlags($window.localStorage.token, $window.localStorage.user).then(function(data) {
                 $scope.userInfo = data.data;
 
                 $scope.skipped_main_page = data.data.skipped_main_page;
 				if(!$scope.skipped_main_page){
 					$scope.startJoyRide = true;
 				}
-                $window.sessionStorage.data = data.data;
+                $window.localStorage.data = data.data;
             });
         }
     };
@@ -130,7 +130,7 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 
         return deferred.promise;
     };
-    $scope.getMoneyboard($window.sessionStorage.user).then(function(data){
+    $scope.getMoneyboard($window.localStorage.user).then(function(data){
         $scope.moneyBoard = data;
 
 
@@ -282,7 +282,7 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 	];
 
 	$scope.onFinish = function () {
-		userInfoFactory.sendFlags($window.sessionStorage.token, $window.sessionStorage.user, 'skipped_main_page', true);
+		userInfoFactory.sendFlags($window.localStorage.token, $window.localStorage.user, 'skipped_main_page', true);
 		$scope.skipped_main_page = true;
 		$rootScope.$broadcast('CLOSE_MODAL');
 

@@ -1,5 +1,5 @@
 angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideBarController', ['$scope',  '$window','UserService', 'AuthenticationService', '$rootScope','$q', '$http', '$sce', function($scope, $window, UserService, AuthenticationService, $rootScope, $q, $http, $sce) {
-    if($window.sessionStorage.token){
+    if($window.localStorage.token){
         AuthenticationService.isAuthenticated = true;
     }else{
         AuthenticationService.isAuthenticated = false;
@@ -10,7 +10,7 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
     }, function (newVal, oldVal) {
         $scope.isLoggedIn = AuthenticationService.isAuthenticated;
     });
-    $scope.username = $window.sessionStorage.user
+    $scope.username = $window.localStorage.user
     $scope.collapse = true;
 	$scope.isCollapsed = true;
 	$scope.name = true;
@@ -56,7 +56,7 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
         });
         return deferred.promise;
     };
-    $scope.getScoreboard($window.sessionStorage.user).then(function(data){
+    $scope.getScoreboard($window.localStorage.user).then(function(data){
 		$scope.scoreboard = [];
 		var sb = data;
 		for(var s in sb){
@@ -108,7 +108,7 @@ angular.module('SideBarCtrl',  ['ui.bootstrap', 'bracketApp']).controller('SideB
 	});
         if(!$scope.brackets_opened){
             $http({
-                url: '/boxes_scoreboard.json', method: "GET", params: {username: $window.sessionStorage.user}
+                url: '/boxes_scoreboard.json', method: "GET", params: {username: $window.localStorage.user}
             }).success(function(data){
                 $scope.box_scoreboard =  data;
                 $scope.box_scoreboard_by_round = [];

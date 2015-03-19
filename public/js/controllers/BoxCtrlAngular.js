@@ -4,7 +4,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 	$scope.Math = window.Math;
 	$scope.init = function(){
 		$http({
-			url: '/boxes.json', method: "GET", params: {username: $window.sessionStorage.user}
+			url: '/boxes.json', method: "GET", params: {username: $window.localStorage.user}
 		}).success(function(data){
 			$scope.json_data = data
 			$scope.winning_team = $scope.json_data['winning_numbers'];
@@ -34,7 +34,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 
 			if(!$scope.brackets_opened){
 				$http({
-					url: '/boxes_scoreboard.json', method: "GET", params: {username: $window.sessionStorage.user}
+					url: '/boxes_scoreboard.json', method: "GET", params: {username: $window.localStorage.user}
 				}).success(function(data){
 					$scope.box_scoreboard=  data;
 					$scope.box_scoreboard_by_round = [];
@@ -83,7 +83,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 	};
 	$scope.tagline = "Don't get boxed in!";
 	$scope.losing_label = "losing-label";
-    $scope.myName = $window.sessionStorage.user;
+    $scope.myName = $window.localStorage.user;
 	$scope.brackets_opened = false;
 	$http.get('/is_bracket_opened.json').success(function(data){
 		$scope.brackets_opened = data['result']
@@ -92,8 +92,8 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 	});
 
 	$scope.getFlags = function(){
-		if(!$window.sessionStorage.userFlags){
-			userInfoFactory.getFlags($window.sessionStorage.token, $window.sessionStorage.user).then(function(data) {
+		if(!$window.localStorage.userFlags){
+			userInfoFactory.getFlags($window.localStorage.token, $window.localStorage.user).then(function(data) {
 				$scope.doneWithTutorial = data.data.skipped_boxes_page;
 				if(!$scope.doneWithTutorial){
 					$scope.start();
@@ -105,7 +105,7 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 	$scope.onFinish = function(){
 		$scope.doneWithTutorial = true;
 		console.log("DONE WITH TUT")
-		userInfoFactory.sendFlags($window.sessionStorage.token, $window.sessionStorage.user, 'skipped_boxes_page', true);
+		userInfoFactory.sendFlags($window.localStorage.token, $window.localStorage.user, 'skipped_boxes_page', true);
 	}
 
 	$scope.startJoyRide = false;

@@ -1,5 +1,5 @@
 angular.module('NavBarCtrl',  ['bracketApp']).controller('NavBarController', ['$scope','UserService', 'AuthenticationService',  '$window', '$location', '$rootScope', '$http', function($scope, UserService, AuthenticationService,  $window, $location, $rootScope, $http) {
-	if($window.sessionStorage.token){
+	if($window.localStorage.token){
 		AuthenticationService.isAuthenticated = true;
 	}else{
 		AuthenticationService.isAuthenticated = false;
@@ -11,7 +11,7 @@ angular.module('NavBarCtrl',  ['bracketApp']).controller('NavBarController', ['$
 		$scope.isLoggedIn = AuthenticationService.isAuthenticated;
 	});
     $scope.name = "MARCH MADNESS MADNESS 2015"
-    $scope.user = $window.sessionStorage.user
+    $scope.user = $window.localStorage.user
 
     $http.get('/is_bracket_opened.json').success(function(data){
         $scope.brackets_opened = data['result']
@@ -25,7 +25,7 @@ angular.module('NavBarCtrl',  ['bracketApp']).controller('NavBarController', ['$
 
             UserService.logOut().success(function(data) {
                 AuthenticationService.isAuthenticated = false;
-                delete $window.sessionStorage.token;
+                delete $window.localStorage.token;
                 $location.path("/login");
             }).error(function(status, data) {
                 console.log(status);

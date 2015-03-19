@@ -57,13 +57,13 @@ angular.module('bracketRoutes', []).config(['$routeProvider', '$locationProvider
     $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
         //redirect only if both isAuthenticated is false and no token is set
         if (nextRoute != null && nextRoute.access != null && nextRoute.access.requiredAuthentication
-            && !AuthenticationService.isAuthenticated && !$window.sessionStorage.token) {
+            && !AuthenticationService.isAuthenticated && !$window.localStorage.token) {
 			console.log("REROOT BITCH");
             $location.path("/login");
         }else {
             // check if user object exists else fetch it. This is incase of a page refresh
-            if (!AuthenticationService.user) AuthenticationService.user = $window.sessionStorage.user;
-            if (!AuthenticationService.userRole) AuthenticationService.userRole = $window.sessionStorage.userRole;
+            if (!AuthenticationService.user) AuthenticationService.user = $window.localStorage.user;
+            if (!AuthenticationService.userRole) AuthenticationService.userRole = $window.localStorage.userRole;
         }
 
 

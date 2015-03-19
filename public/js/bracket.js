@@ -5,7 +5,7 @@ angular.module('bracketApp', ['ngRoute', 'bracketRoutes', 'MainCtrl', 'BoxCtrlAn
 		isAuthenticated: false,
 		isAdmin: false,
         check: function() {
-            if ($window.sessionStorage.token && $window.sessionStorage.user) {
+            if ($window.localStorage.token && $window.localStorage.user) {
                 this.isLogged = true;
             } else {
                 this.isLogged = false;
@@ -19,8 +19,8 @@ angular.module('bracketApp', ['ngRoute', 'bracketRoutes', 'MainCtrl', 'BoxCtrlAn
 	return {
 		request: function (config) {
 			config.headers = config.headers || {};
-			if ($window.sessionStorage.token) {
-				config.headers.Authorization = 'Bearer ' + $window.sessionStorage.token;
+			if ($window.localStorage.token) {
+				config.headers.Authorization = 'Bearer ' + $window.localStorage.token;
 			}
 			return config;
 		},
@@ -31,7 +31,7 @@ angular.module('bracketApp', ['ngRoute', 'bracketRoutes', 'MainCtrl', 'BoxCtrlAn
 
 		/* Set Authentication.isAuthenticated to true if 200 received */
 		response: function (response) {
-			if (response != null && response.status == 200 && $window.sessionStorage.token && !AuthenticationService.isAuthenticated) {
+			if (response != null && response.status == 200 && $window.localStorage.token && !AuthenticationService.isAuthenticated) {
 				AuthenticationService.isAuthenticated = true;
 			}
 			return response || $q.when(response);
@@ -39,8 +39,8 @@ angular.module('bracketApp', ['ngRoute', 'bracketRoutes', 'MainCtrl', 'BoxCtrlAn
 
 		/* Revoke client authentication if 401 is received */
 		responseError: function(rejection) {
-			if (rejection != null && rejection.status === 401 && ($window.sessionStorage.token || AuthenticationService.isAuthenticated)) {
-				delete $window.sessionStorage.token;
+			if (rejection != null && rejection.status === 401 && ($window.localStorage.token || AuthenticationService.isAuthenticated)) {
+				delete $window.localStorage.token;
 				AuthenticationService.isAuthenticated = false;
 				$location.path("/login");
 			}

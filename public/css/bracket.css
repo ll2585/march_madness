@@ -13,6 +13,19 @@
 .firstSpacer-right, .secondTeam-right{
     border-left:1px solid #ccc;
 }
+.region-label{
+    position: absolute;
+    font-size: larger;
+    text-transform: uppercase;
+    font-weight: bolder;
+    top: -50px;
+}
+.region-label-left{
+    left: 20%;
+}
+.region-label-right{
+    right: 20%;
+}
 .team{
     position:absolute;
     bottom: 0px;

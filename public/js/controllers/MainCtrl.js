@@ -31,9 +31,9 @@ angular.module('MainCtrl', ['bracketApp']).controller('MainController', ['$rootS
                 AuthenticationService.isAuthenticated = true;
                 AuthenticationService.user = data.user.username;
                 AuthenticationService.userRole = data.user.role;
-                $window.sessionStorage.token = data.token;
-                $window.sessionStorage.user = data.user.username; // to fetch the user details on refresh
-                $window.sessionStorage.userRole = data.user.role; // to fetch the user details on refresh
+                $window.localStorage.token = data.token;
+                $window.localStorage.user = data.user.username; // to fetch the user details on refresh
+                $window.localStorage.userRole = data.user.role; // to fetch the user details on refresh
 				console.log(AuthenticationService);
 
                 $location.path("/");
@@ -53,7 +53,7 @@ angular.module('MainCtrl', ['bracketApp']).controller('MainController', ['$rootS
 
 			UserService.logOut().success(function(data) {
 				AuthenticationService.isAuthenticated = false;
-				delete $window.sessionStorage.token;
+				delete $window.localStorage.token;
 				$location.path("/login");
 			}).error(function(status, data) {
 				console.log(status);
@@ -91,7 +91,7 @@ angular.module('MainCtrl', ['bracketApp']).controller('MainController', ['$rootS
 		}
 	};
     $scope.token = $localStorage.token;
-    console.log($window.sessionStorage.data);
+    console.log($window.localStorage.data);
 
 
 
@@ -108,9 +108,9 @@ angular.module('MainCtrl', ['bracketApp']).controller('MainController', ['$rootS
                 delete AuthenticationService.user;
                 delete AuthenticationService.userRole;
 
-                delete $window.sessionStorage.token;
-                delete $window.sessionStorage.user;
-                delete $window.sessionStorage.userRole;
+                delete $window.localStorage.token;
+                delete $window.localStorage.user;
+                delete $window.localStorage.userRole;
 
                 //$location.path("/login");
                 return $http.get('/logout');

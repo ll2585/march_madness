@@ -1,7 +1,7 @@
 angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketControllerAngular', ['$scope', '$rootScope', '$http', 'bracketFactory','$window', 'userInfoFactory', function($scope, $rootScope, $http, bracketFactory, $window, userInfoFactory) {
 	$scope.base_height = 20;
     $scope.setUsername = function(n){
-        $scope.username = n == undefined ? $window.sessionStorage.user :  n;
+        $scope.username = n == undefined ? $window.localStorage.user :  n;
     };
 	$scope.round = function(x){
 		return Math.round(x);
@@ -214,7 +214,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 
                 $scope.saveChanges = function () {
                     var new_bracket = $scope.data;
-                    bracketFactory.saveBracket($window.sessionStorage.token, $window.sessionStorage.user, new_bracket).success(function () {
+                    bracketFactory.saveBracket($window.localStorage.token, $window.localStorage.user, new_bracket).success(function () {
                         alert("SAVED");
                         $scope.storeBracketAsSaved();
                     }).error(function (status, data) {
@@ -331,11 +331,11 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 
                 $scope.finalsPicked = ($scope.getTeamName(4, 0, 0, 0, 1) != null && $scope.getTeamName(4, 0, 0, 0, 2) != null )
                 $scope.getFlags();
-                bracketFactory.getScoreboard($window.sessionStorage.user).then(function (data) {
+                bracketFactory.getScoreboard($window.localStorage.user).then(function (data) {
                     $scope.score = data;
                     $scope.myScore = data[$scope.username]
                 });
-                bracketFactory.getOfficialBracket($window.sessionStorage.user).then(function (data) {
+                bracketFactory.getOfficialBracket($window.localStorage.user).then(function (data) {
                     $scope.officialBracket = data;
                     $scope.getOfficialTeamColor = function (regionID, round, matchup, team_num, team_id_given) {
                         var region = $scope.region_dict[regionID];
@@ -886,8 +886,8 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 
 
 	$scope.getFlags = function(){
-		if(!$window.sessionStorage.userFlags){
-			userInfoFactory.getFlags($window.sessionStorage.token, $window.sessionStorage.user).then(function(data) {
+		if(!$window.localStorage.userFlags){
+			userInfoFactory.getFlags($window.localStorage.token, $window.localStorage.user).then(function(data) {
 				$scope.skipped_bracket_page = data.data.skipped_bracket_page;
 				if(!$scope.skipped_bracket_page){
 					$scope.start();
@@ -899,7 +899,7 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 
 	$scope.onFinish = function () {
 		$scope.skipped_bracket_page = true;
-		userInfoFactory.sendFlags($window.sessionStorage.token, $window.sessionStorage.user, 'skipped_bracket_page', true);
+		userInfoFactory.sendFlags($window.localStorage.token, $window.localStorage.user, 'skipped_bracket_page', true);
 
 	};
 

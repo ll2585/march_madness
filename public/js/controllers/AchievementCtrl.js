@@ -1,6 +1,6 @@
 angular.module('AchievementCtrl', []).controller('AchievementsController', ['$scope', '$rootScope', '$http', 'achievementFactory','$window', 'userInfoFactory', function($scope, $rootScope, $http, achievementFactory, $window, userInfoFactory) {
     $scope.setUsername = function(n){
-        $scope.username = n == undefined ? $window.sessionStorage.user :  n;
+        $scope.username = n == undefined ? $window.localStorage.user :  n;
     };
     $http.get('/is_bracket_opened.json').success(function(data){
         $scope.brackets_opened = data['result']
@@ -16,10 +16,15 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
     }).error(function(data){
         console.log(data);
     });
+    $scope.scrollTo = function(page){
+        jQuery('html, body').animate({
+            scrollTop:  jQuery('#' + page).position().top-85
+        });
+    };
     $scope.achievementDescriptions = [
         "Finish your bracket",
-        "Correctly choose 10 or more dog teams to win.",
-        "Correctly choose 15 or more cat teams to win.",
+        "Correctly choose 6 or more dog teams to win.",
+        "Correctly choose 12 or more cat teams to win.",
         "Correctly choose 10 or more matchups.",
         "Correctly choose 25 or more matchups.",
         "Correctly choose 50 or more matchups.",
@@ -220,8 +225,8 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
         });
     };
     $scope.getFlags = function(){
-        if(!$window.sessionStorage.userFlags){
-            userInfoFactory.getFlags($window.sessionStorage.token, $window.sessionStorage.user).then(function(data) {
+        if(!$window.localStorage.userFlags){
+            userInfoFactory.getFlags($window.localStorage.token, $window.localStorage.user).then(function(data) {
                 $scope.skipped_achievement_page = data.data.skipped_achievement_page;
                 if(!$scope.skipped_achievement_page){
                     $scope.start();
@@ -255,7 +260,7 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
     }
     $scope.onFinish = function () {
         $scope.skipped_achievement_page = true;
-        userInfoFactory.sendFlags($window.sessionStorage.token, $window.sessionStorage.user, 'skipped_achievement_page', true);
+        userInfoFactory.sendFlags($window.localStorage.token, $window.localStorage.user, 'skipped_achievement_page', true);
 		$scope.merlin_unlocked = false;
     };
 
