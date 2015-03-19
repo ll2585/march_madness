@@ -168,7 +168,8 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 					for(var region in official){
 						for(var team_id in official[region]['tree']){
 							var node = official[region]['tree'][team_id];
-							if(node.team !== null){
+							if(node.team !== null && users[region]['tree'][team_id]['team'] !== null){
+
 								if(node.team.name == users[region]['tree'][team_id]['team']['name']){
 									var regionName = $scope.getRegionNameForTeamID(region, team_id);
 									if(regionName != null){ //so ignore championship first round and first row of regions
@@ -217,58 +218,59 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                 for(var region in official){
                     for(var team_id in official[region]['tree']){
                         var node = official[region]['tree'][team_id];
-
-                        if(node.team !== null && node.left !== null){
-                            var winning_team = node.team.name;
-                            var this_team_color = node.team.color;
-                            var left_score = official[region]['tree'][node.left]['score'];
-                            var left_team = official[region]['tree'][node.left]['team'];
-                            var left_team_color = official[region]['tree'][node.left]['team']['color']
-                            var right_team = official[region]['tree'][node.right]['team'];
-                            var right_team_color = official[region]['tree'][node.right]['team']['color']
-                            var left_team_name = official[region]['tree'][node.left]['team']['name'];
-                            var right_team_name = official[region]['tree'][node.right]['team']['name'];
-                            var chosen_team_name = users[region]['tree'][team_id]['team']['name'];
-                            var right_score = official[region]['tree'][node.right]['score'];
-                            var left_seed =official[region]['tree'][node.left]['team']['seed'];
-                            var right_seed =official[region]['tree'][node.right]['team']['seed'];
-                            var chosen_seed = users[region]['tree'][team_id]['team']['seed'];
-                            var your_left_team = users[region]['tree'][node.left]['team'];
-                            var your_right_team = users[region]['tree'][node.right]['team'];
-                            //do the worst loss first
-                            if(node.team.name != users[region]['tree'][team_id]['team']['name']){ //you don't have the right pick
-                                if($scope.rightTeamsInMatchup(region, node, bracket)){
-                                    if(users[region]['tree'][team_id]['team']['seed'] < node.team.seed){
-                                        heartbreaking_count += 1;
+                        if(users[region]['tree'][team_id]['team'] !== null) {
+                            if (node.team !== null && node.left !== null) {
+                                var winning_team = node.team.name;
+                                var this_team_color = node.team.color;
+                                var left_score = official[region]['tree'][node.left]['score'];
+                                var left_team = official[region]['tree'][node.left]['team'];
+                                var left_team_color = official[region]['tree'][node.left]['team']['color']
+                                var right_team = official[region]['tree'][node.right]['team'];
+                                var right_team_color = official[region]['tree'][node.right]['team']['color']
+                                var left_team_name = official[region]['tree'][node.left]['team']['name'];
+                                var right_team_name = official[region]['tree'][node.right]['team']['name'];
+                                var chosen_team_name = users[region]['tree'][team_id]['team']['name'];
+                                var right_score = official[region]['tree'][node.right]['score'];
+                                var left_seed = official[region]['tree'][node.left]['team']['seed'];
+                                var right_seed = official[region]['tree'][node.right]['team']['seed'];
+                                var chosen_seed = users[region]['tree'][team_id]['team']['seed'];
+                                var your_left_team = users[region]['tree'][node.left]['team'];
+                                var your_right_team = users[region]['tree'][node.right]['team'];
+                                //do the worst loss first
+                                if (node.team.name != users[region]['tree'][team_id]['team']['name']) { //you don't have the right pick
+                                    if ($scope.rightTeamsInMatchup(region, node, bracket)) {
+                                        if (users[region]['tree'][team_id]['team']['seed'] < node.team.seed) {
+                                            heartbreaking_count += 1;
+                                        }
+                                        var difference = Math.abs(left_score - right_score);
+                                        if (difference > user_info["Worst Pick"]['value']) {
+                                            user_info["Worst Pick"]['value'] = difference;
+                                            user_info["Worst Pick"]['info'] = left_team_name + " v. " + right_team_name + ": " + name + " chose " + chosen_team_name + " to win but they lost by a score of " + left_score + " to " + right_score + ", for a difference of " + difference
+                                        }
                                     }
-                                    var difference = Math.abs(left_score - right_score);
-                                    if(difference > user_info["Worst Pick"]['value']){
-                                        user_info["Worst Pick"]['value'] = difference;
-                                        user_info["Worst Pick"]['info'] = left_team_name + " v. " + right_team_name + ": " + name + " chose " + chosen_team_name + " to win but they lost by a score of " + left_score + " to " + right_score + ", for a difference of " + difference
+
+                                } else {
+                                    //correct team chosen, not first round
+
+                                    ////upsets in round 1
+                                    var round = $scope.getRound(team_id)
+                                    if (node.team.color == 'blue') {
+                                        blues_chosen += 1;
                                     }
-                                }
-
-                            }else{
-                                //correct team chosen, not first round
-
-                                ////upsets in round 1
-                                var round = $scope.getRound(team_id)
-                                if(node.team.color == 'blue'){
-                                    blues_chosen += 1;
-                                }
-                                if($scope.rightTeamsInMatchup(region, node, bracket)) {
-                                    if (round == 3 && region != 'championship') {
-                                        if (chosen_seed == Math.max(left_seed, right_seed)) {
-                                            round_one_upsets += 1;
+                                    if ($scope.rightTeamsInMatchup(region, node, bracket)) {
+                                        if (round == 3 && region != 'championship') {
+                                            if (chosen_seed == Math.max(left_seed, right_seed)) {
+                                                round_one_upsets += 1;
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            //if left is red and your left is red and this isnt left and your this isnt that, or with right, then get a red point
-                            if((left_team_color == 'red' && left_team_name==your_left_team.name && winning_team!= left_team_name) ||
-                                (right_team_color == 'red' && right_team_name==your_right_team.name && winning_team!= right_team_name)){
-                                reds_chosen += 1;
+                                //if left is red and your left is red and this isnt left and your this isnt that, or with right, then get a red point
+                                if ((left_team_color == 'red' && left_team_name == your_left_team.name && winning_team != left_team_name) ||
+                                    (right_team_color == 'red' && right_team_name == your_right_team.name && winning_team != right_team_name)) {
+                                    reds_chosen += 1;
+                                }
                             }
                         }
 
@@ -325,7 +327,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                     if(official['championship']['tree'][2]['team']['name'] !=  users['championship']['tree'][2]['team']['name']&&
                         official['championship']['tree'][3]['team']['name'] !=  users['championship']['tree'][3]['team']['name']){
                         for(var i = 4; i < 8; i++){
-                            if(official['championship']['tree'][i]['team']['name'] ==  users['championship']['tree'][i]['team']['name']){
+                            if(users['championship']['tree'][i]['team'] !== null && official['championship']['tree'][i]['team']['name'] ==  users['championship']['tree'][i]['team']['name']){
                                 giveAchievement("I'm on the bleachers");
                             }
                         }
@@ -356,13 +358,13 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                     if(region == 'championship'){
                         for(var i = 4; i < 8; i++){
                             if(official[region]['tree'][i]['team'] !== null){
-                                if(official[region]['tree'][i]['team']['name'] ==  users[region]['tree'][i]['team']['name']){
+                                if(users[region]['tree'][i]['team'] !== null && official[region]['tree'][i]['team']['name'] ==  users[region]['tree'][i]['team']['name']){
 
                                     merlin_teams += 1;
                                    if(official[region]['tree'][i]['team']['name'] == users[region]['tree'][1]['team']['name']) {
                                        var possible_hope = true;
                                        for(var j = 4; j < 8; j++){
-                                           if(j != i && official[region]['tree'][j]['team'] != null){
+                                           if(j != i && official[region]['tree'][j]['team'] != null && users[region]['tree'][j]['team'] !== null){
                                                possible_hope = possible_hope && (official[region]['tree'][j]['team']['name'] !=  users[region]['tree'][j]['team']['name'])
                                            }
                                        }
@@ -376,9 +378,11 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                         }
                     }
                     for(var team_id in official[region]['tree']){
-                        if(users[region]['tree'][team_id]['team'] !== null){
-                            completed_picks += 1; //you made a choice
+                        if(users[region]['tree'][team_id]['team'] === null){
+                            continue;
+
                         }
+                        completed_picks += 1; //you made a choice
                         var node = official[region]['tree'][team_id];
 
                         if(node.team !== null){
@@ -452,8 +456,8 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 
                                     }
                                 }
-                                if((left_team_name == your_left_team.name && left_team_name != node.team.name && chosen_team_name != your_left_team.name && chosen_seed > left_seed && parseInt(node.team.seed) > left_seed )
-                                    || (right_team_name == your_right_team.name && right_team_name != node.team.name && chosen_team_name != your_right_team.name && chosen_seed > right_seed && parseInt(node.team.seed) > right_seed)){
+                                if((your_left_team !== null && left_team_name == your_left_team.name && left_team_name != node.team.name && chosen_team_name != your_left_team.name && chosen_seed > left_seed && parseInt(node.team.seed) > left_seed )
+                                    || (your_right_team!== null && right_team_name == your_right_team.name && right_team_name != node.team.name && chosen_team_name != your_right_team.name && chosen_seed > right_seed && parseInt(node.team.seed) > right_seed)){
                                     if(round < 3){
                                         reverser_choices += 1;
 
@@ -603,7 +607,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                 if(official['championship']['tree'][1]['team'] !== null) {
                     for(var i = 4; i < 7; i++){
                         if(official['championship']['tree'][i]['team']['name'] == official['championship']['tree'][1]['team']['name']){
-                            if(users['championship']['tree'][i]['team']['name'] == users['championship']['tree'][1]['team']['name']){
+                            if(users['championship']['tree'][i]['team']!== null && users['championship']['tree'][i]['team']['name'] == users['championship']['tree'][1]['team']['name']){
                                 giveAchievement("25% Chance");
                             }
                         }
@@ -728,6 +732,9 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                 var users = bracket;
                 var left_node = official[region]['tree'][node.left]
                 var right_node = official[region]['tree'][node.right]
+                if( users[region]['tree'][node.left]['team'] == null || users[region]['tree'][node.right]['team'] == null) {
+                    return false;
+                }
                 return(left_node.team.name == users[region]['tree'][node.left]['team']['name'] && right_node.team.name == users[region]['tree'][node.right]['team']['name'])
             }
             $scope.getRegionNameForTeamID = function(region, team_id){
@@ -994,8 +1001,13 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                 };
                 for(var i = 0; i < $scope.moneyBoard.length; i++){
                     var curItem =  $scope.moneyBoard[i]
+
+
                     if(!curItem['final']){
-                        var category =curItem['category'];
+                        var category = curItem['category'];
+                        if(category == "Closest To 50 Points"){//clear the closest to 50 so we recalc it each time
+                            curItem['score'] = 0;
+                        }
                         if(!(category in determine_after_all_users)) {
                             for (var s in $scope.users) {
                                 var user = $scope.users[s];

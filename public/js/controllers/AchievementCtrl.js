@@ -152,7 +152,7 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
 					var resistance_text = '';
 					var ts_text = '';
 					//weighted by % owned to be POSITIVE!
-					if(0 < $scope.regular_achievements < 5){
+					if(0 < $scope.regular_achievements  && $scope.regular_achievements < 5){
 						regular_text = "Great achievements!"
 					}else if($scope.regular_achievements < 10){
 						regular_text = "Your achievements will make anyone jealous!"
@@ -161,7 +161,7 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
 					}else{
 						regular_text = "Don't let anyone call you an overachiever, you're just that good!"
 					}
-					if(0 < $scope.box_achievements < 2){
+					if(0 < $scope.box_achievements &&  $scope.box_achievements < 2){
 						box_text = "Nice job getting in the ring!"
 					}else if($scope.box_achievements < 4){
 						box_text = "You are definitely a boxes competitor!"
@@ -170,7 +170,7 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
 					}else{
 						box_text = "You cleared the ring!!"
 					}
-					if(0 <  $scope.res_Achievements < 2){
+					if(0 < $scope.res_Achievements && $scope.res_Achievements < 2){
 						resistance_text = "Mission Success getting that first Resistance Achievement!"
 					}else if($scope.res_Achievements < 4){
 						resistance_text = "I hope you're blue because you've got quite a few Resistance Achievements!"
@@ -182,7 +182,7 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
 						resistance_text = "Wow. A Resistance Champion. I hope you're always on my team."
 					}
 
-					if(0 < $scope.ts_achievements < 2){
+					if(0 < $scope.ts_achievements  && $scope.ts_achievements< 2){
 						ts_text = "I hope you've heard the song related to the achievement you've earned!"
 					}else if($scope.ts_achievements < 4){
 						ts_text = "I'm sure Taylor Swift will appreciate you unlocking her achievements!"
@@ -200,6 +200,7 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
 					});
 					var weights = [];
 
+
 					var r = Math.random();
 					for(var i = 0; i < achieve_percents.length; i++){
 						weights[i] = achieve_percents[i]/total;
@@ -212,9 +213,7 @@ angular.module('AchievementCtrl', []).controller('AchievementsController', ['$sc
 					var weighted_sum = 0;
 					var spec = {0: weights[0], 1: weights[1], 2: weights[2], 3: weights[3]}
 					for (i in spec) {
-						weighted_sum += spec[i];
-						if (r <= weighted_sum) {
-
+						if (r <= spec[i]) {
 							return possible_flavor[i];
 						}
 					}

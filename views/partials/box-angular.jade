@@ -31,7 +31,7 @@
 					.empty-cell.right-cell
 						.mytable
 							div(ng-repeat="i in [0,1,2,3,4,5,6,7,8,9]", class="losing-cols myrow")
-								div(ng-repeat="p in players[i] track by $index", ng-class="{'you': {{p == myName}}}", class="number-cell player-cell")
+								div(ng-repeat="p in players[i] track by $index", ng-class="{'you': p == myName, 'none-box': p == 'None'}", class="number-cell player-cell")
 									span( ng-class="{'joyridecustom3': i == first_coords[0] && $index == first_coords[1]}") {{p}}
 		center-me(id="losing-team-label", my-parent='losing-rows', loaded = 'loaded', vertical='true', padding='8') Losing Team
 		center-me(id="winning-team-label", my-parent='winning-cols', loaded = 'loaded', vertical='false', padding='8') Winning Team

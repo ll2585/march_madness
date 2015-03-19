@@ -15,6 +15,7 @@
 			li(ng-repeat="u in users")
 				a(href="/bracket-angular/{{u.name}}", ng-class="{'active-player': u.name==username}") {{u.name}}
 					span(ng-if='u.name==username') - ACTIVE
+		br
 	div.rightStuff
 		div.pickCounter(ng-show="brackets_opened && (skipped_bracket_page || showPickCounter)") Picks: {{pickCountTotal()['Completed Picks']}}/{{pickCountTotal()['Total Picks']}}
 
@@ -77,7 +78,7 @@
 			div.row(id="finals-match")
 				div.col-xs-1.spacer &nbsp
 				div(ng-repeat="(seed, i) in [1,2]")
-					div.col-xs-3.final-four(id="finals-{{i}}", ng-class="{'no-team-chosen-wrong-pick': getTeamName(4, 1, 0, i) == null && !brackets_opened, 'no-team-chosen': getTeam(4, 1, 0, i) == null, 'correct-team': !brackets_opened &&  correctTeam(4, 1, 0, i), 'team-selectable': brackets_opened && canClick(4,1,0,i), 'team-chosen-to-lose': brackets_opened &&  choseToLose(4,1,0,i), 'incorrect-team-championship': !brackets_opened &&eliminatedTeamInChampionshipByTeam(1, seed), 'team-chosen': !brackets_opened && teamChosen(4, 1,0,0,seed) && getOfficialTeamName(4,0,(i+1)%2, round(i/2)) == null, 'team-not-chosen': !brackets_opened &&!eliminatedTeamInChampionshipByTeam(0, seed)&& choseToLose(4, 1, 0, i) && (getOfficialTeamName(4, 1, 0, i) == null )}", ng-click="moveTop(4,1,0,i)")
+					div.col-xs-3.final-four(id="finals-{{i}}", ng-class="{'no-team-chosen-wrong-pick': getTeamName(4, 1, 0, i) == null && !brackets_opened, 'no-team-chosen': getTeam(4, 1, 0, i) == null, 'correct-team': !brackets_opened &&  correctTeam(4, 1, 0, i), 'team-selectable': brackets_opened && canClick(4,1,0,i), 'team-chosen-to-lose': brackets_opened &&  choseToLose(4,1,0,i), 'incorrect-team-championship': !brackets_opened &&eliminatedTeamInChampionshipByTeam(1, seed), 'team-chosen': !brackets_opened && teamChosen(4, 1,0,0,seed) && getOfficialTeamName(4, 1, 0, i) == null, 'team-not-chosen': !brackets_opened &&!eliminatedTeamInChampionshipByTeam(0, seed)&& choseToLose(4, 1, 0, i) && (getOfficialTeamName(4, 1, 0, i) == null )}", ng-click="moveTop(4,1,0,i)")
 						span(ng-if="toggleColors && getTeamColor(4, 1, 0, i) !== '' && getTeam(4, 1, 0, i) !== null", class="glyphicon glyphicon-tag", ng-style="{'color': getTeamColor(4, 1, 0, i)}")
 						span(ng-if="toggleMascots && getTeamMascot(4, 1, 0, i) !== '' && getTeam(4, 1, 0, i) !== null", class="icon-{{getTeamMascot(4, 1, 0, i)}}")
 						span(class="team-seed") {{getTeamSeed(4, 1, 0, i)}}
