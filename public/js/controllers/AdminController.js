@@ -237,9 +237,13 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                                 var your_left_team = users[region]['tree'][node.left]['team'];
                                 var your_right_team = users[region]['tree'][node.right]['team'];
                                 //do the worst loss first
+								console.log([node.team.name,users[region]['tree'][team_id]['team']['name']])
                                 if (node.team.name != users[region]['tree'][team_id]['team']['name']) { //you don't have the right pick
+									console.log("HB TEST?")
                                     if ($scope.rightTeamsInMatchup(region, node, bracket)) {
-                                        if (users[region]['tree'][team_id]['team']['seed'] < node.team.seed) {
+										console.log([users[region]['tree'][team_id]['team']['seed'], node.team.seed])
+                                        if (parseInt(users[region]['tree'][team_id]['team']['seed']) < parseInt(node.team.seed)) {
+											console.log("HEARTBREAKER")
                                             heartbreaking_count += 1;
                                         }
                                         var difference = Math.abs(left_score - right_score);
@@ -737,9 +741,12 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                 var users = bracket;
                 var left_node = official[region]['tree'][node.left]
                 var right_node = official[region]['tree'][node.right]
-                if( users[region]['tree'][node.left]['team'] == null || users[region]['tree'][node.right]['team'] == null) {
+				console.log([left_node, right_node])
+                if( left_node.team !== null && right_node.team !== null && (users[region]['tree'][node.left]['team'] == null || users[region]['tree'][node.right]['team'] == null)) {
                     return false;
                 }
+				console.log([left_node, right_node, users[region]['tree'][node.left]['team'], users[region]['tree'][node.right]['team']])
+				console.log([left_node.team.name == users[region]['tree'][node.left]['team']['name'], right_node.team.name == users[region]['tree'][node.right]['team']['name'], users[region]['tree'][node.left]['team'], users[region]['tree'][node.right]['team']])
                 return(left_node.team.name == users[region]['tree'][node.left]['team']['name'] && right_node.team.name == users[region]['tree'][node.right]['team']['name'])
             }
             $scope.getRegionNameForTeamID = function(region, team_id){

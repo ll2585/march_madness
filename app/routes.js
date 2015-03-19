@@ -131,6 +131,10 @@ module.exports = function(app) {
 	});
 
 	app.post('/register', function (req, res) {
+		if(!settings['bracketOpened']){
+			return res.status(409).send("Brackets opened, signups closed.");
+		}
+
 		var username = req.body.username || '';
 		var email = req.body.email || '';
 
