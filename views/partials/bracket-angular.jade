@@ -62,7 +62,7 @@
 				div.col-xs-8.final-four#champion(ng-class="{'no-team-chosen-wrong-pick': getChampion(4) == null && !brackets_opened, 'no-team-chosen': getChampion(4) == null, 'chosen-champion': getChampion(4) != null, 'incorrect-team-championship': !brackets_opened &&eliminatedTeamInChampionshipByTeam(2, 0),}")
 					span(ng-if="toggleColors && getChampionColor() !== '' && getChampion(4) !== null", class="glyphicon glyphicon-tag", ng-style="{'color': getChampionColor()}")
 					span(ng-if="toggleMascots && getChampionMascot() !== '' && getChampion(4) !== null", class="icon-{{getChampionMascot()}}")
-					span(class="team-seed") {{getTeamSeed(4, 2, 1, 1)}}
+					span(class="team-seed" ) {{getTeamSeed(4, 2, 1, 1)}}
 					span(class="champion-bracket-name") {{getChampion(4)}}
 				div.col-xs-2.spacer
 			div.row(ng-if="eliminatedTeamInChampionship(1)")
@@ -71,8 +71,9 @@
 					div.col-xs-3.final-four(id="finals-{{i}}", ng-class="{'official-incorrect-team': (getOfficialTeamName(4, 1, 0, i) !== getTeamName(4, 1, 0, i)) && getOfficialTeamName(4, 1, 0, i) != null}")
 						span(ng-if="toggleColors && getOfficialTeamColor(4, 1, 0, i) !== '' && getOfficialTeam(4, 1, 0, i) !== null", class="glyphicon glyphicon-tag", ng-style="{'color': getOfficialTeamColor(4, 1, 0, i)}")
 						span(ng-if="toggleMascots && getOfficialTeamMascot(4, 1, 0, i) !== '' && getOfficialTeam(4, 1, 0, i) !== null", class="icon-{{getOfficialTeamMascot(4, 1, 0, i)}}")
-						span(class="team-seed") {{getOfficialTeamSeed(4, 1, 0, i)}}
-						span(class="champion-bracket-name") {{getOfficialTeamName(4, 1, 0, i)}}
+						span(class="team-seed", ng-if="getOfficialTeamName(4, 1, 0, i) != getTeamName(4, 1, 0, i)") {{getOfficialTeamSeed(4, 1, 0, i)}}
+						span(class="champion-bracket-name", ng-if="getOfficialTeamName(4, 1, 0, i) != getTeamName(4, 1, 0, i)") {{getOfficialTeamName(4, 1, 0, i)}}
+						span(class="team-score", ng-if="getOfficialTeamName(4, 1, 0, i) != getTeamName(4, 1, 0, i)") {{getScore(4, 1, 0, i)}}
 					div.col-xs-4.spacer(ng-if="i==1")
 				div.col-xs-1.spacer
 			div.row(id="finals-match")
@@ -83,6 +84,7 @@
 						span(ng-if="toggleMascots && getTeamMascot(4, 1, 0, i) !== '' && getTeam(4, 1, 0, i) !== null", class="icon-{{getTeamMascot(4, 1, 0, i)}}")
 						span(class="team-seed") {{getTeamSeed(4, 1, 0, i)}}
 						span(class="champion-bracket-name") {{getTeamName(4, 1, 0, i)}}
+						span(class="team-score", ng-if="getOfficialTeamName(4, 1, 0, i) == getTeamName(4, 1, 0, i)") {{getScore(4, 1, 0, i)}}
 					div.col-xs-4.spacer(ng-if="i==1")
 				div.col-xs-1.spacer
 			div.row(ng-if="eliminatedTeamInChampionship(0)")
@@ -92,6 +94,7 @@
 						span(ng-if="getOfficialTeamName(4,0,(i+1)%2, round(i/2)) != getTeamName(4,0,(i+1)%2, round(i/2)) && toggleMascots && getOfficialTeamMascot(4,0,(i+1)%2, round(i/2)) !== '' && getOfficialTeam(4,0,(i+1)%2, round(i/2)) !== null", class="icon-{{getOfficialTeamMascot(4,0,(i+1)%2, round(i/2))}}")
 						span(class="team-seed", ng-if="getOfficialTeamName(4,0,(i+1)%2, round(i/2)) != getTeamName(4,0,(i+1)%2, round(i/2)) ") {{getOfficialTeamSeed(4,0,(i+1)%2, round(i/2))}}
 						span(class="champion-bracket-name", ng-if="getOfficialTeamName(4,0,(i+1)%2, round(i/2)) != getTeamName(4,0,(i+1)%2, round(i/2))  ") {{getOfficialTeamName(4,0,(i+1)%2, round(i/2))}}
+						span(class="team-score", ng-if="getOfficialTeamName(4,0,(i+1)%2, round(i/2)) != getTeamName(4,0,(i+1)%2, round(i/2))") {{getScore(4,0,(i+1)%2, round(i/2))}}
 					div.col-xs-1.spacer(ng-if="i<3") &nbsp
 					div.col-xs-2.spacer(ng-if="i==3") &nbsp
 			div.row
@@ -101,6 +104,7 @@
 						span(ng-if="toggleMascots && getTeamMascot(4,0,(i+1)%2, round(i/2)) !== '' && getTeam(4,0,(i+1)%2, round(i/2)) !== null", class="icon-{{getTeamMascot(4,0,(i+1)%2, round(i/2))}}")
 						span(class="team-seed") {{getTeamSeed(4,0,(i+1)%2, round(i/2))}}
 						span(class="champion-bracket-name") {{getTeamName(4,0,(i+1)%2, round(i/2))}}
+						span(class="team-score" , ng-if="getOfficialTeamName(4,0,(i+1)%2, round(i/2)) == getTeamName(4,0,(i+1)%2, round(i/2))") {{getScore(4,0,(i+1)%2, round(i/2))}}
 					div.col-xs-1.spacer(ng-if="i<3")
 					div.col-xs-2.spacer(ng-if="i==3")
 		div.teams

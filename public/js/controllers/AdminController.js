@@ -319,6 +319,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                 var oberon_blues_defeated = [];
                 var lady_blue_rounds = [false, false, false, false, false];
                 var lady_red_rounds = [false, false, false, false, false];
+                var burning_red_count = 0;
                 if(official['championship']['tree'][2]['team'] !== null && official['championship']['tree'][3]['team'] !== null){
                     if(official['championship']['tree'][2]['team']['name'] ==  users['championship']['tree'][2]['team']['name']&&
                         official['championship']['tree'][3]['team']['name'] ==  users['championship']['tree'][3]['team']['name']){
@@ -575,7 +576,8 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 
                                     if(((left_team_color == 'red' && winning_team!= left_team_name) ||
                                         (right_team_color == 'red' && winning_team!= right_team_name) )&& node.team.color == 'blue'){
-                                        giveAchievement("Burning red");
+                                        burning_red_count += 1;
+
                                     }
 
                                 }
@@ -624,7 +626,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                 if(dog_count >= 6){
                     giveAchievement("I Say I Like Dogs");
                 }
-                if(tough_luck >= 20){
+                if(tough_luck >= 12){
                     giveAchievement("Tough Luck");
                 }
                 if(cat_count >= 12){
@@ -651,13 +653,13 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                 if(first_round_picks>=24){
                     giveAchievement("Frontrunner");
                 }
-                if(payback_count >= 12){
+                if(payback_count >= 6){
                     giveAchievement("Payback");
                 }
                 if(merlin_teams >= 3){
                     giveAchievement("Merlin");
                 }
-                if(reverser_choices >= 6){
+                if(reverser_choices >= 3){
                     giveAchievement("Reverser");
                 }
                 if(percival_teams >= 5){
@@ -665,6 +667,9 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                 }
                 if(merlin_teams < 3 && percival_teams >= 5){
                     giveAchievement("Morgana");
+                }
+                if(burning_red_count >= 6){
+                    giveAchievement("Burning red");
                 }
 
                 console.log("REVERSER?! " + reverser_choices)

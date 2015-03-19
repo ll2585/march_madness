@@ -84,6 +84,31 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
         console.log(data);
     });
 
+    $scope.getMoneyDesc = function(i){
+        var descriptions = ["The winner of the bracket.",
+        "Second place in the bracket.",
+        "Third place in the bracket.",
+        "Sixth place in the bracket.",
+        "Second to last place in the bracket.",
+        "Luke will have a minigame where everyone gets a secret role and a secret win condition, which depends on everyone elses' role. At the end," +
+        "everyone will have a chance to guess everyone elses' role. If anyone guesses over 33% of the roles correctly (including themself), then the person" +
+        " with the most correct guesses will win. Otherwise it will be random, weighted by everyone's correct guesses.",
+        "Whoever wins after Day 1 (not the end of Round of 64)",
+        "Whoever wins after Day 2 (end of Round of 64).",
+        "Whoever picks the most upsets (lower seed beats a higher seed) in Round 1",
+        "Whoever wins the most points in the Box (also known as Squares).  Points are the same per round as the bracket.",
+        "Whoever picks a team to win, but that team lost by the greatest margin (must have both teams right)",
+        "Most number of times a team that is chosen by a player gets upset.",
+        "First person to be eliminated",
+        "Whoever chooses the most blue teams to win correctly (only the blue team needed)",
+        "Whoever chooses the most red teams to win correctly (only the red team needed)",
+        "Whoever wins the most Resistance Achievements",
+        "Whoever wins the most total Achievements",
+        "Whoever wins the most Taylor Swift Achievements",
+        "Whoever ends closest to 50 points"]
+        return descriptions[i]
+    }
+
     $scope.getFlags = function(){
         if(!$window.localStorage.userFlags){
             userInfoFactory.getFlags($window.localStorage.token, $window.localStorage.user).then(function(data) {

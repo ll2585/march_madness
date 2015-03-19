@@ -24,7 +24,7 @@ div.container
 				th Info
 		tbody
 			tr(ng-repeat='row in moneyBoard' ng-class="{'final-moneyboard-row': row.final, 'moneyboard-row': !row.final, 'first-place': row.category == 'First Place'}")
-				td {{row.category}}
+				td(data-container="body" tooltip-placement="left" tooltip="{{getMoneyDesc($index)}}" tooltip-append-to-body="true") {{row.category}}
 				td {{row.amount}}
 				td(ng-if="brackets_opened" colspan=3) Will appear once brackets are closed
 				td(ng-if="!brackets_opened" ng-bind-html="makeNice(row.player)")
