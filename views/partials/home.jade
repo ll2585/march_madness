@@ -9,6 +9,10 @@ div.container
 			small(ng-show="!brackets_opened") Good luck!! Go&nbsp
 				a(href='/bracket-official') here
 				| &nbspto see the official bracket and everyone's picks!
+			br
+			small Wanna participate in the minigame? Go&nbsp
+				a(href='/minigame') here
+				| !
 	table.table.table-striped.table-bordered( id='money-board')
 		caption(class="text-center")
 			|THE MONEYBOARD
@@ -57,7 +61,9 @@ div.container
 				td(ng-repeat='(round, round_name) in tournamentRounds' ng-if="!brackets_opened" )
 					|{{row["round_score"][round_name]}}
 				td(ng-if="!brackets_opened") {{row.score}}
-				td(ng-if="!brackets_opened") {{row.achievements}}
+				td(ng-if="!brackets_opened")
+					a(href="/achievements/{{row.name}}" ng-if="!brackets_opened") {{row.achievements}}
+					span(ng-if="brackets_opened")
 				td(ng-if="!brackets_opened") {{row.points_remaining}}
 				td(colspan=9, ng-if="brackets_opened" )
 					|Will appear once brackets are closed

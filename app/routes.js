@@ -32,11 +32,6 @@ function storeAsSetting(s){
                 }
             }
         }else{
-            console.log("YESS FOUND YOU YOU")
-            console.log(result)
-            console.log(s)
-            console.log(settings)
-            console.log(settings[s])
             settings[s] = result.getVal();
             settings_loaded = true;
         }
@@ -88,7 +83,6 @@ module.exports = function(app) {
 		var setting = req.body.setting;
 		var val = req.body.val;
 		ServerSettings.findOne({setting: setting}, function (err, result) {
-			console.log(setting);
 			if (err) {
 				console.log(err);
 				return res.status(401).send("Some error.");
@@ -97,13 +91,11 @@ module.exports = function(app) {
 				console.log("NO NAME")
 				return res.status(401).send("No setting with that name.");
 			}
-			console.log(result.getVal());
 			console.log("SETTING " + setting + " to " + val);
 			(result.setVal(val)).then(function(data){
 				settings[setting] = val; //cache setting
 				deferred.resolve(res.status(212).send("Success!"));
 			}).catch(function(e){
-				console.log("?DFVD")
 				return res.status(401).send("Could not save.");
 			});
 		})
@@ -117,7 +109,6 @@ module.exports = function(app) {
 
 	app.get('/is_bracket_opened.json', function (req, res) {
 		var setting = 'bracketOpened'
-		console.log()
 		return res.json({'result': settings[setting]});
 	});
 
@@ -603,20 +594,12 @@ module.exports = function(app) {
 		}
 	});
 
-	app.get('/partials/box', function (req, res, next) {
-		res.render('.' + req.path, {
-			winning_numbers: winning_numbers,
-			losing_numbers: losing_numbers,
-			boxes: boxes,
-			curUser: "Luke"
-		});
+	app.get('/partials/minigame', function (req, res) {
+		res.render('partials/minigame-signup');
 	});
+
     app.get('/partials/bracket-angular/:name', function (req, res, next) {
-        console.log(req.params)
-        console.log(req.params.name);
-        console.log("IS THERE A FUCKING NAME2");
         var setting = "bracketOpened";
-        console.log("WTF BRACKETS OEPNED" + settings[setting])
         if(settings[setting]){
             //brackets opened send to your page
             res.render('partials/bracket-angular', {opened: settings[setting]});
@@ -626,18 +609,11 @@ module.exports = function(app) {
         }
     });
 	app.get('/partials/bracket-angular', function (req, res, next) {
-        console.log(req.params.name);
-        console.log("IS THERE A FUCKING NAME");
 		var setting = "bracketOpened";
-		console.log("WTF BRACKETS OEPNED" + settings[setting])
 		res.render('.' + req.path, {opened: settings[setting]});
 	});
 	app.get('/partials/achievements/:name', function (req, res, next) {
-		console.log(req.params)
-		console.log(req.params.name);
-		console.log("IS THERE A FUCKING NAME2");
 		var setting = "bracketOpened";
-		console.log("WTF BRACKETS OEPNED" + settings[setting])
 		if(settings[setting]){
 			//brackets opened send to your page
 			res.render('partials/achievements', {opened: settings[setting]});

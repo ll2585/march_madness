@@ -965,8 +965,6 @@ angular.module('BracketCtrlAngular', ['ui.bootstrap']).controller('BracketContro
 
 
 	bracketFactory.saveBracket = function(token, username, bracket) {
-		console.log("SAVING?");
-
 		return $http.post( '/savebracket', {username: username, token: token, bracket: bracket});
 	};
 

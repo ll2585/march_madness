@@ -24,7 +24,6 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 			});
 		}else {
 			$scope.getScoreboard($window.localStorage.user).then(function (data) {
-                console.log(data);
 
 				$scope.scoreboard = [];
 				var sb = data;
@@ -175,6 +174,7 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
         }
         return $sce.trustAsHtml(players);
     }
+
     $scope.getValue = function(row){
         var hide_vals = [
             "Closest To 50 Points", "First to be Eliminated", "Winner after Day 1", "Winner after Day 2"

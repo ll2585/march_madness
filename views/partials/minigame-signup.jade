@@ -1,0 +1,44 @@
+.hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()')
+div.container
+	div.page-header
+		div.prompt-minigame(ng-if="said_yes_to_playing_minigame == null")
+			h1 THE MINIGAME!!
+				br
+				small Do you want to play a minigame?
+					br
+					small What is this?
+						br
+						|Everyone will be given a role with their own secret win condition. The win condition depends on both your final ranking relative to other people, whether you can guess other peoples' roles correctly, and whether other people can guess your role correctly.
+						br
+						|For example, you may be given the role 'Merlin' with the win condition:
+						|You win if the "Assassin" does not guess you and either of the following:
+						ol 1) You correctly guess "Mordred"
+						ol 2) You are ranked higher than "Mordred" and the "Assassin" at the end of the tournament.
+						|Correspondingly, 'Mordred' might have the win conditions:
+						|You win if "Merlin" does not guess you and either of the following:
+						ol 1) You correctly guess the "Assassin" and the "Assassin" correctly guesses "Merlin"
+						ol 2) You and the Assassin are ranked higher than "Merlin" at the end of the tournament.
+						|and the "Assassin" might have:
+						|You win if "Merlin" does NOT guess "Mordred" and either of the following:
+						ol 1) You correctly guess "Merlin"
+						ol 2) You and Mordred are ranked higher than "Merlin" at the end of the tournament AND you correctly guess "Mordred."
+						|So, it is possible for all 3 to lose, or Merlin to win and the other two lose, or vice versa, but not for all 3 to win. Since some roles are imbalanced, winning the minigame only gives you an achievement.
+						br
+						|BUT whoever has the most correct guesses (can guess everyone who is playing, 1 guess per person, and can only guess each role once) you can win $10!!!!
+						br
+						|How to guess people correctly? Well, that's up to you. Make deals, buy someone lunch, just ask, whatever. Just be smart about it (aka don't steal someone's computer).
+				br
+			button(type="button", ng-click="signup(true)") YEAH IT SOUNDS AWESOME!!!
+			br
+			button(type="button", ng-click="signup(false)") No, and please never invite me to play any games involving roles ever again.
+		div.i-suck(ng-if="said_yes_to_playing_minigame == false")
+			|You chose not to play the minigame and no role games ever again. Too bad. You must be sad missing out on all the fun. Here are some gifs to lighten your mood.
+			div(style="height: 305px")
+				carousel(interval="1500")
+					slide(ng-repeat="slide in slides" active="slide.active")
+						img(ng-src="{{slide.image}}")
+		div.yay(ng-if="said_yes_to_playing_minigame == true")
+			|GREAT! Luke will send you an email telling you your role and how you win.
+			|When the tournament is over, Luke will tell everyone when to submit their guesses.
+
+link(rel='stylesheet', href='/css/minigame.css')

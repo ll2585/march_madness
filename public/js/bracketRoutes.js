@@ -44,6 +44,11 @@ angular.module('bracketRoutes', []).config(['$routeProvider', '$locationProvider
             controller: 'AchievementsController',
 			access: { requiredAuthentication: true }
         })
+		.when('/minigame', {
+			templateUrl: 'partials/minigame',
+			controller: 'MiniGameController',
+			access: { requiredAuthentication: true }
+		})
 		.when('/login', {
 			templateUrl: 'partials/login',
 			controller: 'MainController'
