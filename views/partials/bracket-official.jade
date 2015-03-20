@@ -32,11 +32,11 @@
 		div(class="championship-bracket")
 			div.row
 				div.col-xs-2.spacer &nbsp
-				div.col-xs-8.final-four#champion(tooltip-html-unsafe="{{getEveryonesPicks(4, 2, 1, 1)}}" tooltip-placement="{{region % 2 == 0 ? 'right': 'left'}}", ng-class="{'no-official-team-yet': getChampion(4) == null}")
+				div.col-xs-8.final-four#champion(tooltip-html-unsafe="{{getEveryonesPicks(4, 0, 0, 0, 1)}}" tooltip-placement="{{region % 2 == 0 ? 'right': 'left'}}", ng-class="{'no-official-team-yet': getChampion(4) == null}")
 					span(ng-if="toggleColors && getOfficialChampionColor() !== '' && getOfficialChampion(4) !== null", class="glyphicon glyphicon-tag", ng-style="{'color': getOfficialChampionColor()}")
 					span(ng-if="toggleMascots && getOfficialChampionMascot() !== '' && getOfficialChampion(4) !== null", class="icon-{{getOfficialChampionMascot()}}")
-					span(class="team-seed" ) {{getOfficialTeamSeed(4, 2, 1, 1)}}
-					span(class="team-name" ng-if="getOfficialTeamName(4, 2, 1, 1) == null") (pending)
+					span(class="team-seed" ) {{getOfficialTeamSeed(4, 0, 0, 0, 1)}}
+					span(class="team-name" ng-if="getOfficialTeamName(4, 0, 0, 0, 1) == null") (pending)
 					span(class="champion-bracket-name") {{getOfficialChampion(4)}}
 				div.col-xs-2.spacer
 			div.row(id="finals-match")
