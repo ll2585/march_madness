@@ -24,11 +24,12 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 			});
 		}else {
 			$scope.getScoreboard($window.localStorage.user).then(function (data) {
+                console.log(data);
 
 				$scope.scoreboard = [];
 				var sb = data;
 				for(var s in sb){
-					$scope.scoreboard.push({name: s, round_score: sb[s]["Round Score"], score: sb[s]["Total Score"], achievements: sb[s]["Achievements"]})
+					$scope.scoreboard.push({name: s, round_score: sb[s]["Round Score"], score: sb[s]["Total Score"], achievements: sb[s]["Achievements"], 'points_remaining': sb[s]["Points Remaining"]})
 				}
 				var sort_by = function() {
 					var fields = [].slice.call(arguments),
@@ -163,10 +164,14 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 
     $scope.makeNice = function(playerArr){
         var players = ''
+        var new_players = [];
         if(playerArr.length == 0){
             players = 'None';
         }else{
-            players= playerArr.join('<br>')
+            for(var i = 0; i < playerArr.length; i++){
+                new_players.push('<a href="/bracket-angular/' + playerArr[i] + '">' + playerArr[i] + '</a>')
+            }
+            players= new_players.join('<br>')
         }
         return $sce.trustAsHtml(players);
     }

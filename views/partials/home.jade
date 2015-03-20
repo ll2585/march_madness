@@ -6,7 +6,9 @@ div.container
 			span(ng-show="!brackets_opened") &nbspIS CLOSED
 			br
 			small(ng-show="brackets_opened") Go make your picks!
-			small(ng-show="!brackets_opened") Good luck!!
+			small(ng-show="!brackets_opened") Good luck!! Go&nbsp
+				a(href='/bracket-official') here
+				| &nbspto see the official bracket and everyone's picks!
 	table.table.table-striped.table-bordered( id='money-board')
 		caption(class="text-center")
 			|THE MONEYBOARD
@@ -45,6 +47,7 @@ div.container
 						ng-pluralize(count='{{Math.pow(2,round)}}' when="{'one': '({} point)', 'other': '({} points)'}")
 				th(st-sort="total_score") Total Score
 				th(st-sort="achievements" class="achievements_col") Total Achievements
+				th(st-sort="points_remaining") Possible Points Remaining
 		tbody
 			tr(ng-repeat='row in displayedCollection')
 				td {{row.rank}}
@@ -55,7 +58,8 @@ div.container
 					|{{row["round_score"][round_name]}}
 				td(ng-if="!brackets_opened") {{row.score}}
 				td(ng-if="!brackets_opened") {{row.achievements}}
-				td(colspan=8, ng-if="brackets_opened" )
+				td(ng-if="!brackets_opened") {{row.points_remaining}}
+				td(colspan=9, ng-if="brackets_opened" )
 					|Will appear once brackets are closed
 
 

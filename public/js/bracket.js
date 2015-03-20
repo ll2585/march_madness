@@ -1,4 +1,4 @@
-angular.module('bracketApp', ['ngRoute', 'bracketRoutes', 'MainCtrl', 'BoxCtrlAngular', 'BracketCtrlAngular', 'NavBarCtrl', 'AchievementCtrl',
+angular.module('bracketApp', ['ngRoute', 'bracketRoutes', 'MainCtrl', 'BoxCtrlAngular', 'BracketCtrlAngular', 'OfficialBracketCtrlAngular', 'NavBarCtrl', 'AchievementCtrl',
     'SideBarCtrl', 'ui.bootstrap', 'ngCookies', 'ngStorage', 'mgcrea.ngStrap', 'MainPageCtrl', 'ngJoyRide','smart-table', 'ngSanitize', 'ngAnimate'
 ]).factory('AuthenticationService', function($window) {
 	var auth = {

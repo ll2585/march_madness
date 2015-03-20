@@ -388,6 +388,40 @@ module.exports = function(app) {
         });
     });
 
+    app.get('/everyonesbrackets.json', function (req, res) {
+        var username = req.query.username;
+        if(settings['bracketOpened']){
+            return res.sendStatus(404);
+        }
+        User.findOne({username: username}, function (err, user) {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(404);
+            }
+            else {
+                User.find({}, function(err, users) {
+                    if (err) {
+                        console.log(err);
+                        return res.sendStatus(401);
+                    }
+                    var user_map = [];
+
+                    users.forEach(function(user) {
+                        user_map.push({'name': user.username, 'bracket': user.bracket});
+                    });
+
+                    if (user_map.length == 0) {
+                        return res.status(404).send("No bracket found");
+                    } else {
+                        return res.json(user_map);
+                    }
+                });
+
+
+            }
+        });
+    });
+
     app.get('/scoreboard.json', function (req, res) {
         var username = req.query.username;
         User.findOne({username: username}, function (err, user) {

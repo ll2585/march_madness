@@ -2,6 +2,9 @@
 .jumbotron.text-center
 	input(type="hidden" ng-init="setUsername(" + userToGet + ")")
 	h1 THE BRACKET
+	h2 Looking for the&nbsp
+		a(href='/bracket-official') official
+		| &nbsp?
 	span(ng-show="brackets_opened")
 		h3(ng-if="pickCountTotal()['Completed Picks']!=63") Your bracket is incomplete! Finish making your picks before Thursday, March 19, 2015 at noon!
 		h3(ng-if="pickCountTotal()['Completed Picks']==63 && (data['championship']['tree'][2]['score'] == null || data['championship']['tree'][3]['score'] == null)") Your bracket is complete but remember to put in a final score! Finish making your picks before Thursday, March 19, 2015 at noon!

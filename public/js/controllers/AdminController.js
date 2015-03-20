@@ -144,6 +144,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
             }
             $scope.determineScore = function(bracket){
                 var totalScore = 0;
+                var pointsRemaining = 0;
                 var roundScore = {
                     "Round of 64": 0,
                     "Round of 32": 0,
@@ -176,13 +177,24 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 										totalPicks += 1;
 										var pointsForThisPick = $scope.calculateScore(region, team_id);
 										totalScore += pointsForThisPick;
-
 										roundScore[regionName] += pointsForThisPick;
 										roundPicks[regionName] +=1;
 									}
 
 								}
+
+
 							}
+
+                            if(node.team === null && users[region]['tree'][team_id]['team'] !== null){
+                                if(!(users[region]['tree'][team_id]['team']['name'] in $scope.eliminatedTeams)){
+                                    var regionName = $scope.getRegionNameForTeamID(region, team_id);
+                                    if(regionName != null) {
+                                        pointsRemaining += $scope.calculateScore(region, team_id)
+                                    }
+                                }
+                            }
+
 
 						}
 					}
@@ -191,7 +203,8 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                     "Total Score": totalScore,
                     "Total Picks": totalPicks,
                     "Round Score": roundScore,
-                    "Round Picks": roundPicks
+                    "Round Picks": roundPicks,
+                    "Points Remaining": pointsRemaining
                 };
 
 
@@ -238,9 +251,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                                 var your_right_team = users[region]['tree'][node.right]['team'];
                                 //do the worst loss first
                                 if (node.team.name != users[region]['tree'][team_id]['team']['name']) { //you don't have the right pick
-									console.log("HB TEST?")
                                     if ($scope.rightTeamsInMatchup(region, node, bracket)) {
-										console.log([users[region]['tree'][team_id]['team']['seed'], node.team.seed])
                                         if (parseInt(users[region]['tree'][team_id]['team']['seed']) < parseInt(node.team.seed)) {
 											console.log("HEARTBREAKER")
                                             heartbreaking_count += 1;
@@ -543,8 +554,6 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                                     if(node.team.color == 'red'){
                                         lady_red_rounds[temp_round] = true;
                                         console.log(username + "GOT A RED IN " + temp_round + " - " + node.team.name)
-                                        console.log("RED IS ")
-                                        console.log()
                                     }
                                     if(node.team.color == 'blue'){
                                         lady_blue_rounds[temp_round] = true;
@@ -974,10 +983,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                 }
 
                 for(var u in $scope.boxWinningsByUser){
-                    console.log($scope.boxWinningsByUser[u])
-                    console.log ("WE WANNA OSRT THAT BOXES")
                     $scope.boxWinningsByUser[u].sort(sort_by({name: "round"}))
-                    console.log($scope.boxWinningsByUser[u])
                 }
 
                 //sortable.sort(sort_by({name: "score", reverse: true},{name: "achievements", reverse: true}))
@@ -1008,6 +1014,30 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 					}
 					return score;
 				}
+                $scope.eliminatedTeams = {};
+                var official = $scope.officialBracket;
+                for(var region in official) {
+                    for (var team_id in official[region]['tree']) {
+                        var node = official[region]['tree'][team_id];
+                        if (node.team !== null && node.left !== null) {
+                            var this_team_name = node.team.name;
+                            var left_team_name = official[region]['tree'][node.left].team.name
+                            var right_team_name = official[region]['tree'][node.right].team.name
+                            if(left_team_name !== this_team_name){
+                                if(!(left_team_name in $scope.eliminatedTeams)){
+                                    $scope.eliminatedTeams[left_team_name] = node.left; //their last seed
+                                }
+                            }
+                            if(right_team_name !== this_team_name){
+                                if(!(right_team_name in $scope.eliminatedTeams)){
+                                    $scope.eliminatedTeams[right_team_name] = node.right; //their last seed
+                                }
+                            }
+                        }
+                    }
+                }
+                console.log("ELIMINATED TEAMS")
+                console.log($scope.eliminatedTeams)
 				$scope.achievementCountByUser = {};
                 for(var s in $scope.users){
                     var user =  $scope.users[s];
@@ -1144,10 +1174,10 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                             var ranking = determine_after_all_users[category];
                             if (ranking <= sorted_scoredboard.length) {
                                 var ranking_score = sorted_scoredboard[ranking - 1]['score'];
-								console.log("The ranking is " + ranking)
+
 
 								var ranking_achievement = sorted_scoredboard[ranking - 1]['achievements']
-								console.log("the achievement is " + ranking_achievement)
+
                                 curItem['score'] = ranking_score;
 
 								curItem['info'] = "Tiebreaker: " + ranking_achievement + " Achievements";
