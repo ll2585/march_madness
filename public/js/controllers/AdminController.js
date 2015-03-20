@@ -271,8 +271,8 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                                 }
 
                                 //if left is red and your left is red and this isnt left and your this isnt that, or with right, then get a red point
-                                if ((left_team_color == 'red' && left_team_name == your_left_team.name && winning_team != left_team_name) ||
-                                    (right_team_color == 'red' && right_team_name == your_right_team.name && winning_team != right_team_name)) {
+                                if ((left_team_color == 'red' && left_team_name == your_left_team.name && winning_team != left_team_name &&winning_team !=  your_left_team.name  ) ||
+                                    (right_team_color == 'red' && right_team_name == your_right_team.name && winning_team != right_team_name && winning_team != your_right_team.name)) {
                                     reds_chosen += 1;
                                 }
                             }

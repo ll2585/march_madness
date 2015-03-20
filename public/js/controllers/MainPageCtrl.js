@@ -101,7 +101,7 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
         "Most number of times a team that is chosen by a player gets upset.",
         "First person to be eliminated",
         "Whoever chooses the most blue teams to win correctly (only the blue team needed)",
-        "Whoever chooses the most red teams to win correctly (only the red team needed)",
+        "Whoever chooses the most red teams to lose correctly (only the red team needed)",
         "Whoever wins the most Resistance Achievements",
         "Whoever wins the most total Achievements",
         "Whoever wins the most Taylor Swift Achievements",
