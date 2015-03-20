@@ -237,7 +237,6 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                                 var your_left_team = users[region]['tree'][node.left]['team'];
                                 var your_right_team = users[region]['tree'][node.right]['team'];
                                 //do the worst loss first
-								console.log([node.team.name,users[region]['tree'][team_id]['team']['name']])
                                 if (node.team.name != users[region]['tree'][team_id]['team']['name']) { //you don't have the right pick
 									console.log("HB TEST?")
                                     if ($scope.rightTeamsInMatchup(region, node, bracket)) {
@@ -252,6 +251,8 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                                             user_info["Worst Pick"]['info'] = left_team_name + " v. " + right_team_name + ": " + name + " chose " + chosen_team_name + " to win but they lost by a score of " + left_score + " to " + right_score + ", for a difference of " + difference
                                         }
                                     }
+
+
 
                                 } else {
                                     //correct team chosen, not first round
@@ -271,10 +272,14 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                                 }
 
                                 //if left is red and your left is red and this isnt left and your this isnt that, or with right, then get a red point
-                                if ((left_team_color == 'red' && left_team_name == your_left_team.name && winning_team != left_team_name &&winning_team !=  your_left_team.name  ) ||
-                                    (right_team_color == 'red' && right_team_name == your_right_team.name && winning_team != right_team_name && winning_team != your_right_team.name)) {
+                                if ((left_team_color == 'red' && left_team_name == your_left_team.name && winning_team != left_team_name &&chosen_team_name != your_left_team.name ) ||
+                                    (right_team_color == 'red' && right_team_name == your_right_team.name && winning_team != right_team_name&&chosen_team_name != your_right_team.name )) {
+                                    console.log("LOS REDS FOR " + username)
+                                    console.log([left_team_name, your_left_team.name, winning_team, right_team_name, your_right_team.name, node.team.name, users[region]['tree'][team_id]['team']['name'], chosen_team_name, winning_team])
                                     reds_chosen += 1;
                                 }
+
+
                             }
                         }
 
@@ -284,6 +289,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                 user_info["Most Correct Upsets in Round 1"] = {value: round_one_upsets, info: ''};
                 user_info["Most Correct Blue Teams"] = {value: blues_chosen, info: ''};
                 user_info["Most Correct Red Teams"] = {value: reds_chosen, info: ''};
+                console.log(username +  " HAS THESE RED TEAMS " + reds_chosen)
                 return user_info
             }
 
@@ -714,7 +720,6 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 						}else{
 							round_wins[win.round] += 1;
 						}
-						console.log(round_wins)
 						if(round_wins[win.round] >= 2){
 							giveAchievement("One-two Combo");
 						}
@@ -868,7 +873,6 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                         }
                     }
                 }
-                console.log($scope.achievementsByUser)
 				if($scope.brackets_opened){
 					$scope.recalculateBox()
 					$scope.recalculateScores();
@@ -916,7 +920,6 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 							if(region=='championship'){
 								box_round = 6-round;
 							}
-							console.log(box_round)
 
 							var left_node = official[region]['tree'][node.left];
 							var right_node = official[region]['tree'][node.right];
@@ -939,6 +942,46 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 
 					}
 				}
+                //sort it based on the round
+                var sort_by = function() {
+                    var fields = [].slice.call(arguments),
+                        n_fields = fields.length;
+
+                    return function(A, B) {
+                        var a, b, field, key, primer, reverse, result;
+                        for (var i = 0, l = n_fields; i < l; i++) {
+                            result = 0;
+                            field = fields[i];
+
+                            key = typeof field === 'string' ? field : field.name;
+
+                            a = A[key];
+                            b = B[key];
+
+                            if (typeof field.primer !== 'undefined') {
+                                a = field.primer(a);
+                                b = field.primer(b);
+                            }
+
+                            reverse = (field.reverse) ? -1 : 1;
+
+                            if (a < b) result = reverse * -1;
+                            if (a > b) result = reverse * 1;
+                            if (result !== 0) break;
+                        }
+                        return result;
+                    }
+                }
+
+                for(var u in $scope.boxWinningsByUser){
+                    console.log($scope.boxWinningsByUser[u])
+                    console.log ("WE WANNA OSRT THAT BOXES")
+                    $scope.boxWinningsByUser[u].sort(sort_by({name: "round"}))
+                    console.log($scope.boxWinningsByUser[u])
+                }
+
+                //sortable.sort(sort_by({name: "score", reverse: true},{name: "achievements", reverse: true}))
+
 
 				$http.post('/admin/setSetting', {setting: 'boxWinningsByUser', val: $scope.boxWinningsByUser }).success(function(data){
 					console.log("SAVED BOX WININGS!");
@@ -948,12 +991,20 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 			}
             $scope.recalculateScores = function(){
 				function calculateBoxScore(boxes){
+                    var fib_seq = {
+                        1: 1,
+                        2: 1,
+                        3: 2,
+                        4: 3,
+                        5: 5,
+                        6: 8
+                    }
 					var score = 0;
 					if(boxes == null || boxes == undefined){
 						return 0;
 					}
 					for(var i = 0; i < boxes.length; i++){
-						score += Math.pow(2,boxes[i]['round']-1)
+						score += fib_seq[boxes[i]['round']]
 					}
 					return score;
 				}
@@ -1080,8 +1131,6 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 
                 var sortable = [];
                 for (var user in $scope.scoreboard){
-					console.log(user);
-					console.log($scope.user_money_board)
 					sortable.push({user: user, score: $scope.scoreboard[user]['Total Score'], achievements: $scope.user_money_board[user]["Most Achievements"]['value']})
 				}
 				sortable.sort(sort_by({name: "score", reverse: true},{name: "achievements", reverse: true}))

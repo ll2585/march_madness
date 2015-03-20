@@ -31,7 +31,7 @@
 					.empty-cell.right-cell
 						.mytable
 							div(ng-repeat="i in [0,1,2,3,4,5,6,7,8,9]", class="losing-cols myrow")
-								div(ng-repeat="p in players[i] track by $index", ng-class="{'you': p == myName, 'none-box': p == 'None'}", class="number-cell player-cell")
+								div(ng-repeat="p in players[i] track by $index", ng-class="{'you': p == myName, 'none-box': p == 'None', 'mr-long-name-Kawin-Rattanakorn': p == 'Kawin Rattanakorn'}", class="number-cell player-cell")
 									span( ng-class="{'joyridecustom3': i == first_coords[0] && $index == first_coords[1]}") {{p}}
 		center-me(id="losing-team-label", my-parent='losing-rows', loaded = 'loaded', vertical='true', padding='8') Losing Team
 		center-me(id="winning-team-label", my-parent='winning-cols', loaded = 'loaded', vertical='false', padding='8') Winning Team
@@ -54,24 +54,109 @@
 					td {{game.losing_team}}
 						br
 						|{{game.losing_score}}
-					td {{Math.pow(2, game.round-1)}}
+					td {{getFib(game.round)}}
 		hr
-		div.box-scoreboard(ng-show="!brackets_opened" ) ALL SCORES
+
+		form
+			input(type="radio" ng-model="show_scores_type" value="by_player")
+			|Show Scores by Player and then Round?
+			br
+			input(type="radio" ng-model="show_scores_type" value="by_round")
+			|Show Scores by Round and then Player?
+		div.box-scoreboard(ng-show="!brackets_opened && show_scores_type == 'by_player'" ) ALL SCORES BY PLAYER AND THEN ROUND
 			div.row
-				div.col-xs-1 Round
-				div.col-xs-3 Winning Team
-				div.col-xs-3 Losing Team
-				div.col-xs-4 Player
-				div.col-xs-1 Points
-			div.row(ng-repeat="(i, game) in box_scoreboard_by_round", class="scoreboard-row-{{i%2}}", ng-class="{'your-win': game.player == myName}")
-				div.col-xs-1 {{game.round}}
-				div.col-xs-3 {{game.winning_team}}
-					br
-					|{{game.winning_score}}
-				div.col-xs-3 {{game.losing_team}}
-					br
-					|{{game.losing_score}}
-				div.col-xs-4 {{game.player}}
-				div.col-xs-1 {{Math.pow(2, game.round-1)}}
+				div.col-xs-6
+					div.row
+						div.col-xs-2 Round
+						div.col-xs-4 Winning Team
+						div.col-xs-4 Losing Team
+						div.col-xs-2 Points
+					div.row(ng-repeat="(i, p) in box_scoreboard_by_player_and_then_round_player_order")
+						div(class="round-then-player-round main-col round-then-player-player-name-{{$index%2}}") {{p}}
+							div.row(class="players-wins", ng-repeat="(k, game) in box_scoreboard[p]", ng-class="{'your-win': game.player == myName}")
+								div.col-xs-2 {{game.round}}
+								div.col-xs-4 {{game.winning_team}}
+									br
+									|{{game.winning_score}}
+								div.col-xs-4 {{game.losing_team}}
+									br
+									|{{game.losing_score}}
+								div.col-xs-2 {{getFib(game.round)}}
+				div.col-xs-6
+					div.row
+						div.col-xs-2 Round
+						div.col-xs-4 Winning Team
+						div.col-xs-4 Losing Team
+						div.col-xs-2 Points
+					div.row(ng-repeat="(i, p) in box_scoreboard_by_player_and_then_round_player_order_second_half")
+						div(class="round-then-player-round main-col round-then-player-player-name-{{$index%2}}") {{p}}
+							div.row(class="players-wins", ng-repeat="(k, game) in box_scoreboard[p]", ng-class="{'your-win': game.player == myName}")
+								div.col-xs-2 {{game.round}}
+								div.col-xs-4 {{game.winning_team}}
+									br
+									|{{game.winning_score}}
+								div.col-xs-4 {{game.losing_team}}
+									br
+									|{{game.losing_score}}
+								div.col-xs-2 {{getFib(game.round)}}
+
+		div.box-scoreboard(ng-show="!brackets_opened && show_scores_type == 'by_round'" ) ALL SCORES BY ROUND AND THEN PLAYER
+
+			div.row
+				div.col-xs-6(class="round-then-player-round main-col") round 1
+					div.row
+						div.col-xs-2 Round
+						div.col-xs-4 Winning Team
+						div.col-xs-4 Losing Team
+						div.col-xs-2 Points
+					div.row(ng-if="box_scoreboard_by_round_and_then_player_player_order[1].length == 0")
+						div.col-xs-12 NONE
+					div.row.all-scores-row(ng-repeat="(j, u) in box_scoreboard_by_round_and_then_player_player_order[1]")
+						div.col-xs-12(class="round-then-player-player-name-{{$index%2}}") {{u}}
+							div.row(class="players-wins", ng-repeat="(k, game) in box_scoreboard_by_round_and_then_player[1][u]", ng-class="{'your-win': game.player == myName}")
+								div.col-xs-2 {{game.round}}
+								div.col-xs-4 {{game.winning_team}}
+									br
+									|{{game.winning_score}}
+								div.col-xs-4 {{game.losing_team}}
+									br
+									|{{game.losing_score}}
+								div.col-xs-2 {{getFib(game.round)}}
+				div.col-xs-6(class="round-then-player-round main-col") round 2
+					div.row
+						div.col-xs-2 Round
+						div.col-xs-4 Winning Team
+						div.col-xs-4 Losing Team
+						div.col-xs-2 Points
+					div.row(ng-if="box_scoreboard_by_round_and_then_player_player_order[2].length == 0")
+						div.col-xs-12 NONE
+					div.row.all-scores-row(ng-repeat="(j, u) in box_scoreboard_by_round_and_then_player_player_order[2]")
+						div.col-xs-12(class="round-then-player-player-name-{{$index%2}}") {{u}}
+							div.row(ng-repeat="(k, game) in box_scoreboard_by_round_and_then_player[2][u]", ng-class="{'your-win': game.player == myName}")
+								div.col-xs-2 {{game.round}}
+								div.col-xs-4 {{game.winning_team}}
+									br
+									|{{game.winning_score}}
+								div.col-xs-4 {{game.losing_team}}
+									br
+									|{{game.losing_score}}
+								div.col-xs-2 {{getFib(game.round)}}
+					div(ng-repeat="i in [3,4,5,6]")
+						div.row
+							div.col-xs-12(class="round-then-player-round") round {{i}}
+						div.row(ng-if="box_scoreboard_by_round_and_then_player_player_order[i].length == 0")
+							div.col-xs-12 NONE
+						div.row.all-scores-row(ng-repeat="(j, u) in box_scoreboard_by_round_and_then_player_player_order[i]")
+							div.col-xs-12(class="round-then-player-player-name-{{$index%2}}") {{u}}
+								div.row(ng-repeat="(k, game) in box_scoreboard_by_round_and_then_player[i][u]", ng-class="{'your-win': game.player == myName}")
+									div.col-xs-2 {{game.round}}
+									div.col-xs-4 {{game.winning_team}}
+										br
+										|{{game.winning_score}}
+									div.col-xs-4 {{game.losing_team}}
+										br
+										|{{game.losing_score}}
+									div.col-xs-2 {{getFib(game.round)}}
+
 
 link(rel='stylesheet', href='/css/box-angular.css')

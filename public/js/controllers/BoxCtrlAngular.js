@@ -36,25 +36,91 @@ angular.module('BoxCtrlAngular', []).controller('BoxControllerAngular', ['$scope
 				$http({
 					url: '/boxes_scoreboard.json', method: "GET", params: {username: $window.localStorage.user}
 				}).success(function(data){
+                    console.log(data);
 					$scope.box_scoreboard=  data;
 					$scope.box_scoreboard_by_round = [];
+                    $scope.box_scoreboard_by_round_and_then_player = {};
+                    $scope.box_scoreboard_by_round_and_then_player_player_order = {};
+                    $scope.box_scoreboard_by_player_and_then_round_player_order = [];
+                    for(var i = 1; i < 7; i++){
+                        $scope.box_scoreboard_by_round_and_then_player[i] = {};
+                    }
+
 					for(var u in $scope.box_scoreboard){
 						for(var i = 0; i < $scope.box_scoreboard[u].length; i++){
 							var temp = {};
 							var this_game = $scope.box_scoreboard[u][i]
 							temp['round'] = this_game.round;
+
+
 							temp['winning_team'] = this_game.winning_team;
 							temp['winning_score'] = this_game.winning_score;
 							temp['losing_team'] = this_game.losing_team;
 							temp['losing_score'] = this_game.losing_score;
 							temp['player'] = u
 							$scope.box_scoreboard_by_round.push(temp);
+                            if(!(u in $scope.box_scoreboard_by_round_and_then_player[this_game.round])){
+                                $scope.box_scoreboard_by_round_and_then_player[this_game.round][u] = [];
+                            }
+                            $scope.box_scoreboard_by_round_and_then_player[this_game.round][u].push(temp);
 						}
+
+                        $scope.box_scoreboard_by_player_and_then_round_player_order.push(u);
+
 					}
+                    $scope.box_scoreboard_by_player_and_then_round_player_order
+                        .sort(function(a,b){
+                            return $scope.box_scoreboard[b].length-$scope.box_scoreboard[a].length;
+                        })
+                    var total_boxes = 0;
+                    for(var i = 0; i < $scope.box_scoreboard_by_player_and_then_round_player_order.length; i++){
+                        total_boxes += $scope.box_scoreboard[$scope.box_scoreboard_by_player_and_then_round_player_order[i]].length
+                    }
 
 
+                    var one_half = total_boxes/2;
+                    var temp = 0;
+                    var stop_index = 0;
+                    for(var i = 0; i < $scope.box_scoreboard_by_player_and_then_round_player_order.length; i++){
+                        temp += $scope.box_scoreboard[$scope.box_scoreboard_by_player_and_then_round_player_order[i]].length
+                        if(temp > one_half){
+                            stop_index = i;
+                            break;
+                        }
+                    }
+
+                    $scope.box_scoreboard_by_player_and_then_round_player_order_second_half = $scope.box_scoreboard_by_player_and_then_round_player_order.splice(stop_index)
+
+
+                    for(var i = 1; i < 7; i++){
+                        $scope.box_scoreboard_by_round_and_then_player_player_order[i] = [];
+                        for(var u in $scope.box_scoreboard_by_round_and_then_player[i]){
+                            $scope.box_scoreboard_by_round_and_then_player_player_order[i].push(u);
+                        }
+                        $scope.box_scoreboard_by_round_and_then_player_player_order[i]
+                        .sort(function(a,b){
+                            return $scope.box_scoreboard_by_round_and_then_player[i][b].length-$scope.box_scoreboard_by_round_and_then_player[i][a].length;
+                        })
+
+
+                    }
+
+
+                    $scope.show_scores_type = 'by_player'
 
 				});
+
+                $scope.getFib = function(i){
+                    var fib_seq = {
+                        1: 1,
+                        2: 1,
+                        3: 2,
+                        4: 3,
+                        5: 5,
+                        6: 8
+                    }
+                    return fib_seq[i]
+                }
 
 				$scope.flavorText = function(){
 					if($scope.box_scoreboard == undefined || !($scope.myName in $scope.box_scoreboard)){

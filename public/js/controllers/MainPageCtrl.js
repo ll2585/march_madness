@@ -96,7 +96,7 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
         "Whoever wins after Day 1 (not the end of Round of 64)",
         "Whoever wins after Day 2 (end of Round of 64).",
         "Whoever picks the most upsets (lower seed beats a higher seed) in Round 1",
-        "Whoever wins the most points in the Box (also known as Squares).  Points are the same per round as the bracket.",
+        "Whoever wins the most points in the Box (also known as Squares).  Points go: 1, 1, 2, 3, 5, 8.",
         "Whoever picks a team to win, but that team lost by the greatest margin (must have both teams right)",
         "Most number of times a team that is chosen by a player gets upset.",
         "First person to be eliminated",

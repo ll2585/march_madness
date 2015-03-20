@@ -49,7 +49,9 @@ body{
     background-color: lightsalmon;
 }
 
-
+.losing-numbers{
+    height: 10%;
+}
 
 .mytable {
     display: table;
@@ -124,6 +126,11 @@ body{
 
 .player-cell{
     width: 10%;
+    height: 10%;
+}
+
+.mr-long-name-Kawin-Rattanakorn {
+    font-size: 80%
 }
 
 .scoreboard-row-0{
@@ -134,4 +141,44 @@ body{
 }
 .your-win{
     font-weight: bold
+}
+
+.round-then-player-round{
+    font-variant: small-caps;
+    font-weight: bold;
+
+}
+.round-then-player-round > *{
+    font-variant: normal;
+    font-weight: normal;
+}
+.main-col{
+    border-right: 1px solid black;
+}
+.all-scores-row{
+    margin-left: 0px;
+    margin-right: 0px;
+}
+.players-wins-0{
+    font-variant: normal;
+
+    padding-bottom: 2px;
+}
+.players-wins-1{
+    font-variant: normal;
+
+    padding-bottom: 2px;
+}
+.round-then-player-player-name-0{
+    font-variant: small-caps;
+    margin-bottom: 18px;
+    background-color: #344039;
+    color: #b2dba1;
+}
+
+.round-then-player-player-name-1{
+    font-variant: small-caps;
+    margin-bottom: 18px;
+    background-color: #b2dba1;
+    color: #344039;
 }
