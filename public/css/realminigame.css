@@ -21,3 +21,9 @@
     color: #827D46;
     cursor: pointer;
 }
+
+.is-me{
+    font-weight: bolder;
+    font-size: 200%;
+    border: 2px solid;
+}

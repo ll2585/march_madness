@@ -512,6 +512,29 @@ module.exports = function(app) {
             return res.json(info);
         });
     });
+	app.get('/getMiniGamePlayers.json', function (req, res) {
+		var username = req.query.username;
+		MiniGame.findOne({username: username}, function (err, user) {
+			if (err) {
+				console.log(err);
+				return res.sendStatus(401);
+			}
+
+			User.find({"flags.said_yes_to_playing_minigame": true}, function(err, users) {
+				if (err) {
+					console.log(err);
+					return res.sendStatus(401);
+				}
+				var users_list = [];
+
+				users.forEach(function(user) {
+					users_list.push(user.username);
+				});
+
+				return res.json(users_list);
+			});
+		});
+	});
 
 	app.post('/savebracket', function (req, res) {
 		var username = req.body.username;

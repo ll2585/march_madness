@@ -18,7 +18,7 @@ div.container
 						div.col-xs-6 Blue Team
 							div.row(ng-repeat="b in blues")
 								div.col-xs-12(ng-click="showDescription(b)")
-									span(class="blue-team") {{b.name}}
+									span(class="blue-team", ng-class="{'is-me': showRole && b.name==myRoleName}") {{b.name}}
 						div.col-xs-6 Red Team
 							div.row(ng-repeat="r in reds")
 								div.col-xs-12(ng-click="showDescription(r)")
@@ -36,10 +36,10 @@ div.container
 			br
 			div.row
 				div.col-xs-12 {{winDescription}}
-			div.row(ng-if="show_conditions")
+			div.row
 				div.col-xs-12
-					img(src="/img/minigame/werewolfscoring1.PNG")
-					img(src="/img/minigame/werewolfscoring2.PNG")
+					img(src="{{selected.scoring_img_1}}")
+					img(src="{{selected.scoring_img_2}}")
 		hr
 		div Forgot your special ability?
 		button(ng-click="showAbility = !showAbility", ng-show="!showAbility") Show my role!
@@ -47,9 +47,51 @@ div.container
 		div.roleInfo(ng-show="showAbility")
 			|HSF
 		hr
+		div
+			h3 ABILITIES
+			div.row
+				div.col-xs-2 Ability
+				div.col-xs-10 Description
+			br
+			div.row
+				div.col-xs-12 {{winDescription}}
+		hr
 		div The Minigame Scoreboard!
 		hr
 		div Ready to guess?
+			div.row
+				div.col-xs-6 Players
+					div.row(ng-repeat="p in players")
+						div.col-xs-12
+							span {{p}}
+							select(ng-model="guessed_players[p]", ng-change="guess(p, guessed_players[p])")
+								option(value="None") None
+								option(ng-repeat="r in allRoles", value = "{{r.name}}" ng-disabled = "alreadyGuessed(null, r.name)") {{r.name}}
+				div.col-xs-6 Roles
+					div.row(ng-repeat="b in blues")
+						div.col-xs-12
+							span(class="blue-team") {{b.name}}
+							select(ng-model="guessed_roles[b.name]", ng-change="guess(guessed_roles[b.name], b.name)")
+								option(value="None") None
+								option(ng-repeat="p in players", value = "{{p}}" ng-disabled = "alreadyGuessed(p, null)") {{p}}
+					div.row(ng-repeat="r in reds")
+						div.col-xs-12
+							span(class="red-team") {{r.name}}
+							select(ng-model="guessed_roles[r.name]", ng-change="guess(guessed_roles[r.name],r.name)")
+								option(value="None") None
+								option(ng-repeat="p in players", value = "{{p}}" ng-disabled = "alreadyGuessed(p, null)") {{p}}
+					div.row(ng-repeat="w in werewolves")
+						div.col-xs-12
+							span(class="werewolf-team") {{w.name}}
+							select(ng-model="guessed_roles[w.name]", ng-change="guess(guessed_roles[w.name], w.name)")
+								option(value="None") None
+								option(ng-repeat="p in players", value = "{{p}}" ng-disabled = "alreadyGuessed(p, null)") {{p}}
+					div.row(ng-repeat="v in village")
+						div.col-xs-12
+							span(class="village-team") {{v.name}}
+							select(ng-model="guessed_roles[v.name]", ng-change="guess(guessed_roles[v.name], v.name)")
+								option(value="None") None
+								option(ng-repeat="p in players", value = "{{p}}" ng-disabled = "alreadyGuessed(p, null)") {{p}}
 		button() Save Suspicions!
 		button() Submit Guesses!
 
