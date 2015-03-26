@@ -40,10 +40,16 @@ html
 					tr
 						th username
 						th email
+						th PAID?!??
+						th Make Pay
 				tbody
 					tr(ng-repeat="u in users")
 						td {{u.username}}
 						td {{u.email}}
+						td {{u.flags.paid}}
+						td
+							button(ng-click="togglePaid(true, u)" ng-show="!u.flags.paid") {{u.username}} Paid.
+							button(ng-click="togglePaid(false, u)" ng-show="u.flags.paid") {{u.username}} REVERSED THE PAYMENT.
 			hr
 			|NUMBERS AND THE BOX
 			br
@@ -143,13 +149,19 @@ html
 					thead
 						tr
 							th username
-							th email
+							th original role
+							th action
+							th new role
+							th believed role
 					tbody
 						tr(ng-repeat="u in miniGamePlayers" ng-if="!miniGameClosed")
 							td(ng-if="") {{u}}
 						tr(ng-repeat="u in miniGamePlayersandRoles" ng-if="miniGameClosed")
 							td {{u.username}}
+							td {{u.original_role}}
+							td {{u.actions_did}}
 							td {{u.role}}
+							td {{u.believed_role}}
 
 
 link(rel='stylesheet', href='/css/admin.css')

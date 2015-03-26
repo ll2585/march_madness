@@ -11,3 +11,9 @@
 #brackets-opened-tag{
   padding: 10px;
 }
+
+.didnt-pay{
+    text-decoration: line-through;
+    color: pink;
+    background-color: maroon !important;
+}

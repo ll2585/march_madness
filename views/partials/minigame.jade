@@ -8,6 +8,49 @@ div.container
 		button(ng-click="showRole = !showRole", ng-show="!showRole") Show my role!
 		button(ng-click="showRole = !showRole", ng-show="showRole") Hide my role!
 		div.roleInfo(ng-show="showRole")
+			|{{roleinfo}}
+		hr
+		div
+			h3 CHARACTERS
+			div.row
+				div.col-xs-6 ONUW (One Night Ultimate Werewolf) Roles
+					div.row
+						div.col-xs-6 Blue Team
+							div.row(ng-repeat="b in blues")
+								div.col-xs-12(ng-click="showDescription(b)")
+									span(class="blue-team") {{b.name}}
+						div.col-xs-6 Red Team
+							div.row(ng-repeat="r in reds")
+								div.col-xs-12(ng-click="showDescription(r)")
+									span(class="red-team") {{r.name}}
+				div.col-xs-6 2R1B (2 Rooms 1 Boom) Roles
+					div.row
+						div.col-xs-6 Werewolf Team
+							div.row(ng-repeat="w in werewolves")
+								div.col-xs-12(ng-click="showDescription(w)")
+									span(class="werewolf-team") {{w.name}}
+						div.col-xs-6 Village Team
+							div.row(ng-repeat="v in village")
+								div.col-xs-12(ng-click="showDescription(v)")
+									span(class="village-team") {{v.name}}
+			br
+			div.row
+				div.col-xs-12 {{winDescription}}
+			div.row(ng-if="show_conditions")
+				div.col-xs-12
+					img(src="/img/minigame/werewolfscoring1.PNG")
+					img(src="/img/minigame/werewolfscoring2.PNG")
+		hr
+		div Forgot your special ability?
+		button(ng-click="showAbility = !showAbility", ng-show="!showAbility") Show my role!
+		button(ng-click="showAbility = !showAbility", ng-show="showAbility") Hide my role!
+		div.roleInfo(ng-show="showAbility")
 			|HSF
+		hr
+		div The Minigame Scoreboard!
+		hr
+		div Ready to guess?
+		button() Save Suspicions!
+		button() Submit Guesses!
 
 link(rel='stylesheet', href='/css/realminigame.css')

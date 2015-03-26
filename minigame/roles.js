@@ -2,25 +2,14 @@ function Role(name, team, game) {
 	this.name = name;
 	this.team = team;
 	this.game = game;
-	this.salt = randomSalt();
 }
-function randomSalt()
-{
-	var text = "";
-	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-	for( var i=0; i < 5; i++ )
-		text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-	return text;
-}
 Role.prototype = {
-	encrypted: function () {
+	encrypted: function (salt) {
 		return {
-			name: encrypt(this.name, this.salt),
-			team: encrypt(this.team, this.salt),
-			game: encrypt(this.game, this.salt),
-			salt: this.salt
+			name: encrypt(this.name, salt),
+			team: encrypt(this.team, salt),
+			game: encrypt(this.game, salt)
 		}
 	}
 }
@@ -28,6 +17,8 @@ var crypto = require('crypto'),
 	algorithm = 'aes-256-ctr'
 
 function encrypt(text, password){
+    console.log(password)
+    var algorithm = 'aes-256-ctr';
 	var cipher = crypto.createCipher(algorithm,password)
 	var crypted = cipher.update(text,'utf8','hex')
 	crypted += cipher.final('hex');
@@ -35,6 +26,7 @@ function encrypt(text, password){
 }
 
 function decrypt(text, password){
+    var algorithm = 'aes-256-ctr';
 	var decipher = crypto.createDecipher(algorithm,password)
 	var dec = decipher.update(text,'hex','utf8')
 	dec += decipher.final('utf8');

@@ -28,7 +28,8 @@ angular.module('MainPageCtrl', []).controller('MainPageController', ['$rootScope
 				$scope.scoreboard = [];
 				var sb = data;
 				for(var s in sb){
-					$scope.scoreboard.push({name: s, round_score: sb[s]["Round Score"], score: sb[s]["Total Score"], achievements: sb[s]["Achievements"], 'points_remaining': sb[s]["Points Remaining"]})
+                    console.log(sb[s])
+					$scope.scoreboard.push({name: s, round_score: sb[s]["Round Score"], score: sb[s]["Total Score"], achievements: sb[s]["Achievements"], 'points_remaining': sb[s]["Points Remaining"], 'paid': sb[s]['paid']})
 				}
 				var sort_by = function() {
 					var fields = [].slice.call(arguments),

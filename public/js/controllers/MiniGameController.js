@@ -48,4 +48,53 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
 
 	/////////////////////////////// for the real
 	$scope.showRole = false;
+    $scope.showAbility = false;
+    $scope.init = function(){
+        $http({
+            url: '/getMiniGameRole.json', method: "GET", params: {username: $window.localStorage.user}
+        }).success(function(data) {
+            if(data.actions_did.indexOf("robbed") > -1){
+                $scope.roleinfo = "You WERE the robber. " + data.actions_did;
+            }else{
+                $scope.roleinfo = "You are the " + data.role.name + "."
+            }
+            $scope.roleinfo += " Your team is " + data.role.team + " and you are from the game " + data.role.game + ". Please check the index to see how you win.";
+            console.log(data);
+        });
+    }
+
+    $scope.blues = [
+        {img: '/img/president.png', name: 'President', win_condition: "You are the head of the blue team. If you win, the blue team wins. If the Bomber guesses you, both you and the blue team will lose.  In order to win, you must guess the Doctor, as well as either A) Guess the Bomber, or B) Be more than three ranks away from the Bomber at the end."},
+        {img: '/img/doctor.png', name: 'Doctor', win_condition: "You are the Doctor. You win if the President wins, and you guess the President."},
+        {img: '/img/one_armed_man.png', name: 'One Armed Man', win_condition: "You are the One Armed Man. You win if the President wins or you guess the Witness. You lose if the Fugitive guesses you, even if you guess the Witness or the President wins."},
+        {img: '/img/marshall.png', name: 'Marshall', win_condition: "You are the Marshall. You win if the President wins or you guess the Fugitive. You lose if the Witness guesses you, even if you guess the Fugitive or the President wins."}
+    ]
+    $scope.reds = [
+        {img: '/img/bomber.png', name: 'Bomber', win_condition: "You are the head of the red team. If you win, the red team wins. If the president guesses you, both you and the red team will lose.  In order to win, you must guess the Engineer, as well as either A) Guess the President, or B) Be three ranks or fewer away from the President at the end."},
+        {img: '/img/engineer.png', name: 'Engineer', win_condition: "You are the Engineer. You win if the Bomber wins, and you guess the Bomber."},
+        {img: '/img/fugitive.png', name: 'Fugitive', win_condition: "You are the Fugitive. You win if the Bomber wins or you guess the One Armed Man. You lose if the Marshall guesses you, even if you guess the One Armed Man or the Bomber wins."},
+        {img: '/img/witness.png', name: 'Witness', win_condition: "You are the Witness. You win if the Bomber wins or you guess the Marshall. You lose if the One Armed Man guesses you, even if you guess the Marshall or the Bomber wins."}
+    ]
+    $scope.village = [
+        {show_img: true, img: '/img/seer.png', name: 'Seer', win_condition: "You are the Seer. You win if the Village wins. The Village wins if they can score three points. If they cannot, the Village loses. See the bottom graphic for how they can score points."},
+        {show_img: true, img: '/img/robber.png', name: 'Robber', win_condition: "You are the Robber. You win if the Village wins. The Village wins if they can score three points. If they cannot, the Village loses. See the bottom graphic for how they can score points."},
+        {show_img: true, img: '/img/troublemaker.png', name: 'Troublemaker', win_condition: "You are the Troublemaker. You win if the Village wins. The Village wins if they can score three points. If they cannot, the Village loses. See the bottom graphic for how they can score points."},
+    ]
+    $scope.werewolves = [
+        {show_img: true, img: '/img/werewolf1.png', name: 'Werewolf 1', win_condition: "You are Werewolf 1. You win if the Werewolves win. The Werewolves win if they can score three points. If they cannot, the Werewolves lose. See the bottom graphic for how they can score points."},
+        {show_img: true, img: '/img/werewolf2.png', name: 'Werewolf 2', win_condition: "You are Werewolf 2. You win if the Werewolves wins. The Werewolves win if they can score three points. If they cannot, the Werewolves lose. See the bottom graphic for how they can score points."},
+        {show_img: true, img: '/img/minion.png', name: 'Minion', win_condition: "You are the Minion. You win if the Werewolves win. The Werewolves win if they can score three points. If they cannot, the Werewolves lose. See the bottom graphic for how they can score points."},
+    ]
+
+    $scope.winDescription = "";
+    $scope.show_conditions = false;
+
+    $scope.showDescription = function(p){
+        $scope.winDescription = p.win_condition;
+        $scope.show_conditions = p.show_img;
+    }
+
+
+    $scope.init();
+
 }]);

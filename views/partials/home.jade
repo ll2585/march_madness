@@ -53,7 +53,7 @@ div.container
 				th(st-sort="achievements" class="achievements_col") Total Achievements
 				th(st-sort="points_remaining") Possible Points Remaining
 		tbody
-			tr(ng-repeat='row in displayedCollection')
+			tr(ng-repeat='row in displayedCollection' ng-class="{'didnt-pay': row.paid == null}")
 				td {{row.rank}}
 				td
 					a(href="/bracket-angular/{{row.name}}" ng-if="!brackets_opened") {{row.name}}

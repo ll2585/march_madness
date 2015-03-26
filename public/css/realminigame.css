@@ -1,0 +1,23 @@
+.blue-team{
+    background-color: #c4d8e2;
+    color: #0057A8;
+    cursor: pointer;
+}
+
+.red-team{
+    background-color: #FB5F63;
+    color: #5B0004;
+    cursor: pointer;
+}
+
+.werewolf-team{
+    background-color: #86E359;
+    color: #1E3B10;
+    cursor: pointer;
+}
+
+.village-team{
+    background-color: #FFEF45;
+    color: #827D46;
+    cursor: pointer;
+}

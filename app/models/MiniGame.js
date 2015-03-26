@@ -3,7 +3,12 @@ var Schema       = mongoose.Schema;
 var Q = require('q')
 var MiniGame = new Schema({
 	username: { type: String, required: true, unique: true },
-	role: { type: Object }, //encoded
+    original_role: {type: Object}, //encoded
+    original_salt: {type: String},
+    believed_role: { type: Object }, //encoded
+    believed_salt: {type: String},
+    role: { type: Object }, //encoded
+    salt: {type: String},
 	actions_did: { type: Object  }, //encoded
 	guesses: { type: Object, required: false },
 	power: {type: String, required: false},

@@ -997,6 +997,23 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 
 				});
 			}
+
+            $scope.togglePaid = function(paid, user){
+                if(user.flags.paid == null){
+                    user.flags.paid = true;
+
+                }else{
+                    user.flags.paid = !user.flags.paid;
+                }
+
+                $http.post('/admin/changeUserPaid', {usersid: user._id, val: user.flags.paid }).success(function(data){
+                    console.log("SAVED USER PAYMENT!");
+                }).error(function(data){
+
+                });
+
+                console.log(user);
+            }
             $scope.recalculateScores = function(){
 				function calculateBoxScore(boxes){
                     var fib_seq = {
@@ -1046,6 +1063,8 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 					console.log('getting score for ' + user.username)
 					console.log($scope.scoreboard);
                     $scope.scoreboard[user.username] = $scope.determineScore(user.bracket);
+
+                    $scope.scoreboard[user.username]['paid'] = $scope.users[s].flags.paid;
 					$scope.user_money_board[user.username] = $scope.calculateMoneyBoard(user.username, user.bracket);
                     $scope.achievementsByUser[user.username] = $scope.calculateUserAchievements( $scope.achievementsByUser[user.username], user.username, user.bracket);
 
@@ -1073,6 +1092,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 					}
 					console.log(user.username + " has achieveements of " +achievements)
 					$scope.scoreboard[user.username]['Achievements'] = achievements
+                    $scope.scoreboard[user.username]['paid'] = $scope.users[s].flags.paid;
 					$scope.user_money_board[user.username]["Most Achievements"] = {'info':'','value':achievements};
 					$scope.user_money_board[user.username]["Most Resistance Achievements"] = {'info':'','value':resistance_achievements};
 					$scope.user_money_board[user.username]["Most Taylor Swift Achievements"] = {'info':'','value':ts_achievements};
@@ -1099,30 +1119,32 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                         if(category == "Closest To 50 Points"){//clear the closest to 50 so we recalc it each time
                             curItem['score'] = 0;
                         }
+                        curItem['score'] = 0; //clear all?
                         if(!(category in determine_after_all_users)) {
                             for (var s in $scope.users) {
                                 var user = $scope.users[s];
                                 var username = user.username;
                                 var users_moneyboard = $scope.user_money_board[username];
+                                if($scope.users[s].flags.paid) { //have to pay
+                                    if (users_moneyboard[category]['value'] > curItem['score']) { // new leader
+                                        curItem['score'] = users_moneyboard[category]['value'];
+                                        curItem['player'] = [username];
+                                        if (users_moneyboard[category]['info'] != null) {
+                                            curItem['info'] = users_moneyboard[category]['info'];
+                                        }
 
-                                if (users_moneyboard[category]['value'] > curItem['score']) { // new leader
-                                    curItem['score'] = users_moneyboard[category]['value'];
-                                    curItem['player'] = [username];
-									if(users_moneyboard[category]['info'] != null){
-										curItem['info'] = users_moneyboard[category]['info'];
-									}
+                                        curItem['multiple'] = false;
+                                    } else if (users_moneyboard[category]['value'] == curItem['score']) { //tied
+                                        if (curItem['player'].indexOf(username) < 0) {
+                                            if (curItem['info'] != null) {
+                                                curItem['info'] += '<br>' + users_moneyboard[category]['info'];
+                                            }
 
-                                    curItem['multiple'] = false;
-                                } else if (users_moneyboard[category]['value'] == curItem['score']) { //tied
-                                    if (curItem['player'].indexOf(username) < 0) {
-										if(curItem['info'] != null){
-											curItem['info'] += '<br>' + users_moneyboard[category]['info'];
-										}
+                                            curItem['player'].push(username);//if youre not in it already
+                                        }
 
-                                        curItem['player'].push(username);//if youre not in it already
+                                        curItem['multiple'] = true;
                                     }
-
-                                    curItem['multiple'] = true;
                                 }
                             }
                         }
@@ -1163,7 +1185,9 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 
                 var sortable = [];
                 for (var user in $scope.scoreboard){
-					sortable.push({user: user, score: $scope.scoreboard[user]['Total Score'], achievements: $scope.user_money_board[user]["Most Achievements"]['value']})
+                    if($scope.scoreboard[user]['paid']){
+                        sortable.push({user: user, score: $scope.scoreboard[user]['Total Score'], achievements: $scope.user_money_board[user]["Most Achievements"]['value']})
+                    }
 				}
 				sortable.sort(sort_by({name: "score", reverse: true},{name: "achievements", reverse: true}))
                 var sorted_scoredboard = sortable;
@@ -1195,7 +1219,24 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
                                 curItem['multiple'] = winners.length != 1
 
                             }else{
+                                var ranking_score = sorted_scoredboard[sorted_scoredboard.length-1]['score'];
 
+
+                                var ranking_achievement = sorted_scoredboard[sorted_scoredboard.length-1]['achievements']
+
+                                curItem['score'] = ranking_score;
+
+                                curItem['info'] = "Tiebreaker: " + ranking_achievement + " Achievements";
+                                var winners = [];
+                                for (var username in $scope.scoreboard) {
+                                    var user = $scope.scoreboard[username];
+                                    var users_score = user["Total Score"];
+                                    if (users_score == ranking_score && $scope.user_money_board[username]["Most Achievements"]['value'] == ranking_achievement ) {
+                                        winners.push(username)
+                                    }
+                                }
+                                curItem['player'] = winners;
+                                curItem['multiple'] = winners.length != 1
                             }
                         }
                     }
@@ -1290,23 +1331,26 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 			console.log("No data");
 
 		});
+        $scope.loadMinigame = function(){
+            $http.get('/admin/getMiniGamePlayers').success(function(data){
+                console.log(data);
+                $scope.miniGamePlayers = data;
+                if($scope.miniGameClosed) {
+                    $http.get('/admin/getMiniGamePlayersAndRoles').success(function(data){
+                        $scope.miniGamePlayersandRoles = data;
+                        console.log(data);
+                    }).error(function(data){
+                        console.log("No data");
 
-		$http.get('/admin/getMiniGamePlayers').success(function(data){
-			console.log(data);
-			$scope.miniGamePlayers = data;
-			if($scope.miniGameClosed) {
-				$http.get('/admin/getMiniGamePlayersAndRoles').success(function(data){
-					$scope.miniGamePlayersandRoles = data;
-					console.log(data);
-				}).error(function(data){
-					console.log("No data");
+                    });
+                }
+            }).error(function(data){
+                console.log("No data");
 
-				});
-			}
-		}).error(function(data){
-			console.log("No data");
+            });
+        }
+        $scope.loadMinigame();
 
-		});
     }
 
 	$scope.toggleBrackets = function(val){
@@ -1348,6 +1392,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 		$scope.miniGameOver = false;
 		$http.post('/admin/startMinigame', {players: $scope.miniGamePlayers }).success(function(data){
 			$scope.minigame = data;
+            $scope.loadMinigame();
 			console.log(data);
 		}).error(function(data){
 			console.log("No data");

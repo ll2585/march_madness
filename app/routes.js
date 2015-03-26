@@ -1,7 +1,7 @@
 var tournament      = require('.././march_madness/brackets.js')();
 var User     = require('./models/User.js');
 var jwt        = require("jsonwebtoken");
-
+var mongoose     = require('mongoose');
 var expressJwt = require('express-jwt');
 var secret = require('./secret.js');
 var Q = require('q');
@@ -21,6 +21,22 @@ for(var s in settings){
 
 var roles        = require("../minigame/roles.js");
 console.log(roles);
+var crypto = require('crypto'),
+    algorithm = 'aes-256-ctr'
+
+function encrypt(text, password){
+    var cipher = crypto.createCipher(algorithm,password)
+    var crypted = cipher.update(text,'utf8','hex')
+    crypted += cipher.final('hex');
+    return crypted;
+}
+
+function decrypt(text, password){
+    var decipher = crypto.createDecipher(algorithm,password)
+    var dec = decipher.update(text,'hex','utf8')
+    dec += decipher.final('utf8');
+    return dec;
+}
 
 function storeAsSetting(s){
     ServerSettings.findOne({setting: s}, function (err, result) {
@@ -42,7 +58,32 @@ function storeAsSetting(s){
 
     })
 }
+function userPaid(req){
+    var deferred = Q.defer()
+    var setting = req.body.setting;
+    var val = req.body.val;
 
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
+    if (req.session.token !== undefined) {
+        var decoded = jwt.verify(req.session.token, secret());
+        User.findOne({_id: decoded.id}, function (err, user) {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(401).send("COLDNT FIND");;
+            }
+            var paid = user.flags.paid;
+            console.log("!!!!!" + paid);
+            deferred.resolve(paid);
+        });
+
+
+
+    }else {
+        console.log("WTF?!?!")
+        deferred.resolve(false);
+    }
+    return deferred.promise;
+}
 module.exports = function(app) {
 
 
@@ -111,6 +152,25 @@ module.exports = function(app) {
 		return res.json({'result': settings[setting]});
 	});
 
+    app.post('/admin/changeUserPaid', isLuke, function (req, res) {
+        var userid = req.body.usersid;
+        var bool = req.body.val;
+        var new_flag = "flags.paid";
+        var new_set = {};
+        new_set[new_flag] = bool;
+        var updated_flag = {$set: new_set};
+        User.findOneAndUpdate({_id: userid}, updated_flag, function (err, user) {
+            console.log(userid)
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("SUCCESS")
+                res.sendStatus(212);
+            }
+        });
+    });
+
+
 
 
 	app.get('/is_bracket_opened.json', function (req, res) {
@@ -153,28 +213,120 @@ module.exports = function(app) {
 			return res.json(users_list);
 		});
 	});
+    function randomSalt()
+    {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for( var i=0; i < 5; i++ )
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    }
+    function randomLetters(chars)
+    {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for( var i=0; i < chars; i++ )
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    }
 	app.post('/admin/startMinigame', isLuke, function (req, res) {
 		var setting = 'miniGameClosed'
 		if(settings[setting]){
-			MiniGame.remove({});
-			var players = req.body.players;
-			shuffle(players);
-			shuffle(roles);
-			console.log(players);
-			console.log(roles);
+            console.log("OKAYT WE ARE DOING NEW MINIGAME MAYUBE?!?!?")
+            mongoose.connection.db.dropCollection('minigames', function(err, result) {
+                console.log(result);
+                console.log("DROPPED")
+                var players = req.body.players;
+                var player_arr = [];
+                shuffle(players);
+                shuffle(roles);
+                var seer, robber, troublemaker;
+                var robber_role = null;
 
-			for(var i = 0; i < players.length; i++){
-				var roleMatch = new MiniGame();
-				roleMatch.username = players[i];
-				roleMatch.role = roles[i];
-				roleMatch.save(function (err) {
-					if (err) {
-						console.log(err);
-						return res.sendStatus(500);
-					}
-				});
-			}
-			return res.json({'roles': roles});
+                for(var i = 0; i < players.length; i++){
+                    var roleMatch = new MiniGame();
+                    roleMatch.username = players[i];
+                    roleMatch.original_salt = randomSalt();
+                    roleMatch.salt = randomSalt();
+                    roleMatch.believed_salt = randomSalt();
+                    if(roles[i].name == "Seer"){
+                        seer = roleMatch;
+                    }else if(roles[i].name == "Robber"){
+                        robber_role = roles[i].encrypted(roleMatch.original_salt);
+                        robber = roleMatch;
+                    }else if(roles[i].name == "Troublemaker"){
+                        troublemaker = roleMatch;
+                    }
+                    roleMatch.original_role = roles[i].encrypted(roleMatch.original_salt); //.encrpyted with salt1
+                    roleMatch.role = roles[i].encrypted(roleMatch.salt); //.encrpyted with salt2
+                    roleMatch.believed_role = roles[i].encrypted(roleMatch.believed_salt); //.encrpyted with salt2
+                    player_arr.push(roleMatch);
+                }
+                var random_seered = player_arr[Math.floor(Math.random()*player_arr.length)];
+
+                while(random_seered.username == seer.username){
+                    random_seered = player_arr[Math.floor(Math.random()*player_arr.length)];
+                }
+
+                var random_robbed = player_arr[Math.floor(Math.random()*player_arr.length)];
+                while(random_robbed.username == robber.username){
+                    random_robbed = player_arr[Math.floor(Math.random()*player_arr.length)];
+                }
+                var robbed_role = random_robbed.role;
+                var robbed_salt = random_robbed.salt;
+                random_robbed.role = robber_role;
+                random_robbed.salt = robber.salt;
+                robber.role = robbed_role;
+                robber.salt = robbed_salt;
+
+                var random_troublemaker1 = player_arr[Math.floor(Math.random()*player_arr.length)];
+                while(random_troublemaker1.username == troublemaker.username){
+                    random_troublemaker1 = player_arr[Math.floor(Math.random()*player_arr.length)];
+                }
+                var random_troublemaker2 = player_arr[Math.floor(Math.random()*player_arr.length)];
+                while(random_troublemaker2.username == troublemaker.username || random_troublemaker2.username == random_troublemaker1.username){
+                    console.log(random_troublemaker2.username)
+                    random_troublemaker2 = player_arr[Math.floor(Math.random()*player_arr.length)];
+                }
+                var tm_1_role = random_troublemaker1.role;
+                var tm_1_salt = random_troublemaker1.salt;
+                random_troublemaker1.role = random_troublemaker2.role;
+                random_troublemaker1.salt = random_troublemaker2.salt;
+                random_troublemaker2.role = tm_1_role;
+                random_troublemaker2.salt = tm_1_salt;
+                for(var i = 0; i < player_arr.length; i++){
+                    var player = player_arr[i];
+                    if(decrypt(player.original_role.name,player.original_salt)  == "Seer"){
+                        player.actions_did = "You saw " + random_seered.username + "; THEY ARE THE " + decrypt(random_seered.original_role.name, random_seered.original_salt) + "! Or at least they were before the robber and the troublemaker struck. "
+                    }else if(decrypt(player.original_role.name,player.original_salt) == "Robber"){
+                        player.actions_did = "You robbed " + random_robbed.username + "; Now you are THE " + decrypt(robbed_role.name, robbed_salt) + "!!! Or at least you are before the troublemaker struck."
+                        player.believed_role = {name: encrypt(decrypt(robbed_role.name, robbed_salt), player.believed_salt),
+                            team: encrypt(decrypt(robbed_role.team, robbed_salt), player.believed_salt),
+                            game: encrypt(decrypt(robbed_role.game, robbed_salt), player.believed_salt)};
+                    }else if(decrypt(player.original_role.name,player.original_salt) == "Troublemaker"){
+                        player.actions_did = "You swapped " + random_troublemaker1.username + " and " + random_troublemaker2.username + ". Now they will never who each other is!!! Unfortunately, neither do you."
+                    }else{
+                        player.actions_did = "Blahblahlbalhlslbdlf actually this is just filler because this person si not a special cahrafyer oops " + randomLetters(Math.floor(Math.random()*10));
+                    }
+                    player.actions_did = encrypt(player.actions_did, player.salt);
+
+                }
+
+                for(var i = 0; i < player_arr.length; i++){
+                    player_arr[i].save(function (err) {
+                        if (err) {
+                            console.log(err);
+                        }
+                    });
+                }
+                return res.json({'roles': roles});
+            });
+
+
 		}else{
 			return res.json({'nope': "ERROR"})
 		}
@@ -340,6 +492,26 @@ module.exports = function(app) {
 			}
 		});
 	});
+    app.get('/getMiniGameRole.json', function (req, res) {
+        var username = req.query.username;
+        MiniGame.findOne({username: username}, function (err, user) {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(401);
+            }
+            var info = {}
+
+            info['role'] = {'game':
+                decrypt(user.believed_role.game, user.believed_salt),
+                'name':
+                    decrypt(user.believed_role.name, user.believed_salt),
+                'team':
+                    decrypt(user.believed_role.team, user.believed_salt),
+            };
+            info['actions_did'] = decrypt(user.actions_did, user.salt)
+            return res.json(info);
+        });
+    });
 
 	app.post('/savebracket', function (req, res) {
 		var username = req.body.username;
@@ -649,13 +821,20 @@ module.exports = function(app) {
 	});
 
 	app.all('/*', function (req, res, next) {
-		console.log("WE RENDERING" + req.path);
-		var arbitraryUrls = ['partials'];
-		if (arbitraryUrls.indexOf(req.url.split('/')[1]) > -1) {
-			next();
-		} else {
-			res.render('index');
-		}
+        userPaid(req).then(function(data){
+            console.log(data);
+            if(data){
+                var arbitraryUrls = ['partials'];
+                if (arbitraryUrls.indexOf(req.url.split('/')[1]) > -1) {
+                    next();
+                } else {
+                    res.render('index');
+                }
+            }else{
+                res.render('payluke');
+            }
+        });
+
 	});
 
 	app.get('/partials/minigame', function (req, res) {
