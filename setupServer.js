@@ -40,7 +40,9 @@ var initialSettings = [
 	{setting: 'winning_numbers', type: 'obj', val: null},
 	{setting: 'losing_numbers', type: 'obj', val: null},
 	{setting: 'player_numbers', type: 'obj', val: null},
-	{setting: 'boxWinningsByUser', type: 'obj', val: null}
+	{setting: 'boxWinningsByUser', type: 'obj', val: null},
+	{setting: 'miniGameClosed', type: 'bool', val: null},
+	{setting: 'miniGameOver', type: 'bool', val: null}
 ]
 module.exports= {
     insertSettingsIntoMongo: function () {

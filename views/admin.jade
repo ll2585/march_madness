@@ -131,6 +131,25 @@ html
 						input(type="checkbox" ng-model="achievementsByUser[selectedUserForAchievements][i]['owned']")
 			#saved-achievements-alert
 			button(ng-click="saveAchievements()") Save Achievements
+			hr
+			button(ng-click="toggleMinigameClosed(false)", ng-show="miniGameClosed") Open Minigame Signups!
+			button(ng-click="toggleMinigameClosed(true)", ng-show="!miniGameClosed") Close Minigame Signups!
+			button(ng-click="toggleMinigameOver(false)", ng-show="miniGameOver && miniGameClosed") Begin Minigame!
+			button(ng-click="toggleMinigameOver(true)", ng-show="!miniGameOver && miniGameClosed") End Minigame!
+			div(ng-show="miniGameClosed")
+				hr
+				|USERS
+				table(class="table table-condensed table-striped table-bordered")
+					thead
+						tr
+							th username
+							th email
+					tbody
+						tr(ng-repeat="u in miniGamePlayers" ng-if="!miniGameClosed")
+							td(ng-if="") {{u}}
+						tr(ng-repeat="u in miniGamePlayersandRoles" ng-if="miniGameClosed")
+							td {{u.username}}
+							td {{u.role}}
 
 
 link(rel='stylesheet', href='/css/admin.css')

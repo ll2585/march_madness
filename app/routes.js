@@ -1,13 +1,15 @@
 var tournament      = require('.././march_madness/brackets.js')();
 var User     = require('./models/User.js');
 var jwt        = require("jsonwebtoken");
+
 var expressJwt = require('express-jwt');
 var secret = require('./secret.js');
 var Q = require('q');
 var ServerSettings     = require('./models/ServerSettings.js');
+var MiniGame     = require('./models/MiniGame.js');
 var setUpServer = require('../setupServer.js');
 var settings = {'bracketOpened': false, 'officialBracket': null, 'scores': null, 'moneyBoard': null, 'achievements': null, 'achievementsByUser': null,
-'winning_numbers': null, 'losing_numbers': null, 'player_numbers': null, 'boxWinningsByUser': null}; //get settings first - cache settings so we dont connect to db all the time
+'winning_numbers': null, 'losing_numbers': null, 'player_numbers': null, 'boxWinningsByUser': null, 'miniGameClosed': null, 'miniGameOver': null}; //get settings first - cache settings so we dont connect to db all the time
 console.log("!@$@%");
 var settings_loaded = false;
 var initial_settings = setUpServer.initialSettings()
@@ -17,6 +19,8 @@ for(var s in settings){
 }
 
 
+var roles        = require("../minigame/roles.js");
+console.log(roles);
 
 function storeAsSetting(s){
     ServerSettings.findOne({setting: s}, function (err, result) {
@@ -107,6 +111,8 @@ module.exports = function(app) {
 		return res.json({'result': settings[setting]});
 	});
 
+
+
 	app.get('/is_bracket_opened.json', function (req, res) {
 		var setting = 'bracketOpened'
 		return res.json({'result': settings[setting]});
@@ -115,6 +121,64 @@ module.exports = function(app) {
 
 	app.get('/admin/getAllSettings', isLuke, function (req, res) {
 		return res.json(settings);
+	});
+
+	app.get('/admin/getMiniGamePlayers', isLuke, function (req, res) {
+		User.find({"flags.said_yes_to_playing_minigame": true}, function(err, users) {
+			if (err) {
+				console.log(err);
+				return res.sendStatus(401);
+			}
+			var users_list = [];
+
+			users.forEach(function(user) {
+				users_list.push(user.username);
+			});
+
+			return res.json(users_list);
+		});
+	});
+	app.get('/admin/getMiniGamePlayersAndRoles', isLuke, function (req, res) {
+		MiniGame.find({}, function(err, users) {
+			if (err) {
+				console.log(err);
+				return res.sendStatus(401);
+			}
+			var users_list = [];
+
+			users.forEach(function(user) {
+				users_list.push(user);
+			});
+
+			return res.json(users_list);
+		});
+	});
+	app.post('/admin/startMinigame', isLuke, function (req, res) {
+		var setting = 'miniGameClosed'
+		if(settings[setting]){
+			MiniGame.remove({});
+			var players = req.body.players;
+			shuffle(players);
+			shuffle(roles);
+			console.log(players);
+			console.log(roles);
+
+			for(var i = 0; i < players.length; i++){
+				var roleMatch = new MiniGame();
+				roleMatch.username = players[i];
+				roleMatch.role = roles[i];
+				roleMatch.save(function (err) {
+					if (err) {
+						console.log(err);
+						return res.sendStatus(500);
+					}
+				});
+			}
+			return res.json({'roles': roles});
+		}else{
+			return res.json({'nope': "ERROR"})
+		}
+
 	});
 
 	app.get('/async.json', function (req, res) {
@@ -595,7 +659,40 @@ module.exports = function(app) {
 	});
 
 	app.get('/partials/minigame', function (req, res) {
-		res.render('partials/minigame-signup');
+		if(settings['miniGameClosed']){
+			if (req.session.token !== undefined) {
+				var decoded = jwt.verify(req.session.token, secret());
+				User.findOne({_id: decoded.id}, function (err, user) {
+					if (err) {
+						console.log(err);
+						return res.sendStatus(401).send("COLDNT FIND");;
+					}
+					var username = user.username;
+					MiniGame.findOne({username: username}, function (err, user) {
+						if (err) {
+							console.log(err);
+							res.redirect('/');
+						}
+
+						if (user == undefined) {
+							res.redirect('/');
+						}
+
+						res.render('partials/minigame');
+					});
+				});
+
+
+
+			}else {
+				console.log("NO SES")
+					res.render('partials/minigame-signup');
+				}
+
+
+		}else {
+			res.render('partials/minigame-signup');
+		}
 	});
 
     app.get('/partials/bracket-angular/:name', function (req, res, next) {

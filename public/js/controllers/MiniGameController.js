@@ -38,4 +38,14 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
 
 
 	$scope.getFlags()
+
+
+
+
+
+
+
+
+	/////////////////////////////// for the real
+	$scope.showRole = false;
 }]);

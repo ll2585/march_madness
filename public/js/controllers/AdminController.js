@@ -14,6 +14,8 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 			console.log("SETTINGS!!")
 			console.log(data);
 			$scope.brackets_opened = data['bracketOpened']
+			$scope.miniGameOver = data['miniGameOver']
+			$scope.miniGameClosed = data['miniGameClosed']
 			$scope.officialBracket = data['officialBracket']
             $scope.moneyBoard = data['moneyBoard'];
             $scope.achievements = data['achievements'];
@@ -1288,6 +1290,23 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 			console.log("No data");
 
 		});
+
+		$http.get('/admin/getMiniGamePlayers').success(function(data){
+			console.log(data);
+			$scope.miniGamePlayers = data;
+			if($scope.miniGameClosed) {
+				$http.get('/admin/getMiniGamePlayersAndRoles').success(function(data){
+					$scope.miniGamePlayersandRoles = data;
+					console.log(data);
+				}).error(function(data){
+					console.log("No data");
+
+				});
+			}
+		}).error(function(data){
+			console.log("No data");
+
+		});
     }
 
 	$scope.toggleBrackets = function(val){
@@ -1298,6 +1317,42 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 
 		});
 
+	}
+
+	$scope.toggleMinigameClosed = function(val){
+		$http.post('/admin/setSetting', {setting: 'miniGameClosed', val: !$scope.miniGameClosed }).success(function(data){
+			$scope.miniGameClosed = !$scope.miniGameClosed;
+
+			if($scope.miniGameClosed){
+				//minigame started
+				$scope.startMiniGame();
+			}
+		}).error(function(data){
+			console.log("No data");
+
+		});
+
+	}
+
+	$scope.toggleMinigameOver = function(val){
+		$http.post('/admin/setSetting', {setting: 'miniGameOver', val: !$scope.miniGameOver }).success(function(data){
+			$scope.miniGameOver = !$scope.miniGameOver;
+		}).error(function(data){
+			console.log("No data");
+
+		});
+
+	}
+
+	$scope.startMiniGame = function(){
+		$scope.miniGameOver = false;
+		$http.post('/admin/startMinigame', {players: $scope.miniGamePlayers }).success(function(data){
+			$scope.minigame = data;
+			console.log(data);
+		}).error(function(data){
+			console.log("No data");
+
+		});
 	}
 
 

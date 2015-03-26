@@ -1,0 +1,13 @@
+.hide(ng-joy-ride='startJoyRide', config='config', on-finish='onFinish()', on-skip='onFinish()')
+div.container
+	div.page-header
+		div.prompt-minigame
+			h1 WELCOME TO THE MINIGAME!!
+		hr
+		div Forgot your role?
+		button(ng-click="showRole = !showRole", ng-show="!showRole") Show my role!
+		button(ng-click="showRole = !showRole", ng-show="showRole") Hide my role!
+		div.roleInfo(ng-show="showRole")
+			|HSF
+
+link(rel='stylesheet', href='/css/realminigame.css')
