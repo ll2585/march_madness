@@ -63,8 +63,8 @@ div.container
 				div.col-xs-6 Players
 					div.row(ng-repeat="p in players")
 						div.col-xs-12
-							span {{p}}
-							select(ng-model="guessed_players[p]", ng-change="guess(p, guessed_players[p])")
+							span {{p}} {{guessed_players[p]}}
+							select(ng-model="red", ng-change="guess(p, guessed_players[p])")
 								option(value="None") None
 								option(ng-repeat="r in allRoles", value = "{{r.name}}" ng-disabled = "alreadyGuessed(null, r.name)") {{r.name}}
 				div.col-xs-6 Roles
@@ -92,7 +92,7 @@ div.container
 							select(ng-model="guessed_roles[v.name]", ng-change="guess(guessed_roles[v.name], v.name)")
 								option(value="None") None
 								option(ng-repeat="p in players", value = "{{p}}" ng-disabled = "alreadyGuessed(p, null)") {{p}}
-		button() Save Suspicions!
-		button() Submit Guesses!
+		button(ng-click="saveChanges()") Save Suspicions!
+		button(ng-click = "submitGuesses()") Submit Guesses!
 
 link(rel='stylesheet', href='/css/realminigame.css')

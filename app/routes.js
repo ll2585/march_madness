@@ -506,12 +506,37 @@ module.exports = function(app) {
                 'name':
                     decrypt(user.believed_role.name, user.believed_salt),
                 'team':
-                    decrypt(user.believed_role.team, user.believed_salt),
+                    decrypt(user.believed_role.team, user.believed_salt)
             };
-            info['actions_did'] = decrypt(user.actions_did, user.salt)
+            info['actions_did'] = decrypt(user.actions_did, user.salt);
+			info['guesses'] = user.guesses;
             return res.json(info);
         });
     });
+	app.post('/saveGuesses', function (req, res) {
+		var username = req.body.username;
+		var token = req.body.token;
+		var guesses = req.body.guesses;
+		var decoded = jwt.verify(token, secret());
+		User.findOne({username: username}, function (err, user) {
+
+			if (err) {
+				console.log(err);
+				return res.sendStatus(401);
+			}
+			if (user._id == decoded.id) {
+				var partial_update = {$set: {guesses: guesses}};
+				MiniGame.findOneAndUpdate({username: username}, partial_update, function (err) {
+					if (err) {
+						console.log("ERRROR");
+						console.log(err);
+					} else {
+						res.sendStatus(212);
+					}
+				});
+			}
+		});
+	});
 	app.get('/getMiniGamePlayers.json', function (req, res) {
 		var username = req.query.username;
 		MiniGame.findOne({username: username}, function (err, user) {
