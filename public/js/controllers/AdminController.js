@@ -1392,7 +1392,6 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 		$scope.miniGameOver = false;
 		$http.post('/admin/startMinigame', {players: $scope.miniGamePlayers }).success(function(data){
 			$scope.minigame = data;
-            $scope.loadMinigame();
 			console.log(data);
 		}).error(function(data){
 			console.log("No data");

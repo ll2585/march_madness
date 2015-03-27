@@ -34,7 +34,6 @@ Bracket.prototype = {
 		this.tree[1] = first_elem;
 		var cur_node = first_elem;
 		var nodes_added = 1;
-		console.log(cur_node);
 		while(nodes_added < elements){
 			var newLeftNode = new Node(nodes_added+1);
 			cur_node.setLeft(nodes_added+1);

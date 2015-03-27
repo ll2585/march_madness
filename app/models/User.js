@@ -38,7 +38,6 @@ User.pre('save', function(next) {
             });
             sendgrid.send(email, function(err, json) {
                 if (err) { return console.error(err); }
-                console.log(json);
             });
             user.password = hash;
             next();

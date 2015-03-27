@@ -56,7 +56,22 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
 			$http({
 				url: '/getMiniGamePlayers.json', method: "GET", params: {username: $window.localStorage.user}
 			}).success(function(players) {
+                $http({
+                    url: '/getUsers.json', method: "GET"
+                }).success(function(allUsers){
+                    if(data.power_string.indexOf("filler") == -1){
+                        $scope.usedAbility = true;
+                        $scope.abilityInfo = data.power_string;
+                    }
 
+                    if(data.curTargets){
+                        $scope.targets = data.curTargets;
+                    }else{
+                        $scope.targets = [];
+                    }
+                $scope.allPlayers = allUsers;
+                    console.log(allUsers)
+                $scope.me = $window.localStorage.user;
 				$scope.blues = [
 					{scoring_img_1: "/img/minigame/redbluescoring1.PNG", scoring_img_2: "/img/minigame/redbluescoring2.PNG", img: '/img/president.png', name: 'President', win_condition: "You are the head of the blue team. If you win, the blue team wins. You win if you can score three points. See below. If the Bomber guesses you, both you and the blue team will lose.  In order to win, you must guess the Doctor, as well as either A) Guess the Bomber, or B) Be more than three ranks away from the Bomber at the end."},
 					{img: '/img/doctor.png', name: 'Doctor', win_condition: "You are the Doctor. You win if the President wins, and you guess the President."},
@@ -75,8 +90,8 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
 					{scoring_img_1: "/img/minigame/werewolfscoring1.PNG", scoring_img_2: "/img/minigame/werewolfscoring2.PNG",  img: '/img/troublemaker.png', name: 'Troublemaker', win_condition: "You are the Troublemaker. You win if the Village wins. The Village wins if they can score three points. If they cannot, the Village loses. See the bottom graphic for how they can score points."},
 				]
 				$scope.werewolves = [
-					{scoring_img_1: "/img/minigame/werewolfscoring1.PNG", scoring_img_2: "/img/minigame/werewolfscoring2.PNG",  img: '/img/werewolf1.png', name: 'Werewolf 1', win_condition: "You are Werewolf 1. You win if the Werewolves win. The Werewolves win if they can score three points. If they cannot, the Werewolves lose. See the bottom graphic for how they can score points."},
-					{scoring_img_1: "/img/minigame/werewolfscoring1.PNG", scoring_img_2: "/img/minigame/werewolfscoring2.PNG",  img: '/img/werewolf2.png', name: 'Werewolf 2', win_condition: "You are Werewolf 2. You win if the Werewolves wins. The Werewolves win if they can score three points. If they cannot, the Werewolves lose. See the bottom graphic for how they can score points."},
+					{scoring_img_1: "/img/minigame/werewolfscoring1.PNG", scoring_img_2: "/img/minigame/werewolfscoring2.PNG",  img: '/img/werewolf1.png', name: 'Werewolf1', win_condition: "You are Werewolf 1. You win if the Werewolves win. The Werewolves win if they can score three points. If they cannot, the Werewolves lose. See the bottom graphic for how they can score points."},
+					{scoring_img_1: "/img/minigame/werewolfscoring1.PNG", scoring_img_2: "/img/minigame/werewolfscoring2.PNG",  img: '/img/werewolf2.png', name: 'Werewolf2', win_condition: "You are Werewolf 2. You win if the Werewolves wins. The Werewolves win if they can score three points. If they cannot, the Werewolves lose. See the bottom graphic for how they can score points."},
 					{scoring_img_1: "/img/minigame/werewolfscoring1.PNG", scoring_img_2: "/img/minigame/werewolfscoring2.PNG",  img: '/img/minion.png', name: 'Minion', win_condition: "You are the Minion. You win if the Werewolves win. The Werewolves win if they can score three points. If they cannot, the Werewolves lose. See the bottom graphic for how they can score points."},
 				]
 
@@ -93,25 +108,83 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
 				for(var i = 0; i <  $scope.werewolves.length; i++){
 					$scope.allRoles.push($scope.werewolves[i])
 				}
-				$scope.guessed_players = {}
-				$scope.guessed_players["Luke"] = "Seer"
-				$scope.red = "Robber"
 				$scope.players = players;
 				$scope.myRoleName = data.role.name;
+                $scope.myAbility = "You have been given one random ability. It is " + data.abilities +  ". See below for its effect.";
+                var cannotTargetSelf = ["Silence", "Sentinel", "Clone", "Gravity", "Mirror", "Resetter"]
+                var noTargets = ["Push", "Union", "Jumper"]
+                $scope.onlyTargetInactives = false;
+                $scope.onlyTargetPlayers = false;
+                $scope.seekerPower = false;
+                $scope.cannotTargetSelf = false;
+                if(data.abilities == "Repository"){
+                    $scope.cannotTargetSelf = true;
+                    $scope.seekerPower = true;
+                    $scope.onlyTargetPlayers = true;
+                    $scope.possibleSelections = 3;
+                }else if(data.abilities == "Eliminator"){
+                    $scope.cannotTargetSelf = true;
+                    $scope.seekerPower = true;
+                    $scope.onlyTargetPlayers = true;
+                    $scope.possibleSelections = 3;
+                }else if(data.abilities == "Onlooker"){
+                    $scope.cannotTargetSelf = true;
+                    $scope.seekerPower = true;
+                    $scope.onlyTargetPlayers = true;
+                    $scope.possibleSelections = 5;
+                }else if(data.abilities == "Together"){
+                    $scope.onlyTargetInactives = true;
+                    $scope.possibleSelections = 1;
+                }else if(cannotTargetSelf.indexOf(data.abilities) > -1){
+                    $scope.cannotTargetSelf = true
+                    $scope.possibleSelections = 1;
+                }else if(noTargets.indexOf(data.abilities)>-1){
+                    $scope.possibleSelections = 0;
+                }else{
+                    $scope.possibleSelections = 1;
+                }
+
+                $scope.users_for_select = [{'name': 'None'}];
+
+
+                console.log(data);
 				$scope.guessed_players = {};
 				$scope.guessed_roles = {};
 				for(var i = 0; i < $scope.allRoles.length; i++){
-					console.log("MAKING NONE 3")
-					$scope.guessed_roles[$scope.allRoles[i].name] = "None";
-				}
+                    console.log("MAKING NONE 3")
+                    $scope.guessed_roles[$scope.allRoles[i].name] = "None";
+                }
 				for(var i = 0; i < $scope.players.length; i++){
 					console.log("MAKING NONE 4")
+                    $scope.users_for_select.push({'name': $scope.players[i]})
 					$scope.guessed_players[$scope.players[i]] = "None";
 				}
+                $scope.targetted_player = {
+                    'target': $scope.users_for_select[0]
+                };
+
+                $scope.toggleTargetted = function(name) {
+                    var selection = $scope.targets;
+                    var idx = selection.indexOf(name);
+
+                    // is currently selected
+                    if (idx > -1) {
+                        selection.splice(idx, 1);
+                    }
+
+                    // is newly selected
+                    else {
+                        selection.push(name);
+                    }
+
+                    console.log($scope.targets)
+                };
+
 
 				for(var i = 0 ; i < $scope.players.length; i++){
 					$scope.$watch('guessed_players["' + $scope.players[i] + '"]', function(newValue, oldValue){
 						if(oldValue && oldValue != ''  && newValue !== "None" && oldValue != newValue){
+                            console.log("CHANGED FROM " + oldValue + " TO " + newValue)
 							$scope.guessed_roles[oldValue] = null
 							$scope.guessed_roles[oldValue] = "None"
 						}
@@ -128,11 +201,49 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
 				}
 				if(data.actions_did.indexOf("robbed") > -1){
 					$scope.roleinfo = "You WERE the robber. " + data.actions_did;
-				}else{
+				}else if(data.actions_did.indexOf("filler") > -1){
 					$scope.roleinfo = "You are the " + data.role.name + "."
-				}
+				}else{
+                    $scope.roleinfo = "You are the " + data.role.name + ". " + data.actions_did;
+                }
 				$scope.roleinfo += " Your team is " + data.role.team + " and you are from the game " + data.role.game + ". Please check the index to see how you win.";
 
+                    $scope.saveAbility = function () {
+                        $scope.postSaveAbility($window.localStorage.user, $window.localStorage.token, $scope.targets).success(function () {
+                            alert("SAVED");
+                        }).error(function (status, data) {
+                            console.log("SOERROR");
+                            alert(status);
+                            console.log(status);
+                            console.log(data);
+                        });
+                    };
+
+                    $scope.postSaveAbility = function(username, token, targets){
+                        return $http.post( '/saveAbility', {username: username, token: token, targets: targets});
+                    }
+
+                    $scope.submitAbility = function () {
+                        $scope.postSubmitAbility($window.localStorage.user, $window.localStorage.token, $scope.targets).success(function (data) {
+                            alert("SAVED");
+                            console.log(data);
+                            $scope.usedAbility = true;
+                            $scope.abilityInfo = data;
+                        }).error(function (status, data) {
+                            console.log("SOERROR");
+                            alert(status);
+                            console.log(status);
+                            console.log(data);
+                        });
+                    };
+
+                    $scope.postSubmitAbility = function(username, token, targets){
+                        return $http.post( '/submitAbility', {username: username, token: token, targets: targets});
+                    }
+
+                }).error(function(){
+
+                });
 			});
 
 		});
@@ -182,6 +293,8 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
 	$scope.submitGuesses = function(){
 		return $http.post( '/saveGuesses', {username: username, token: token, guesses: guesses});
 	}
+
+
 
 
 

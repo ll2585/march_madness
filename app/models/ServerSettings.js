@@ -16,7 +16,6 @@ Settings.path('type').validate(function (value) {
 
 //Password verification
 Settings.methods.getVal = function() {
-	console.log(this);
 	switch(this.type){
 		case "bool":{
 			return this.flag;

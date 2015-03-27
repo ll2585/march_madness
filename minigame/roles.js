@@ -17,7 +17,6 @@ var crypto = require('crypto'),
 	algorithm = 'aes-256-ctr'
 
 function encrypt(text, password){
-    console.log(password)
     var algorithm = 'aes-256-ctr';
 	var cipher = crypto.createCipher(algorithm,password)
 	var crypted = cipher.update(text,'utf8','hex')

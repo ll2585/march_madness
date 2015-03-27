@@ -21,17 +21,17 @@ div.container
 									span(class="blue-team", ng-class="{'is-me': showRole && b.name==myRoleName}") {{b.name}}
 						div.col-xs-6 Red Team
 							div.row(ng-repeat="r in reds")
-								div.col-xs-12(ng-click="showDescription(r)")
+								div.col-xs-12(ng-click="showDescription(r)" , ng-class="{'is-me': showRole && r.name==myRoleName}")
 									span(class="red-team") {{r.name}}
 				div.col-xs-6 2R1B (2 Rooms 1 Boom) Roles
 					div.row
 						div.col-xs-6 Werewolf Team
 							div.row(ng-repeat="w in werewolves")
-								div.col-xs-12(ng-click="showDescription(w)")
+								div.col-xs-12(ng-click="showDescription(w)" , ng-class="{'is-me': showRole && w.name==myRoleName}")
 									span(class="werewolf-team") {{w.name}}
 						div.col-xs-6 Village Team
 							div.row(ng-repeat="v in village")
-								div.col-xs-12(ng-click="showDescription(v)")
+								div.col-xs-12(ng-click="showDescription(v)" , ng-class="{'is-me': showRole && v.name==myRoleName}")
 									span(class="village-team") {{v.name}}
 			br
 			div.row
@@ -45,7 +45,15 @@ div.container
 		button(ng-click="showAbility = !showAbility", ng-show="!showAbility") Show my role!
 		button(ng-click="showAbility = !showAbility", ng-show="showAbility") Hide my role!
 		div.roleInfo(ng-show="showAbility")
-			|HSF
+			|{{myAbility}}
+			div.use-ability(ng-if="possibleSelections>0") Please select who you want to use your ability on.
+				div.row(ng-repeat="p in allPlayers")
+					label
+						input(value='{{p.name}}', type="checkbox", ng-checked="targets.indexOf(p.name) > -1", ng-click="toggleTargetted(p.name)", ng-disabled = "usedAbility || (targets.length == possibleSelections && targets.indexOf(p.name) == -1) || (cannotTargetSelf && p.name == me )|| (onlyTargetInactives && players.indexOf(p.name)>-1) || (onlyTargetPlayers && players.indexOf(p.name) == -1)")
+						|{{p.name}}
+				button(ng-click = "saveAbility()" ng-if="!seekerPower") Save your choice!
+				button(ng-click = "submitAbility()" ng-if="seekerPower ") Use your ability on these people!
+				div.abilityInfo(ng-if="usedAbility") {{abilityInfo}}
 		hr
 		div
 			h3 ABILITIES
@@ -63,8 +71,8 @@ div.container
 				div.col-xs-6 Players
 					div.row(ng-repeat="p in players")
 						div.col-xs-12
-							span {{p}} {{guessed_players[p]}}
-							select(ng-model="red", ng-change="guess(p, guessed_players[p])")
+							span {{p}}
+							select(ng-model="guessed_players[p]", ng-change="guess(p, guessed_players[p])")
 								option(value="None") None
 								option(ng-repeat="r in allRoles", value = "{{r.name}}" ng-disabled = "alreadyGuessed(null, r.name)") {{r.name}}
 				div.col-xs-6 Roles
@@ -92,7 +100,6 @@ div.container
 							select(ng-model="guessed_roles[v.name]", ng-change="guess(guessed_roles[v.name], v.name)")
 								option(value="None") None
 								option(ng-repeat="p in players", value = "{{p}}" ng-disabled = "alreadyGuessed(p, null)") {{p}}
-		button(ng-click="saveChanges()") Save Suspicions!
 		button(ng-click = "submitGuesses()") Submit Guesses!
 
 link(rel='stylesheet', href='/css/realminigame.css')
