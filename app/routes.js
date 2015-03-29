@@ -86,6 +86,7 @@ function userPaid(req){
         User.findOne({_id: decoded.id}, function (err, user) {
             if (err) {
                 console.log(err);
+
                 return res.sendStatus(401).send("COLDNT FIND");;
             }
             var paid = user.flags.paid;
@@ -96,7 +97,7 @@ function userPaid(req){
 
 
     }else {
-        deferred.resolve(false);
+        deferred.resolve(true);
     }
     return deferred.promise;
 }
