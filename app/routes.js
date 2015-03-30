@@ -9,7 +9,7 @@ var ServerSettings     = require('./models/ServerSettings.js');
 var MiniGame     = require('./models/MiniGame.js');
 var setUpServer = require('../setupServer.js');
 var settings = {'bracketOpened': false, 'officialBracket': null, 'scores': null, 'moneyBoard': null, 'achievements': null, 'achievementsByUser': null,
-'winning_numbers': null, 'losing_numbers': null, 'player_numbers': null, 'boxWinningsByUser': null, 'miniGameClosed': null, 'miniGameOver': null}; //get settings first - cache settings so we dont connect to db all the time
+'winning_numbers': null, 'losing_numbers': null, 'player_numbers': null, 'boxWinningsByUser': null, 'miniGameClosed': null, 'miniGameOver': null, 'miniGameEmailsSent': null, 'miniGameActions': null, 'miniGameScoreboard': null}; //get settings first - cache settings so we dont connect to db all the time
 var settings_loaded = false;
 var initial_settings = setUpServer.initialSettings()
 for(var s in settings){
@@ -91,6 +91,9 @@ function userPaid(req){
             }
             var paid = user.flags.paid;
             console.log("!!!!!" + paid);
+            if(paid == null || paid == undefined){
+                paid =  false;
+            }
             deferred.resolve(paid);
         });
 
@@ -198,20 +201,65 @@ module.exports = function(app) {
 	});
 
 	app.get('/admin/getMiniGamePlayers', isLuke, function (req, res) {
-		User.find({"flags.said_yes_to_playing_minigame": true}, function(err, users) {
-			if (err) {
-				console.log(err);
-				return res.sendStatus(401);
-			}
-			var users_list = [];
+        User.find({"flags.said_yes_to_playing_minigame": true}, function(err, users) {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(401);
+            }
+            var users_list = [];
 
-			users.forEach(function(user) {
-				users_list.push(user.username);
-			});
+            users.forEach(function(user) {
+                users_list.push(user.username);
+            });
 
-			return res.json(users_list);
-		});
-	});
+            return res.json(users_list);
+        });
+    });
+    app.post('/admin/getMiniGamePlayersEmails', isLuke, function (req, res) {
+        User.find({"flags.said_yes_to_playing_minigame": true}, function(err, users) {
+            if (err) {
+                console.log(err);
+                return res.sendStatus(401);
+            }
+            var users_list = {};
+
+            users.forEach(function(user) {
+                users_list[user.username] = {email: user.email};
+            });
+
+            MiniGame.find({}, function(err, mgusers) {
+                if (err) {
+                    console.log(err);
+                    return res.sendStatus(401);
+                }
+
+                mgusers.forEach(function(mguser) {
+                    users_list[mguser.username]['role'] = decrypt(mguser.original_role.name, mguser.original_salt);
+                    users_list[mguser.username]['power'] = decrypt(mguser.power, mguser.original_salt);
+                });
+
+                var sendgrid  = require('sendgrid')(process.env.SENDGRID_USERNAME_LUKE, process.env.SENDGRID_PASSWORD_LUKE)
+                for(var u in users_list) {
+                    if (u == "Luke"){
+                        var email = new sendgrid.Email({
+                            to: users_list[u].email,
+                            from: 'luke@luke.com',
+                            subject: 'March Madness Madness 2015 MINIGAME INFORMATION!',
+                            text: 'Welcome to the MINIGAME!!!!! You are the ' +  users_list[u].role + ' and your special ability is ' +  users_list[u].power + "!!!!!\r\nIf you have no idea what this means, go to https://enigmatic-bayou-1458.herokuapp.com/minigame !!!"
+                        });
+                    sendgrid.send(email, function (err, json) {
+                        if (err) {
+                            return console.error(err);
+                        }
+                    });
+                    }
+                }
+
+
+                return res.json(users_list);
+            });
+        });
+    });
 	app.get('/admin/getMiniGamePlayersAndRoles', isLuke, function (req, res) {
 		MiniGame.find({}, function(err, users) {
 			if (err) {
@@ -675,7 +723,7 @@ module.exports = function(app) {
                             }else{
                                 cur_not = not3
                             }
-                            info += targets[i] + " is NOT " + cur_not[0] + ", " + cur_not[1]+ ", " + cur_not[2]+ ", " + cur_not[3] + " nor " + cur_not[2] + ". "
+                            info += targets[i] + " is NOT " + cur_not[0] + ", " + cur_not[1]+ ", " + cur_not[2]+ ", " + cur_not[3] + " nor " + cur_not[4] + ". "
                         }
 
                     }else if(ability=="Repository"){

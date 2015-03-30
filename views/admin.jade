@@ -142,6 +142,8 @@ html
 			button(ng-click="toggleMinigameClosed(true)", ng-show="!miniGameClosed") Close Minigame Signups!
 			button(ng-click="toggleMinigameOver(false)", ng-show="miniGameOver && miniGameClosed") Begin Minigame!
 			button(ng-click="toggleMinigameOver(true)", ng-show="!miniGameOver && miniGameClosed") End Minigame!
+			button(ng-click="sendEmails()", ng-show="miniGameClosed", ng-disabled="miniGameEmailsSent") Send Emails!
+			button(ng-click="sendEmails()", ng-show="miniGameClosed", ng-disabled="!miniGameEmailsSent") unSend Emails!
 			div(ng-show="miniGameClosed")
 				hr
 				|USERS

@@ -17,22 +17,22 @@ div.container
 					div.row
 						div.col-xs-6 Blue Team
 							div.row(ng-repeat="b in blues")
-								div.col-xs-12(ng-click="showDescription(b)")
-									span(class="blue-team", ng-class="{'is-me': showRole && b.name==myRoleName}") {{b.name}}
+								div.col-xs-12()
+									span(class="blue-team team-choice", ng-class="{'is-me': showRole && b.name==myRoleName}" ng-click="showDescription(b)") {{b.name}}
 						div.col-xs-6 Red Team
 							div.row(ng-repeat="r in reds")
-								div.col-xs-12(ng-click="showDescription(r)" , ng-class="{'is-me': showRole && r.name==myRoleName}")
-									span(class="red-team") {{r.name}}
+								div.col-xs-12()
+									span(class="red-team team-choice" ng-click="showDescription(r)" ng-class="{'is-me': showRole && r.name==myRoleName}") {{r.name}}
 				div.col-xs-6 2R1B (2 Rooms 1 Boom) Roles
 					div.row
 						div.col-xs-6 Werewolf Team
 							div.row(ng-repeat="w in werewolves")
-								div.col-xs-12(ng-click="showDescription(w)" , ng-class="{'is-me': showRole && w.name==myRoleName}")
-									span(class="werewolf-team") {{w.name}}
+								div.col-xs-12()
+									span(class="werewolf-team team-choice" ng-click="showDescription(w)" , ng-class="{'is-me': showRole && w.name==myRoleName}") {{w.name}}
 						div.col-xs-6 Village Team
 							div.row(ng-repeat="v in village")
-								div.col-xs-12(ng-click="showDescription(v)" , ng-class="{'is-me': showRole && v.name==myRoleName}")
-									span(class="village-team") {{v.name}}
+								div.col-xs-12()
+									span(class="village-team team-choice" ng-click="showDescription(v)" , ng-class="{'is-me': showRole && v.name==myRoleName}") {{v.name}}
 			br
 			div.row
 				div.col-xs-12 {{winDescription}}
@@ -56,13 +56,19 @@ div.container
 				div.abilityInfo(ng-if="usedAbility") {{abilityInfo}}
 		hr
 		div
-			h3 ABILITIES
-			div.row
-				div.col-xs-2 Ability
-				div.col-xs-10 Description
-			br
-			div.row
-				div.col-xs-12 {{winDescription}}
+			h3
+			table(class="table table-condensed table-striped table-bordered")
+				thead ABILITIES
+					tr
+						th Priority
+							span(class="glyphicon glyphicon-question-sign" tooltip="When the tournament is finished, the abilities will be used in the order given here.  The abilities will be used on whoever the person with the ability currently has selected, so select your target as soon as you can!")
+						th  Ability
+						th  Description
+				tbody
+					tr(ng-repeat="a in abilityList")
+						td {{a.priority}}
+						td {{a.name}}
+						td {{a.desc}}
 		hr
 		div The Minigame Scoreboard!
 		hr
@@ -71,35 +77,35 @@ div.container
 				div.col-xs-6 Players
 					div.row(ng-repeat="p in players")
 						div.col-xs-12
-							span {{p}}
-							select(ng-model="guessed_players[p]", ng-change="guess(p, guessed_players[p])")
+							span(class="selection") {{p}}
+							select(ng-class="{'red-team' : guessedClass(guessed_players[p])=='red-team', 'village-team' : guessedClass(guessed_players[p])=='village-team', 'blue-team' : guessedClass(guessed_players[p])=='blue-team', 'werewolf-team' : guessedClass(guessed_players[p])=='werewolf-team'}", ng-model="guessed_players[p]", ng-change="guess(p, guessed_players[p])")
 								option(value="None") None
-								option(ng-repeat="r in allRoles", value = "{{r.name}}" ng-disabled = "alreadyGuessed(null, r.name)") {{r.name}}
+								option(class="{{guessedClass(r.name)}}", ng-repeat="r in allRoles", value = "{{r.name}}" ng-disabled = "alreadyGuessed(null, r.name)", ng-class= "{'already-guessed': alreadyGuessed(null, r.name)}") {{r.name}}
 				div.col-xs-6 Roles
 					div.row(ng-repeat="b in blues")
 						div.col-xs-12
-							span(class="blue-team") {{b.name}}
-							select(ng-model="guessed_roles[b.name]", ng-change="guess(guessed_roles[b.name], b.name)")
-								option(value="None") None
-								option(ng-repeat="p in players", value = "{{p}}" ng-disabled = "alreadyGuessed(p, null)") {{p}}
+							span(class="blue-team selection") {{b.name}}
+							select(ng-model="guessed_roles[b.name]", ng-change="guess(guessed_roles[b.name], b.name)", ng-class="{'blue-team' : guessed_roles[b.name] != 'None'}")
+								option(value="None" class="none-class") None
+								option(class='blue-team',ng-repeat="p in players", value = "{{p}}" ng-disabled = "alreadyGuessed(p, null)" , ng-class= "{'already-guessed': alreadyGuessed(p, null)}") {{p}}
 					div.row(ng-repeat="r in reds")
 						div.col-xs-12
-							span(class="red-team") {{r.name}}
-							select(ng-model="guessed_roles[r.name]", ng-change="guess(guessed_roles[r.name],r.name)")
-								option(value="None") None
-								option(ng-repeat="p in players", value = "{{p}}" ng-disabled = "alreadyGuessed(p, null)") {{p}}
+							span(class="red-team selection") {{r.name}}
+							select(ng-model="guessed_roles[r.name]", ng-change="guess(guessed_roles[r.name],r.name)" , ng-class="{'red-team' : guessed_roles[r.name] != 'None'}")
+								option(value="None" class="none-class") None
+								option(class='red-team', ng-repeat="p in players", value = "{{p}}" ng-disabled = "alreadyGuessed(p, null)", ng-class= "{'already-guessed': alreadyGuessed(p, null)}") {{p}}
 					div.row(ng-repeat="w in werewolves")
 						div.col-xs-12
-							span(class="werewolf-team") {{w.name}}
-							select(ng-model="guessed_roles[w.name]", ng-change="guess(guessed_roles[w.name], w.name)")
-								option(value="None") None
-								option(ng-repeat="p in players", value = "{{p}}" ng-disabled = "alreadyGuessed(p, null)") {{p}}
+							span(class="werewolf-team selection") {{w.name}}
+							select(ng-model="guessed_roles[w.name]", ng-change="guess(guessed_roles[w.name], w.name)" , ng-class="{'werewolf-team' : guessed_roles[w.name] != 'None'}")
+								option(value="None" class="none-class") None
+								option(class='werewolf-team', ng-repeat="p in players", value = "{{p}}" ng-disabled = "alreadyGuessed(p, null)", ng-class= "{'already-guessed': alreadyGuessed(p, null)}") {{p}}
 					div.row(ng-repeat="v in village")
 						div.col-xs-12
-							span(class="village-team") {{v.name}}
-							select(ng-model="guessed_roles[v.name]", ng-change="guess(guessed_roles[v.name], v.name)")
-								option(value="None") None
-								option(ng-repeat="p in players", value = "{{p}}" ng-disabled = "alreadyGuessed(p, null)") {{p}}
+							span(class="village-team selection") {{v.name}}
+							select(ng-model="guessed_roles[v.name]", ng-change="guess(guessed_roles[v.name], v.name)" , ng-class="{'village-team' : guessed_roles[v.name] != 'None'}")
+								option(value="None" class="none-class") None
+								option(class='village-team', ng-repeat="p in players", value = "{{p}}" ng-disabled = "alreadyGuessed(p, null)", ng-class= "{'already-guessed': alreadyGuessed(p, null)}") {{p}}
 		button(ng-click = "submitGuesses()") Submit Guesses!
 
 link(rel='stylesheet', href='/css/realminigame.css')

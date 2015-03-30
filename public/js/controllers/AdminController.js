@@ -15,6 +15,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 			console.log(data);
 			$scope.brackets_opened = data['bracketOpened']
 			$scope.miniGameOver = data['miniGameOver']
+            $scope.miniGameEmailsSent = data['miniGameEmailsSent']
 			$scope.miniGameClosed = data['miniGameClosed']
 			$scope.officialBracket = data['officialBracket']
             $scope.moneyBoard = data['moneyBoard'];
@@ -1381,6 +1382,14 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 	$scope.toggleMinigameOver = function(val){
 		$http.post('/admin/setSetting', {setting: 'miniGameOver', val: !$scope.miniGameOver }).success(function(data){
 			$scope.miniGameOver = !$scope.miniGameOver;
+            if($scope.miniGameOver){
+                $http.get('/admin/getMiniGamePlayersAndRoles').success(function(data){
+                    console.log(data);
+                }).error(function(data){
+                    console.log("No data");
+
+                });
+            }
 		}).error(function(data){
 			console.log("No data");
 
@@ -1426,6 +1435,25 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 		}
 		return region_dict[level];
 	};
+
+    $scope.sendEmails = function(){
+        $http.post('/admin/setSetting', {setting: 'miniGameEmailsSent', val: !$scope.miniGameEmailsSent }).success(function(data){
+            $scope.miniGameEmailsSent = !$scope.miniGameEmailsSent
+            if($scope.miniGameEmailsSent){
+                $http.post('/admin/getMiniGamePlayersEmails').success(function(data){
+                    console.log(data);
+
+                }).error(function(data){
+                    console.log("No data");
+
+                });
+            }
+
+        }).error(function(data){
+            console.log("No data");
+
+        });
+    }
 
 
   }]);
