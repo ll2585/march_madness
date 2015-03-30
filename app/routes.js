@@ -250,7 +250,6 @@ module.exports = function(app) {
 
                 var sendgrid  = require('sendgrid')(process.env.SENDGRID_USERNAME_LUKE, process.env.SENDGRID_PASSWORD_LUKE)
                 for(var u in users_list) {
-                    if (u == "Luke"){
                         var email = new sendgrid.Email({
                             to: users_list[u].email,
                             from: 'luke@luke.com',
@@ -262,7 +261,6 @@ module.exports = function(app) {
                             return console.error(err);
                         }
                     });
-                    }
                 }
 
 
