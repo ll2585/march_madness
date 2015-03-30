@@ -60,7 +60,7 @@ function storeAsSetting(s){
             console.log(err);
         }
         if (result == undefined) {
-            console.log("NO NAME for " + s)
+            console.log("NO NAME in mongo for " + s)
 
             for(var i = 0; i < initial_settings.length; i++){
                 if(initial_settings[i]["setting"] == s){
@@ -132,6 +132,7 @@ module.exports = function(app) {
 
 		// IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
 		else {
+            console.log("NOT LOGGED IN")
 			res.redirect('/');
 		}
 
@@ -155,12 +156,17 @@ module.exports = function(app) {
 				return res.status(401).send("No setting with that name.");
 			}
 			console.log("SETTING " + setting + " to " + val);
-			(result.setVal(val)).then(function(data){
-				settings[setting] = val; //cache setting
-				deferred.resolve(res.status(212).send("Success!"));
-			}).catch(function(e){
-				return res.status(401).send("Could not save.");
-			});
+            result.setVal(val)
+            result.save(function (err) {
+                if (err) {
+                    console.log(err);
+                    console.log("SEERROR");
+                    return res.status(401).send("Could not save.");
+                }
+                settings[setting] = val; //cache setting
+                console.log("SSuccess!");
+                deferred.resolve(res.status(212).send("Success!"));
+            });
 		})
 		return deferred.promise
 
@@ -185,6 +191,10 @@ module.exports = function(app) {
                 res.sendStatus(212);
             }
         });
+    });
+
+    app.post('/admin/endMinigame', isLuke, function (req, res) {
+
     });
 
 
@@ -661,6 +671,10 @@ module.exports = function(app) {
             }
             if (user._id == decoded.id) {
                 MiniGame.findOne({username: username}, function (err, minigameUser) {
+                    if(decrypt(minigameUser.power_string, minigameUser.original_salt).indexOf("filler") == -1){
+                        //used ability already bitch
+                        return res.sendStatus(401);
+                    }
                     if (err) {
                         console.log(err);
                         return res.sendStatus(401);
@@ -1085,6 +1099,10 @@ module.exports = function(app) {
 
 	});
 
+    app.get('/didMiniGameStart.json', function (req, res) {
+        return res.json({'started': settings['miniGameClosed']})
+    })
+
 
 	app.get('/brackets.json', function (req, res, next) {
 		var json = tournament;
@@ -1107,6 +1125,7 @@ module.exports = function(app) {
         });
 
 	});
+
 
 	app.get('/partials/minigame', function (req, res) {
 		if(settings['miniGameClosed']){

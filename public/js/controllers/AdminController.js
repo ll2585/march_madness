@@ -1366,6 +1366,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 
 	$scope.toggleMinigameClosed = function(val){
 		$http.post('/admin/setSetting', {setting: 'miniGameClosed', val: !$scope.miniGameClosed }).success(function(data){
+            console.log(data);
 			$scope.miniGameClosed = !$scope.miniGameClosed;
 
 			if($scope.miniGameClosed){
@@ -1383,6 +1384,7 @@ angular.module('AdminController',  []).controller('AdminController', ['$scope', 
 		$http.post('/admin/setSetting', {setting: 'miniGameOver', val: !$scope.miniGameOver }).success(function(data){
 			$scope.miniGameOver = !$scope.miniGameOver;
             if($scope.miniGameOver){
+                alert("GAME OVER!");
                 $http.get('/admin/getMiniGamePlayersAndRoles').success(function(data){
                     console.log(data);
                 }).error(function(data){

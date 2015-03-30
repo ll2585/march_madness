@@ -386,17 +386,20 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
                         }
 
                         $scope.submitAbility = function () {
-                            $scope.postSubmitAbility($window.localStorage.user, $window.localStorage.token, $scope.targets).success(function (data) {
-                                alert("SAVED");
-                                console.log(data);
-                                $scope.usedAbility = true;
-                                $scope.abilityInfo = data;
-                            }).error(function (status, data) {
-                                console.log("SOERROR");
-                                alert(status);
-                                console.log(status);
-                                console.log(data);
-                            });
+                            if($scope.targets.length == $scope.possibleSelections){
+                                $scope.postSubmitAbility($window.localStorage.user, $window.localStorage.token, $scope.targets).success(function (data) {
+                                    alert("SAVED");
+                                    console.log(data);
+                                    $scope.usedAbility = true;
+                                    $scope.abilityInfo = data;
+                                }).error(function (status, data) {
+                                    console.log("SOERROR");
+                                    alert(status);
+                                    console.log(status);
+                                    console.log(data);
+                                });
+                            }
+
                         };
 
                         $scope.postSubmitAbility = function (username, token, targets) {
@@ -481,9 +484,39 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
                         var sortable = [];
                         $scope.miniGameScoreboard = []
                         for (var user in scoreboard){
-                            sortable.push({user: user, score: scoreboard[user]['Total Score'], achievements: scoreboard[user]["Achievements"], 'minigame_ability_adjustments': 0, 'final_score': scoreboard[user]['Total Score']})
+                            $scope.miniGameScoreboard.push({name: user, score: scoreboard[user]['Total Score'], achievements: scoreboard[user]["Achievements"], 'minigame_ability_adjustments': 0, 'final_score': scoreboard[user]['Total Score']})
                         }
-                        sortable.sort(sort_by({name: "score", reverse: true},{name: "achievements", reverse: true}))
+                        $scope.miniGameScoreboard.sort(sort_by({name: "score", reverse: true},{name: "achievements", reverse: true}))
+                        var last_score = -1;
+                        var last_rank = -1;
+                        var last_achievements = -1;
+                        for (var i = 0; i < $scope.miniGameScoreboard.length; i++) {
+                            var score = $scope.miniGameScoreboard[i]['score']
+                            var achievements = $scope.miniGameScoreboard[i]['achievements']
+                            var rank = last_score == score && achievements == last_achievements ? last_rank : i + 1;
+                            last_score = score;
+                            last_achievements = achievements;
+                            last_rank = rank;
+                            $scope.miniGameScoreboard[i]['rank'] = rank;
+                        }
+
+
+                        //copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
+                        $scope.displayedCollection = [].concat($scope.miniGameScoreboard);
+                        console.log($scope.miniGameScoreboard)
+
+                        $scope.notPlaying = function(name){
+                            return $scope.players.indexOf(name) == -1
+                        }
+                        $scope.startJoyRide = false;
+
+                        $scope.showTutorial = function(){
+                            $scope.startJoyRide = true;
+
+                        }
+                        $scope.onFinish = function(){
+                            $scope.startJoyRide = false;
+                        }
                     });
                 }).error(function(){
 
@@ -492,7 +525,126 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
 
 		});
     }
-
+    $scope.config = [
+        {
+            type: "title",
+            heading: "Welcome to the March Madness Madness Minigame!",
+            text: 'This minigame is a battle of wits and guts. The path to victory is by defeating your arch enemy. You can defeat your archenemy in two ways:'
+        },
+        {
+            type: "element",
+            selector: ".scoreboard-section",
+            heading: "Defeating your enemy 1",
+            text: "Utterly humiliating them in the scoreboard by scoring more points...,",
+            placement: "top",
+            scrollPadding: 250,
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: ".guess-section",
+            heading: "Defeating your enemy 2",
+            text: "Or showing your superior intellect by correctly guessing who they are. (note: also most guesses wins money so maybe you want that too).",
+            placement: "top",
+            scrollPadding: 250,
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: ".your-char-section",
+            heading: "Wait What?",
+            text: "So how do you know who you are? It said so in your email. Or, click the button here to find out.",
+            placement: "top",
+            scrollPadding: 250,
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: ".all-chars-section",
+            heading: "Wait What?",
+            text: "This part will tell you the actual way you defeat your enemy. (Ask Luke for questions but Luke is also playing, so he doesn't know who you are unless you tell him...but then he will guess who you are this is a warning)",
+            placement: "top",
+            scrollPadding: 350,
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: ".your-ability",
+            heading: "But..",
+            text: "What if you are someone like Jane (who isn't playing so we can use her as an example) and are stuck at the bottom? Well, you were given a special ability as well. Click this button to see what it is again.",
+            placement: "top",
+            scrollPadding: 350,
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: ".all-abilities",
+            heading: "All Abilities",
+            text: "All the abilities are listed here.  Note, you MUST SELECT YOUR TARGET before the end of the tournament for it to have an effect. Luke will warn you of this. Your ability only works when the tournament is over. ",
+            placement: "top",
+            scrollPadding: 350,
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: ".all-abilities-2",
+            heading: "All Abilities",
+            text: "There is a priority to the order in which the abilities goes, and that is what the priority means. If your ability is 'Onlooker', 'Eliminator' or 'Repository', then you can use your ability whenever before the tournament is over (These are info gathering roles, in case you didn't get that.) WHEN THE TOURNAMENT IS OVER WHOEVER YOU WILL AUTOMATICALLY USE YOUR ABILITY ON WHOMEVER YOU HAVE SELECTED!!",
+            placement: "top",
+            scrollPadding: 450,
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: ".all-abilities",
+            heading: "All Abilities",
+            text: "TO REPEAT: WHEN THE TOURNAMENT IS OVER WHOEVER YOU WILL AUTOMATICALLY USE YOUR ABILITY ON WHOMEVER YOU HAVE SELECTED!! You can select someone whenever you want. If your ability does not have a selection, then ignore this.",
+            placement: "top",
+            scrollPadding: 350,
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: ".scoreboard-section",
+            heading: "The Final Score",
+            text: "Your abilities MAY affect the position rankings. This is independent of the actual scoreboard, but it is your minigame scoreboard ranking that determines whether you win or lose.",
+            placement: "top",
+            scrollPadding: 350,
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: ".guess-section",
+            heading: "Vengeance",
+            text: "REMEMBER!!!! MOST CORRECT GUESSES WIN MONEY!! Also, if you can't win, if you can guess your arch enemy right, you will cause them to lose as well.",
+            placement: "top",
+            scrollPadding: 350,
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: ".guess-section-2",
+            heading: "Knowledge",
+            text: "So how to know who is who? Do whatever you want, guess, ask people, offer to trade info, get them drunk, whatever, just don't do anything illegal.",
+            placement: "right",
+            scrollPadding: 250,
+            scroll: true
+        },
+        {
+            type: "element",
+            selector: ".all-chars-section",
+            heading: "Wait What?",
+            text: "Review the characters before you guess. (This is just to make you scroll back top)",
+            placement: "top",
+            scrollPadding: 350,
+            scroll: true
+        },
+        {
+            type: "title",
+            heading: "End!",
+            text: "The end! Have fun."
+        }
+    ];
 
 
 
@@ -505,7 +657,7 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
     }
 	$scope.selected = null;
 
-    $scope.init();
+
 
 	$scope.guess = function(p, r, oldp, oldr){
 		$scope.guessed_roles[r] = p;
@@ -553,6 +705,13 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
 		return $http.post( '/saveGuesses', {username: username, token: token, guesses: guesses});
 	}
 
+    $http({
+        url: '/didMiniGameStart.json', method: "GET"
+    }).success(function(data) {
+        if(data['started']){
+            $scope.init();
+        }
+    });
 
 
 

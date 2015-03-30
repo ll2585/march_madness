@@ -26,7 +26,9 @@ if (process.env.NODE_ENV == "production")
 else if (process.env.NODE_ENV == "development")
 {
     console.log("DEV")
-    mongoose.connect(uriUtil.formatMongoose(configDB['local_url'])); //THISLISTENS TO PORT ALREADY LOL DO THIS AFTER AUTH
+    console.log(configDB['local-url'])
+    console.log(uriUtil.formatMongoose(configDB['local-url']))
+    mongoose.connect(uriUtil.formatMongoose(configDB['local-url'])); //THISLISTENS TO PORT ALREADY LOL DO THIS AFTER AUTH
 }
 
 

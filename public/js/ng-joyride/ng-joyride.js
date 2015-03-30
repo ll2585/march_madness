@@ -538,11 +538,14 @@
                     for(var i = 0; i < scope.config.length; i++){
                         scope.$watchCollection('config['+i+']', function (newval, oldval) {
                             if(newval){
-
-                                if(newval.type == 'element'){
-									console.log(newval)
-                                    steps[newval.index].reloadConfig(newval, newval.index === (options.config.length-1));
+                                if(newval.index !== undefined){
+                                    if(newval.type == 'element'){
+                                        console.log(newval)
+                                        steps[newval.index].reloadConfig(newval, newval.index === (options.config.length-1));
+                                    }
                                 }
+
+
                             }
                         });
                     }

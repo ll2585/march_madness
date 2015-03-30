@@ -49,28 +49,38 @@ var initialSettings = [
 ]
 module.exports= {
     insertSettingsIntoMongo: function () {
-        for (var i = 0; i < initialSettings.length; i++) {
-            var curSetting = initialSettings[i];
-            var setting = new serverSettings();
-            setting.setting = curSetting['setting'];
-            setting.type = curSetting['type'];
-            setting.setVal(curSetting['val']);
-            serverSettings.findOne({setting: curSetting['setting']}, function (err, result) {
-                if (err || result == null) {
-                    console.log("DOES NOT EXIST!!")
+        //get a list of waht DOES exist first...
+
+        serverSettings.find({}, function (err, result) {
+            for (var i = 0; i < initialSettings.length; i++) {
+                var curSetting = initialSettings[i];
+                var setting = new serverSettings();
+                setting.setting = curSetting['setting'];
+                setting.type = curSetting['type'];
+                setting.setVal(curSetting['val']);
+                var exists = false;
+                for(var j = 0; j < result.length; j++){
+                    if(result[j]['setting'] == setting){
+                        exists = true;
+                    }
+                }
+                if(!exists){
                     setting.save(function (err) {
                         if (err) {
                             console.log(err);
                         } else {
-                            console.log("OK!")
+                            console.log("OK! saved " + setting.setting)
                         }
 
                     });
                 }
-            })
 
 
-        }
+
+
+            }
+        });
+
 
     },
     initialSettings: function () {

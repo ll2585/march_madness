@@ -56,17 +56,5 @@ Settings.methods.setVal = function(val) {
 			break;
 		}
 	}
-	this.save(function(err) {
-		if (err){
-			console.log(err)
-			deferred.reject(err)
-		}
-		else{
-			console.log('GOOD!')
-			deferred.resolve(true)
-		}
-
-	});
-	return deferred.promise
 };
 module.exports = mongoose.model('Settings', Settings);

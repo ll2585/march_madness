@@ -48,3 +48,8 @@
 .none-class{
     background-color: white;
 }
+
+.not-playing{
+    background-color: #ccc !important;
+    color: #222 !important;
+}
