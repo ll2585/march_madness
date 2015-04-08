@@ -53,3 +53,15 @@
     background-color: #ccc !important;
     color: #222 !important;
 }
+
+.already-guessed-alert{
+    background-color: red !important;
+    font-weight: bolder;
+    text-align: center;
+    font-size: 300%;
+}
+
+.already-guessed-region{
+    margin-bottom: 10px;
+    border: 1px solid;
+}

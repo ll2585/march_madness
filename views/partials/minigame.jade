@@ -95,31 +95,34 @@ div.container
 							a(href="/achievements/{{row.name}}") {{row.achievements}}
 		hr
 		div.guess-section Ready to guess?
-			div.row(ng-if="submittedGuessesAlready") YOU HAVE ALREADY GUESSED THE FOLLOWING!!!
-				div.row
-					div.col-xs-6 By Player
-						div.row(ng-repeat="p in players")
-							div.col-xs-12
-								span(ng-class="{'red-team' : guessedClass(old_guessed_players[p])=='red-team', 'village-team' : guessedClass(old_guessed_players[p])=='village-team', 'blue-team' : guessedClass(old_guessed_players[p])=='blue-team', 'werewolf-team' : guessedClass(old_guessed_players[p])=='werewolf-team'}")
-									|{{p}} - {{old_guessed_players[p]}}
-					div.col-xs-6 Roles
-						div.row(ng-repeat="b in blues")
-							div.col-xs-12
-								span(ng-class="{'blue-team' : old_guessed_roles[b.name] != 'None'}")
-									|{{b.name}} - {{old_guessed_roles[b.name]}}
-						div.row(ng-repeat="r in reds")
-							div.col-xs-12
-								span(ng-class="{'red-team' : old_guessed_roles[r.name] != 'None'}")
-									|{{r.name}} - {{old_guessed_roles[r.name]}}
-						div.row(ng-repeat="w in werewolves")
-							div.col-xs-12
-								span(ng-class="{'werewolf-team' : old_guessed_roles[w.name] != 'None'}")
-									|{{w.name}} - {{old_guessed_roles[w.name]}}
-						div.row(ng-repeat="v in village")
-							div.col-xs-12
-								span(ng-class="{'village-team' : old_guessed_roles[v.name] != 'None'}")
-									|{{v.name}} - {{old_guessed_roles[v.name]}}
-				button.copy-guesses(ng-click = "copyGuesses()") Copy Guesses!
+			div.row.already-guessed-region(ng-if="submittedGuessesAlready")
+				div.already-guessed-alert YOU HAVE ALREADY GUESSED!!!
+				button(style="margin-left: auto; margin-right: auto;display:block;", ng-click = "toggleShowOldGuesses()") Toggle Old Guesses?!
+				div(ng-show="showOldGuesses")
+					div.row
+						div.col-xs-6 By Player
+							div.row(ng-repeat="p in players")
+								div.col-xs-12
+									span(ng-class="{'red-team' : guessedClass(old_guessed_players[p])=='red-team', 'village-team' : guessedClass(old_guessed_players[p])=='village-team', 'blue-team' : guessedClass(old_guessed_players[p])=='blue-team', 'werewolf-team' : guessedClass(old_guessed_players[p])=='werewolf-team'}")
+										|{{p}} - {{old_guessed_players[p]}}
+						div.col-xs-6 Roles
+							div.row(ng-repeat="b in blues")
+								div.col-xs-12
+									span(ng-class="{'blue-team' : old_guessed_roles[b.name] != 'None'}")
+										|{{b.name}} - {{old_guessed_roles[b.name]}}
+							div.row(ng-repeat="r in reds")
+								div.col-xs-12
+									span(ng-class="{'red-team' : old_guessed_roles[r.name] != 'None'}")
+										|{{r.name}} - {{old_guessed_roles[r.name]}}
+							div.row(ng-repeat="w in werewolves")
+								div.col-xs-12
+									span(ng-class="{'werewolf-team' : old_guessed_roles[w.name] != 'None'}")
+										|{{w.name}} - {{old_guessed_roles[w.name]}}
+							div.row(ng-repeat="v in village")
+								div.col-xs-12
+									span(ng-class="{'village-team' : old_guessed_roles[v.name] != 'None'}")
+										|{{v.name}} - {{old_guessed_roles[v.name]}}
+					button.copy-guesses(style="margin-left: auto; margin-right: auto;display:block;", ng-click = "copyGuesses()") Re-Guess These Guesses!
 			div.row
 				div.col-xs-6 Players
 					div.row(ng-repeat="p in players")

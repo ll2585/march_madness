@@ -312,12 +312,20 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
                         $scope.guessed_roles = {};
                         $scope.submittedGuessesAlready = false;
                         if(data.guesses != null){
+                            $scope.showOldGuesses = false;
                             $scope.submittedGuessesAlready = true;
                             $scope.old_guessed_players = data.guesses['players']
                             $scope.old_guessed_roles = data.guesses['roles'];
                             $scope.copyGuesses = function(){
-                                $scope.guessed_players = $scope.old_guessed_players
-                                $scope.guessed_roles = $scope.old_guessed_roles
+                                for(var p in $scope.old_guessed_players){
+                                    $scope.guessed_players[p] = $scope.old_guessed_players[p];
+                                }
+                                for(var p in $scope.old_guessed_roles){
+                                    $scope.guessed_roles[p] = $scope.old_guessed_roles[p];
+                                }
+                            }
+                            $scope.toggleShowOldGuesses = function(){
+                                $scope.showOldGuesses = !$scope.showOldGuesses;
                             }
                         }
 
