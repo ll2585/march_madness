@@ -62,7 +62,7 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
                     $scope.getScoreboard($window.localStorage.user).then(function (scoreboard) {
 
 
-
+                        console.log(data);
 
                         if (data.power_string.indexOf("filler") == -1) {
                             $scope.usedAbility = true;
@@ -75,7 +75,6 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
                             $scope.targets = [];
                         }
                         $scope.allPlayers = allUsers;
-                        console.log(allUsers)
                         $scope.me = $window.localStorage.user;
                         $scope.blues = [
                             {
@@ -309,15 +308,23 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
                         $scope.users_for_select = [{'name': 'None'}];
 
 
-                        console.log(data);
                         $scope.guessed_players = {};
                         $scope.guessed_roles = {};
+                        $scope.submittedGuessesAlready = false;
+                        if(data.guesses != null){
+                            $scope.submittedGuessesAlready = true;
+                            $scope.old_guessed_players = data.guesses['players']
+                            $scope.old_guessed_roles = data.guesses['roles'];
+                            $scope.copyGuesses = function(){
+                                $scope.guessed_players = $scope.old_guessed_players
+                                $scope.guessed_roles = $scope.old_guessed_roles
+                            }
+                        }
+
                         for (var i = 0; i < $scope.allRoles.length; i++) {
-                            console.log("MAKING NONE 3")
                             $scope.guessed_roles[$scope.allRoles[i].name] = "None";
                         }
                         for (var i = 0; i < $scope.players.length; i++) {
-                            console.log("MAKING NONE 4")
                             $scope.users_for_select.push({'name': $scope.players[i]})
                             $scope.guessed_players[$scope.players[i]] = "None";
                         }
@@ -339,7 +346,6 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
                                 selection.push(name);
                             }
 
-                            console.log($scope.targets)
                         };
 
 
@@ -503,7 +509,6 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
 
                         //copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
                         $scope.displayedCollection = [].concat($scope.miniGameScoreboard);
-                        console.log($scope.miniGameScoreboard)
 
                         $scope.notPlaying = function(name){
                             return $scope.players.indexOf(name) == -1
@@ -517,6 +522,22 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
                         $scope.onFinish = function(){
                             $scope.startJoyRide = false;
                         }
+
+                        $scope.submitGuesses = function () {
+                            $scope.postGuesses($window.localStorage.user, $window.localStorage.token, {'players': $scope.guessed_players, 'roles': $scope.guessed_roles}).success(function () {
+                                alert("SAVED");
+                            }).error(function (status, data) {
+                                console.log("SOERROR");
+                                alert(status);
+                                console.log(status);
+                                console.log(data);
+                            });
+                        };
+
+                        $scope.postGuesses = function(username, token, guesses){
+                            return $http.post( '/saveGuesses', {username: username, token: token, guesses: guesses});
+                        }
+
                     });
                 }).error(function(){
 
@@ -701,9 +722,7 @@ angular.module('MiniGameController', []).controller('MiniGameController', ['$roo
 		});
 	};
 
-	$scope.submitGuesses = function(){
-		return $http.post( '/saveGuesses', {username: username, token: token, guesses: guesses});
-	}
+
 
     $http({
         url: '/didMiniGameStart.json', method: "GET"
