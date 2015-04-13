@@ -1152,9 +1152,15 @@ module.exports = function(app) {
 
 
 			}else {
-				console.log("NO SES")
-					res.render('partials/minigame-signup');
-				}
+                if (req.user) {
+
+                    delete req.user;
+                    console.log("BYEBYE")
+                    res.render('/login');
+                }
+                console.log("NO SES")
+
+            }
 
 
 		}else {
